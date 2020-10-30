@@ -1,6 +1,24 @@
 
-<div class="map-container">
-    <div class="map-frame">
-      <div id="map"></div>
-    </div>
-  </div>
+
+
+<mat-sidenav-container>
+  <mat-sidenav mode="side" [(opened)]="toolOpened">
+      <div class="toolbar">
+          <p class="toolbarTitle">Nestmatics</p>
+          <button mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon></button>
+          <button mat-stroked-button><mat-icon class="toolbarButtons">blur_on</mat-icon></button>
+          <button mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon></button>
+          <button mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon></button>
+      </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+      <button class="toolToggle" (click) = "toolOpened=!toolOpened">
+        <mat-icon>notes</mat-icon>
+      </button>
+      <div class="map-container">
+          <div class="map-frame">
+            <div id="map"></div>
+          </div>
+      </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
