@@ -12,7 +12,7 @@ import 'leaflet-plugin-trackplayback';
 export class MapComponent implements AfterViewInit {
   toolOpened = true;
   private map;
-  private data = [{lat:18.2013, lng:-67.1452, time:150, dir:320 }];
+  private data = [{lat:18.208857284769497, lng:-67.1403479576111, time:0},{lat:18.212057410313477, lng:-67.1408522129059, time:40000}];
   
   nests: string = '/assets/map.json';
   restNests: string ='http://localhost:3000/nests'
@@ -102,7 +102,16 @@ export class MapComponent implements AfterViewInit {
 
   private playback(): void {
 
-    const trackplayback = (L as any).trackplayback(this.data, this.map);
-
+    const trackplayback = (L as any).trackplayback(this.data, this.map, {
+      trackPointOptions: {
+        // whether draw track point
+        isDraw: true
+      },
+      trackLineOptions: {
+      // whether draw track line
+      isDraw: true
+    }});
+    console.log(trackplayback);
+    trackplayback.start();
   }
 }
