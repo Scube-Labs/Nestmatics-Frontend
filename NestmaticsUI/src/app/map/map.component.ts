@@ -32,7 +32,7 @@ export class MapComponent implements AfterViewInit {
     this.map = (L as any).map('map', {
       zoomControl: false,
       center: [ 18.2013, -67.1452 ],
-      zoom: 9
+      zoom: 15
     });
 
     new (L as any).Control.Zoom({ position: 'bottomright' }).addTo(this.map);
@@ -42,6 +42,7 @@ export class MapComponent implements AfterViewInit {
   private initTiles(): void {
     const tiles = (L as any).tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
+    minZoom: 15,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
@@ -50,13 +51,17 @@ export class MapComponent implements AfterViewInit {
 
   private drawControl(): void {
     var drawnItems = new (L as any).FeatureGroup();
-    this.map.addLayer(drawnItems);
     var drawControl = new (L as any).Control.Draw({
         edit: {
             featureGroup: drawnItems
         },
         draw: {
-            circlemarker: false
+            circlemarker: true,
+            polyline: false,
+            circle: false,
+            polygon: false,
+            rectangle: false,
+            marker: false
         }
     });
     this.map.addControl(drawControl);
@@ -69,15 +74,27 @@ export class MapComponent implements AfterViewInit {
       }
       // Do whatever else you need to. (save to db; add to map etc)
       this.map.addLayer(layer);
+      console.log(layer._latlng);
+      var lat = layer._latlng.lat;
+      var lon = layer._latlng.lng;
+
+      // const headers = { 'Content-Type' : 'application/json'};
+      this.http.post('http://localhost:3000/nests', {
+        "name": "name",
+        "coordinates": [
+            lon,
+            lat
+          ]
+      }).toPromise() 
    });
   }
 
   private loadNests(): void {
     
     this.http.get(this.restNests).subscribe((res: any) => {
-      for (const c of res[0].features) {
-        const lat = c.geometry.coordinates[0];
-        const lon = c.geometry.coordinates[1];
+      for (const c of res) {
+        const lat = c.coordinates[0];
+        const lon = c.coordinates[1];
         (L as any).circle([lon, lat], 20).addTo(this.map);
       }
     });
@@ -86,9 +103,6 @@ export class MapComponent implements AfterViewInit {
   private playback(): void {
 
     const trackplayback = (L as any).trackplayback(this.data, this.map);
-    console.log(this.data);
-    const trackplaybackControl = (L as any).trackplaybackcontrol(trackplayback);
 
-    trackplaybackControl.addTo(this.map);
   }
 }
