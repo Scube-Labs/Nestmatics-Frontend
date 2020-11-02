@@ -8,6 +8,9 @@ import { MapComponent } from './map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ToolbarModule } from './toolbar/toolbar.module';
 import { FormsModule } from '@angular/forms';
+import { AngularFileUploaderModule } from "angular-file-uploader";
+import { HttpClientModule } from "@angular/common/http";
+
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     BrowserAnimationsModule,
     ToolbarModule,
-    FormsModule
+    FormsModule,
+    AngularFileUploaderModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
