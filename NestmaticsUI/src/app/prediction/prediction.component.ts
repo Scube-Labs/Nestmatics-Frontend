@@ -2,14 +2,14 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
-import 'leaflet-plugin-trackplayback';
+import 'leaflet.heat/dist/leaflet-heat.js'
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  selector: 'app-prediction',
+  templateUrl: './prediction.component.html',
+  styleUrls: ['./prediction.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class PredictionComponent implements AfterViewInit {
   toolOpened = true;
   private map;
   private data = [{lat:18.208857284769497, lng:-67.1403479576111, time:0},{lat:18.212057410313477, lng:-67.1408522129059, time:40000}];
@@ -23,13 +23,13 @@ export class MapComponent implements AfterViewInit {
     this.initMap();
     this.loadNests();
     this.initTiles();
-    this.drawControl();
-    this.playback();
+    //this.drawControl();
+    this.predict();
   }
 
   
   private initMap(): void {
-    this.map = (L as any).map('map', {
+    this.map = (L as any).map('prediction', {
       zoomControl: false,
       center: [ 18.2013, -67.1452 ],
       zoom: 15
@@ -100,18 +100,16 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private playback(): void {
-
-    const trackplayback = (L as any).trackplayback(this.data, this.map, {
-      trackPointOptions: {
-        // whether draw track point
-        isDraw: true
-      },
-      trackLineOptions: {
-      // whether draw track line
-      isDraw: true
-    }});
-    console.log(trackplayback);
-    trackplayback.start();
+  private predict(): void {
+    var heat = (L as any).heatLayer([
+      [18.208857284769497, -67.1403479576111, 5], // lat, lng, intensity
+      [18.2097745242172, -67.1413564682007, 5],
+      [18.209998737569695, -67.14003682136537, 5],
+      [18.212057410313477, -67.1408522129059, 5],
+      [18.214584856440485, -67.14109897613527, 5],
+      [18.211150374331343, -67.1447253227234, 5],
+      [18.206054578751242, -67.14481115341188, 5],
+      [18.205626525135333, -67.1451759338379, 5],
+    ], {radius: 35}).addTo(this.map);
   }
 }

@@ -10,13 +10,17 @@ import { ToolbarModule } from './toolbar/toolbar.module';
 import { FormsModule } from '@angular/forms';
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { HttpClientModule } from "@angular/common/http";
+import { PredictionComponent } from './prediction/prediction.component';
+import { ExperimentComponent } from './experiment/experiment.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    routingComponents
+    routingComponents,
+    PredictionComponent,
+    ExperimentComponent
   ],
   imports: [
     LeafletModule,

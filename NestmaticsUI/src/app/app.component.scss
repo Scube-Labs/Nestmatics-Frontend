@@ -1,0 +1,55 @@
+.map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+  
+  .map-frame {
+    height: 100%;
+  }
+  
+  #map {
+    height: 100%;
+  }
+
+  .mat-sidenav-container {
+    height: 100%;
+  }
+
+  .mat-sidenav {
+    padding: 16px;
+    background-color: rgb(89, 204, 185);
+    width: 110px;
+    padding: 0;
+    border: 0;
+  }
+
+  .toolToggle {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 10px;
+  }
+
+  .mat-stroked-button {
+    height: 100px;
+    width: 100%; 
+  }
+
+  .toolbarButtons {
+    font-size: 40px;
+    padding-right: 40px;  
+    padding-bottom: 40px;  
+  }
+
+  .toolbarTitle {
+    padding-left: 18px;  
+
+  }
+
