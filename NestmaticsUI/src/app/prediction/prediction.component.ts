@@ -16,6 +16,7 @@ export class PredictionComponent implements AfterViewInit {
   
   nests: string = '/assets/map.json';
   restNests: string ='http://localhost:3000/nests'
+  restPredict: string ='http://localhost:3000/predictions'
   
   constructor(private http: HttpClient) { }
 
@@ -23,10 +24,23 @@ export class PredictionComponent implements AfterViewInit {
     this.initMap();
     this.loadNests();
     this.initTiles();
-    //this.drawControl();
+    this.restrict();
     this.predict();
+    
   }
+  private restrict(): void{
+    var polygon = L.polygon([
+      [18.183610921675665, -67.17015266418457],
+      [18.183610921675665, -67.11831092834473],
+      [18.227965441672286, -67.11831092834473],
+      [18.227965441672286,-67.17015266418457]
+  ]);
 
+    this.map.fitBounds(polygon.getBounds());
+    this.map.setMaxBounds(polygon.getBounds());
+    this.map.options.minZoom = this.map.getZoom();
+    
+  }  
   
   private initMap(): void {
     this.map = (L as any).map('prediction', {
@@ -42,51 +56,10 @@ export class PredictionComponent implements AfterViewInit {
   private initTiles(): void {
     const tiles = (L as any).tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    minZoom: 14,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
     tiles.addTo(this.map);
-  }
-
-  private drawControl(): void {
-    var drawnItems = new (L as any).FeatureGroup();
-    var drawControl = new (L as any).Control.Draw({
-        edit: {
-            featureGroup: drawnItems
-        },
-        draw: {
-            circlemarker: true,
-            polyline: false,
-            circle: false,
-            polygon: false,
-            rectangle: false,
-            marker: false
-        }
-    });
-    this.map.addControl(drawControl);
-
-    this.map.on('draw:created', (e) => {
-      var type = e.layerType,
-          layer = e.layer;
-      if (type === 'marker') {
-          // Do marker specific actions
-      }
-      // Do whatever else you need to. (save to db; add to map etc)
-      this.map.addLayer(layer);
-      console.log(layer._latlng);
-      var lat = layer._latlng.lat;
-      var lon = layer._latlng.lng;
-
-      // const headers = { 'Content-Type' : 'application/json'};
-      this.http.post('http://localhost:3000/nests', {
-        "name": "name",
-        "coordinates": [
-            lon,
-            lat
-          ]
-      }).toPromise() 
-   });
   }
 
   private loadNests(): void {
@@ -101,15 +74,11 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   private predict(): void {
-    var heat = (L as any).heatLayer([
-      [18.208857284769497, -67.1403479576111, 5], // lat, lng, intensity
-      [18.2097745242172, -67.1413564682007, 5],
-      [18.209998737569695, -67.14003682136537, 5],
-      [18.212057410313477, -67.1408522129059, 5],
-      [18.214584856440485, -67.14109897613527, 5],
-      [18.211150374331343, -67.1447253227234, 5],
-      [18.206054578751242, -67.14481115341188, 5],
-      [18.205626525135333, -67.1451759338379, 5],
-    ], {radius: 35}).addTo(this.map);
+    this.http.get(this.restPredict).subscribe((res: any) => {
+      for (const c of res) {
+        console.log(c[7]);
+        var heat = (L as any).heatLayer(c[7], {radius: 30}).addTo(this.map);
+      }
+    });
   }
 }
