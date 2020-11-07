@@ -1,5 +1,4 @@
 import { Component} from '@angular/core';
-import { CalendarData, CalendarWeekStart, CalendarOptions, RandomDataService } from 'ng-calendar-heatmap';
 
 @Component({
   selector: 'app-calendar',
@@ -9,30 +8,9 @@ import { CalendarData, CalendarWeekStart, CalendarOptions, RandomDataService } f
 
 export class CalendarComponent {
 
-  public calendarData: CalendarData[];
-  public calendarOptionsCustom: CalendarOptions;
+  
 
-  constructor(protected randomDataService: RandomDataService) {
+  constructor() {}
 
-    this.calendarOptionsCustom = {
-      weekStart: CalendarWeekStart.MONDAY,
-      responsive: true,
-      onClick: (data: CalendarData) => console.log(data),
-      colorRange: ['#D8E6E7', '#832124'],
-      staticMax: true,
-      tooltipEnabled: false,
-      max: 10
-    };
-
-    this.calendarData = randomDataService.generate(10, 20);
-    console.log(this.calendarData);
-  }
-
-  newData() {
-    this.calendarData = this.randomDataService.generate(10, 20);
-  }
-
-  clearData() {
-    this.calendarData = [];
-  }
+  
 }
