@@ -12,7 +12,7 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
 import { HttpClientModule } from "@angular/common/http";
 import { PredictionComponent } from './prediction/prediction.component';
 import { ExperimentComponent } from './experiment/experiment.component';
-
+import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { ExperimentComponent } from './experiment/experiment.component';
     routingComponents,
     PredictionComponent,
     ExperimentComponent
+    
   ],
   imports: [
     LeafletModule,
@@ -31,6 +32,7 @@ import { ExperimentComponent } from './experiment/experiment.component';
     FormsModule,
     AngularFileUploaderModule,
     HttpClientModule,
+    CalendarHeatmapModule
   ],
   providers: [],
   bootstrap: [AppComponent]

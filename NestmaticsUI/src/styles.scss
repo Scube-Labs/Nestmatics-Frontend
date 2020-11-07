@@ -39,6 +39,7 @@ $NestmaticsUI-theme: mat-light-theme((
 @import '~@angular/material/theming';
 @import "~leaflet/dist/leaflet.css";
 @import "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only

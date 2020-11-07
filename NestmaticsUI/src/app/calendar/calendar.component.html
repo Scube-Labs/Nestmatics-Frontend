@@ -1,0 +1,15 @@
+<!-- <body>
+    <button mat-button (click)="newData()">New data</button>
+    <button mat-button (click)="clearData()">Clear data</button>
+    
+    <ng-calendar-heatmap [data]="calendarData" [options]="calendarOptionsCustom"></ng-calendar-heatmap>
+</body> -->
+<body>
+    <mat-form-field>
+        <input matInput [matDatepicker]="calendarPicker">
+        <mat-datepicker-toggle [for]="calendarPicker" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #calendarPicker></mat-datepicker>
+    </mat-form-field>
+</body>
+
+  
