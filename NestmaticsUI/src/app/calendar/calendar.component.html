@@ -4,12 +4,12 @@
     
     <ng-calendar-heatmap [data]="calendarData" [options]="calendarOptionsCustom"></ng-calendar-heatmap>
 </body> -->
-<body>
-    <mat-form-field>
+<div class="calendar">
+<div class="areaTitle" [(ngModel)]="areaName">{{areaName}}</div>
+    <mat-form-field appearance="fill">
+        <mat-label>Calendar</mat-label>
         <input matInput [matDatepicker]="calendarPicker">
         <mat-datepicker-toggle [for]="calendarPicker" matSuffix></mat-datepicker-toggle>
         <mat-datepicker #calendarPicker></mat-datepicker>
     </mat-form-field>
-</body>
-
-  
+</div>

@@ -76,7 +76,6 @@ export class PredictionComponent implements AfterViewInit {
   private predict(): void {
     this.http.get(this.restPredict).subscribe((res: any) => {
       for (const c of res) {
-        console.log(c[7]);
         var heat = (L as any).heatLayer(c[7], {radius: 30}).addTo(this.map);
       }
     });

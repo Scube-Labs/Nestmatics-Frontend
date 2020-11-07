@@ -8,9 +8,12 @@ import { Component} from '@angular/core';
 
 export class CalendarComponent {
 
-  
+  public areaName = "Mayaguez";
+  static areaSelected;
 
-  constructor() {}
+  constructor() {
+    CalendarComponent.areaSelected = this.areaName;
+  }
 
   
 }

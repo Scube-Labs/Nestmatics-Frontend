@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule, routingComponents} from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +12,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { PredictionComponent } from './prediction/prediction.component';
 import { ExperimentComponent } from './experiment/experiment.component';
 import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
+import { CalendarComponent } from './calendar/calendar.component';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
     MapComponent,
     routingComponents,
     PredictionComponent,
-    ExperimentComponent
+    ExperimentComponent,
+    MainComponent
     
   ],
   imports: [
@@ -34,7 +36,7 @@ import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
     HttpClientModule,
     CalendarHeatmapModule
   ],
-  providers: [],
+  providers: [CalendarComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

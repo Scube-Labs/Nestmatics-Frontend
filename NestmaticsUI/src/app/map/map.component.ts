@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet-plugin-trackplayback';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-map',
@@ -12,10 +13,11 @@ import 'leaflet-plugin-trackplayback';
 export class MapComponent implements AfterViewInit {
   toolOpened = true;
   private map;
-  private data = [{lat:18.208857284769497, lng:-67.1403479576111, time:0},{lat:18.212057410313477, lng:-67.1408522129059, time:40000}];
-  
-  nests: string = '/assets/map.json';
-  restNests: string ='http://localhost:3000/nests'
+  calendarComponent: CalendarComponent;
+  private areaSelected = CalendarComponent.areaSelected;
+  areas: string = 'http://localhost:3000/areas'
+  rides: string = 'http://localhost:3000/rides'
+  nests: string ='http://localhost:3000/nests'
   
   constructor(private http: HttpClient) { }
 
@@ -29,18 +31,13 @@ export class MapComponent implements AfterViewInit {
   }
 
   private restrict(): void{
-    var polygon = L.polygon([
-      [18.183610921675665, -67.17015266418457],
-      [18.183610921675665, -67.11831092834473],
-      [18.227965441672286, -67.11831092834473],
-      [18.227965441672286, -67.17015266418457]
-  ]);
-
-    this.map.fitBounds(polygon.getBounds());
-    this.map.setMaxBounds(polygon.getBounds());
-    this.map.options.minZoom = this.map.getZoom();
-    
-  }  
+    this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
+      var polygon = L.polygon(res[0].coordinates);
+      this.map.fitBounds(polygon.getBounds());
+      this.map.setMaxBounds(polygon.getBounds());
+      this.map.options.minZoom = this.map.getZoom();
+    }
+  )}  
 
   private initMap(): void {
     this.map = (L as any).map('map', {
@@ -88,12 +85,11 @@ export class MapComponent implements AfterViewInit {
       }
       // Do whatever else you need to. (save to db; add to map etc)
       this.map.addLayer(layer);
-      console.log(layer._latlng);
       var lat = layer._latlng.lat;
       var lon = layer._latlng.lng;
 
       // const headers = { 'Content-Type' : 'application/json'};
-      this.http.post('http://localhost:3000/nests', {
+      this.http.post(this.nests, {
         "name": "name",
         "coordinates": [
             lon,
@@ -105,7 +101,7 @@ export class MapComponent implements AfterViewInit {
 
   private loadNests(): void {
     
-    this.http.get(this.restNests).subscribe((res: any) => {
+    this.http.get(this.nests).subscribe((res: any) => {
       for (const c of res) {
         const lat = c.coordinates[0];
         const lon = c.coordinates[1];
@@ -116,16 +112,18 @@ export class MapComponent implements AfterViewInit {
 
   private playback(): void {
 
-    const trackplayback = (L as any).trackplayback(this.data, this.map, {
-      trackPointOptions: {
-        // whether draw track point
+    this.http.get(this.rides).subscribe((res: any) => {
+      const trackplayback = (L as any).trackplayback(res[0].date1, this.map, {
+        trackPointOptions: {
+          // whether draw track point
+          isDraw: true
+        },
+        trackLineOptions: {
+        // whether draw track line
         isDraw: true
-      },
-      trackLineOptions: {
-      // whether draw track line
-      isDraw: true
-    }});
-    console.log(trackplayback);
-    trackplayback.start();
+      }});
+      trackplayback.start();
+    });'http://localhost:3000/nests'
+    
   }
 }
