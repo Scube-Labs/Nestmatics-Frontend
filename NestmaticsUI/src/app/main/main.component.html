@@ -2,7 +2,8 @@
         <mat-sidenav mode="side" [(opened)]="toolOpened">
             <div class="toolbar">
                 <p class="toolbarTitle">Nestmatics</p>
-                <button (click)="changeComponent('map')" mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon></button>
+                <button (click)="changeComponent('map')" mat-stroked-button><mat-icon class="toolbarButtons">home</mat-icon></button>
+                <button (click)="changeComponent('playback')" mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon></button>
                 <button (click)="changeComponent('prediction')" mat-stroked-button><mat-icon class="toolbarButtons">blur_on</mat-icon></button>
                 <button (click)="changeComponent('experiment')" mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon></button>
                 <button mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon></button>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MapComponent } from '../map/map.component';
+import { PlaybackComponent } from '../playback/playback.component'
 import { PredictionComponent } from '../prediction/prediction.component';
 import { ExperimentComponent } from '../experiment/experiment.component';
 
@@ -20,6 +21,9 @@ export class MainComponent implements OnInit {
   changeComponent(comp: string) {
     if(comp == "map"){
       this.currentComponent = MapComponent;
+    }
+    if(comp == "playback"){
+      this.currentComponent = PlaybackComponent;
     }
     if(comp == "prediction"){
       this.currentComponent = PredictionComponent;

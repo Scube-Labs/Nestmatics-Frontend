@@ -4,20 +4,10 @@
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
-        -67.1403479576111,
-        18.208857284769497
-      ],
-      "vehicles": 5,
-      "id": 1
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
         -67.1413564682007,
         18.2097745242172
       ],
-      "vehicles": 4,
+      "vehicles": 1,
       "id": 2
     },
     {
@@ -39,36 +29,6 @@
       ],
       "vehicles": 7,
       "id": 4
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14109897613527,
-        18.214584856440485
-      ],
-      "vehicles": 7,
-      "id": 5
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.1447253227234,
-        18.211150374331343
-      ],
-      "vehicles": 5,
-      "id": 6
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14481115341188,
-        18.206054578751242
-      ],
-      "vehicles": 3,
-      "id": 7
     },
     {
       "serviceArea": "Mayaguez",
@@ -97,7 +57,7 @@
         -67.14389920234682,
         18.20553479922366
       ],
-      "vehicles": 2,
+      "vehicles": 1,
       "id": 10
     },
     {
@@ -137,7 +97,7 @@
         -67.13775694370271,
         18.20950444865936
       ],
-      "vehicles": 2,
+      "vehicles": 3,
       "id": 14
     },
     {
@@ -147,48 +107,8 @@
         -67.13867962360384,
         18.208847093192958
       ],
-      "vehicles": 4,
+      "vehicles": 1,
       "id": 15
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.13986515998842,
-        18.208077627441067
-      ],
-      "vehicles": 5,
-      "id": 16
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14227914810182,
-        18.21088539663592
-      ],
-      "vehicles": 2,
-      "id": 17
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.1425098180771,
-        18.212470161078386
-      ],
-      "vehicles": 2,
-      "id": 18
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.13816463947298,
-        18.211313437328116
-      ],
-      "vehicles": 5,
-      "id": 19
     },
     {
       "serviceArea": "Mayaguez",
@@ -214,56 +134,6 @@
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
-        -67.14203238487245,
-        18.21182810391026
-      ],
-      "vehicles": 9,
-      "id": 22
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14221477508546,
-        18.205040497646014
-      ],
-      "vehicles": 6,
-      "id": 23
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14054107666017,
-        18.204806086098312
-      ],
-      "vehicles": 5,
-      "id": 24
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14071810245515,
-        18.203552488555005
-      ],
-      "vehicles": 4,
-      "id": 25
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14084148406984,
-        18.20271165588061
-      ],
-      "vehicles": 7,
-      "id": 26
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
         -67.14259028434755,
         18.204576770148634
       ],
@@ -274,11 +144,320 @@
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
-        -67.13685035705568,
-        18.213270181380054
+        -67.13990807533266,
+        18.21100769408391
+      ],
+      "vehicles": 0,
+      "id": 29
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07370853424074,
+        18.45576592117023
       ],
       "vehicles": 3,
-      "id": 28
+      "id": 31
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07163786888124,
+        18.456030523856196
+      ],
+      "vehicles": 0,
+      "id": 32
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07228159904481,
+        18.455196006307634
+      ],
+      "vehicles": 0,
+      "id": 33
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07039332389833,
+        18.45561326558898
+      ],
+      "vehicles": 0,
+      "id": 34
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07055425643922,
+        18.454320776227938
+      ],
+      "vehicles": 0,
+      "id": 35
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07286095619203,
+        18.453374301469466
+      ],
+      "vehicles": 0,
+      "id": 36
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07202410697938,
+        18.453577844868647
+      ],
+      "vehicles": 2,
+      "id": 37
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.0705864429474,
+        18.45368979363534
+      ],
+      "vehicles": 0,
+      "id": 38
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06922388076784,
+        18.45523671457484
+      ],
+      "vehicles": 0,
+      "id": 40
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06899857521059,
+        18.456783621576346
+      ],
+      "vehicles": 0,
+      "id": 41
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07072591781618,
+        18.452865441915915
+      ],
+      "vehicles": 0,
+      "id": 42
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06925606727602,
+        18.45417829649036
+      ],
+      "vehicles": 0,
+      "id": 43
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06934189796449,
+        18.45360837635771
+      ],
+      "vehicles": 0,
+      "id": 44
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06945991516115,
+        18.452712783755793
+      ],
+      "vehicles": 0,
+      "id": 45
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.0745131969452,
+        18.45203090898357
+      ],
+      "vehicles": 0,
+      "id": 46
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06670260429384,
+        18.454788923104623
+      ],
+      "vehicles": 0,
+      "id": 47
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06698155403139,
+        18.456671674827003
+      ],
+      "vehicles": 0,
+      "id": 48
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06802225112916,
+        18.44999544579763
+      ],
+      "id": 50
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.07210993766786,
+        18.4470541588774
+      ],
+      "vehicles": 0,
+      "id": 51
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.0707473754883,
+        18.446789542359657
+      ],
+      "vehicles": 0,
+      "id": 52
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.0726571083069,
+        18.45073839265641
+      ],
+      "vehicles": 0,
+      "id": 53
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06926679611207,
+        18.45050431385592
+      ],
+      "vehicles": 0,
+      "id": 54
+    },
+    {
+      "serviceArea": "Santurce",
+      "name": "name",
+      "coordinates": [
+        -66.06801420450212,
+        18.45245835318731
+      ],
+      "vehicles": 0,
+      "id": 56
+    },
+    {
+      "serviceArea": "Caguas",
+      "name": "name",
+      "coordinates": [
+        -66.03916704654695,
+        18.241757679191345
+      ],
+      "vehicles": 0,
+      "id": 57
+    },
+    {
+      "serviceArea": "Caguas",
+      "name": "name",
+      "coordinates": [
+        -66.02929651737215,
+        18.232196977729014
+      ],
+      "vehicles": 0,
+      "id": 58
+    },
+    {
+      "serviceArea": "Caguas",
+      "name": "name",
+      "coordinates": [
+        -66.03386968374254,
+        18.241551338667254
+      ],
+      "vehicles": 0,
+      "id": 59
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.13685035705568,
+        18.210905779549883
+      ],
+      "vehicles": 0,
+      "id": 60
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.13816463947298,
+        18.211318533044306
+      ],
+      "vehicles": 0,
+      "id": 61
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.14034527540208,
+        18.208852188981297
+      ],
+      "vehicles": 0,
+      "id": 64
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.13780522346498,
+        18.207705632845432
+      ],
+      "vehicles": 1,
+      "id": 65
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.1427083015442,
+        18.212536404937193
+      ],
+      "vehicles": 2,
+      "id": 66
     }
   ],
   "areas": [

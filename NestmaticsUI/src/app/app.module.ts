@@ -14,6 +14,8 @@ import { ExperimentComponent } from './experiment/experiment.component';
 import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MainComponent } from './main/main.component';
+import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
+import { PlaybackComponent } from './playback/playback.component';
 
 @NgModule({
   declarations: [
@@ -22,8 +24,9 @@ import { MainComponent } from './main/main.component';
     routingComponents,
     PredictionComponent,
     ExperimentComponent,
-    MainComponent
-    
+    MainComponent,
+    DialogNestsComponent,
+    PlaybackComponent
   ],
   imports: [
     LeafletModule,
@@ -34,9 +37,10 @@ import { MainComponent } from './main/main.component';
     FormsModule,
     AngularFileUploaderModule,
     HttpClientModule,
-    CalendarHeatmapModule
+    CalendarHeatmapModule,
   ],
   providers: [CalendarComponent],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DialogNestsComponent]
 })
 export class AppModule { }
