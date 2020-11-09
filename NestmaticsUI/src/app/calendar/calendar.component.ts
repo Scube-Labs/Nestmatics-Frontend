@@ -8,11 +8,20 @@ import { Component} from '@angular/core';
 
 export class CalendarComponent {
 
-  public areaName = "Mayaguez";
-  static areaSelected;
+  static areaName = undefined;
+  static isSelected = false;
+  calComponent = CalendarComponent;
 
   constructor() {
-    CalendarComponent.areaSelected = this.areaName;
+  }
+
+  static updateAreaSelected(name: string) {
+    this.areaName = name;
+    this.isSelected = true;
+  }
+
+  static getAreaSelected() {
+    return CalendarComponent.areaName;
   }
 
   

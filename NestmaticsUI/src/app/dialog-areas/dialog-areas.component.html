@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Area Name: {{data.name}}</h1>
+
+<input matInput type="text" maxlength="20" [(ngModel)]="nestName"/>
+
+<button (click)="updateArea()" mat-raised-button color="primary">update</button>
+<button (click)="deleteArea()" mat-raised-button color="primary">Delete</button>
+<button (click)="selectArea()" mat-raised-button color="accent">Select</button>
+<button (click)="cancelArea()" mat-raised-button color="secondary">Cancel</button>

@@ -17,6 +17,7 @@ import { MainComponent } from './main/main.component';
 import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { PlaybackComponent } from './playback/playback.component';
 import { ServiceAreaComponent } from './service-area/service-area.component';
+import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ServiceAreaComponent } from './service-area/service-area.component';
     MainComponent,
     DialogNestsComponent,
     PlaybackComponent,
-    ServiceAreaComponent
+    ServiceAreaComponent,
+    DialogAreasComponent,
   ],
   imports: [
     LeafletModule,
@@ -43,6 +45,6 @@ import { ServiceAreaComponent } from './service-area/service-area.component';
   ],
   providers: [CalendarComponent],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent]
 })
 export class AppModule { }

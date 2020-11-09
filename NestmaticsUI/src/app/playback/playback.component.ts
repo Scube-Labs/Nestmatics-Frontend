@@ -15,8 +15,8 @@ export class PlaybackComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map 
 
-  calendarComponent: CalendarComponent;
-  private areaSelected = CalendarComponent.areaSelected; // Variable to obtain service area selected
+  calendarComponent: CalendarComponent = new CalendarComponent();
+  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
 
   areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point

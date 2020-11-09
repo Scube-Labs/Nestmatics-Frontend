@@ -4,7 +4,7 @@ import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
+import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
 
 @Component({
   selector: 'app-service-area',
@@ -15,8 +15,8 @@ export class ServiceAreaComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map
 
-  calendarComponent: CalendarComponent;
-  private areaSelected = CalendarComponent.areaSelected; // Variable to obtain service area selected
+  calendarComponent: CalendarComponent = new CalendarComponent();
+  defaultServiceArea = undefined; //Default area selected if a used area is deleted
 
   areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
@@ -24,6 +24,7 @@ export class ServiceAreaComponent implements AfterViewInit {
 
   maxArea: any = [[18.183610921675665,-67.17015266418457],[18.183610921675665,-67.11831092834473],[18.227965441672286,-67.11831092834473],[18.227965441672286,-67.17015266418457]]
   currArea = {};
+
 
   constructor(
       private http: HttpClient,
@@ -39,7 +40,7 @@ export class ServiceAreaComponent implements AfterViewInit {
     this.initTiles();
     this.loadAreas();
     this.drawControl();
-
+    
   }
 
 /**
@@ -81,14 +82,13 @@ export class ServiceAreaComponent implements AfterViewInit {
       var valid = true;
       
       for(var i=0; i<layer._latlngs[0].length; i++){
-        console.log(rectangle.toGeoJSON().geometry.coordinates[0]);
         if(!isMarkerInsidePolygon(layer._latlngs[0][i], rectangle.toGeoJSON().geometry.coordinates[0])){
           valid = false;
         }
        }
        if(valid){
         this.http.post(this.areas, {
-          "name": "Unknown",
+          "name": "Unnamed",
           "coordinates": layer._latlngs[0]
         }).subscribe(res => {
             this.map.off();
@@ -96,18 +96,13 @@ export class ServiceAreaComponent implements AfterViewInit {
             this.initialize();
         }) 
        }
-      //console.log(rectangle.toGeoJSON().geometry.coordinates);
-      //console.log(isMarkerInsidePolygon(layer._latlngs[0][0], rectangle.toGeoJSON().geometry.coordinates[0]));
     });
 
     })
     function isMarkerInsidePolygon(point, poly) {
       var polyPoints = poly;
       var x = point.lat, y = point.lng;
-      console.log("PolyPoints: " + polyPoints);
-      console.log("x: " + x);
-      console.log("y: " + y);
-
+    
       var inside = false;
       for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
           var xi = polyPoints[i][1], yi = polyPoints[i][0];
@@ -181,14 +176,65 @@ export class ServiceAreaComponent implements AfterViewInit {
    * Internal method used by the nest's event listener. This opens the nest-dialog to edit or delete nests.
    * @param vehicles
    */
-  private openDialog(vehicles, area){
-    let dialogRef = this.dialog.open(DialogNestsComponent, {
-      data: {vehicles: vehicles},
+  private openDialog(name, area){
+    let dialogRef = this.dialog.open(DialogAreasComponent, {
+      data: {name: name},
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      
+      if(result === -1){
+        //Delete service area.
+        this.http.delete(this.areas + "/" + area.id).subscribe(res => {
+          CalendarComponent.updateAreaSelected(this.defaultServiceArea);
+          this.getDefaultArea();
+          this.map.off();
+          this.map.remove();
+          this.initialize();
+        }); 
+      }
+      else if (result === -2){
+        //Do-nothing, this is the closing condition.
+      }
+      else if (result === -3){
+        //Select Service Area
 
+        if(name != "Unnamed"){
+          CalendarComponent.updateAreaSelected(name);
+          this.map.off();
+          this.map.remove();
+          this.initialize();
+        }
+        else{
+          alert("Unnamed selection is not allowed. Rename the Service Area and try again")
+        }
+      }
+      else{
+        this.http.put(this.areas + "/" + area.id, {
+          "name": result,
+          "coordinates": area.coordinates
+        }).subscribe(res => {
+          CalendarComponent.updateAreaSelected(result);
+          this.map.off();
+          this.map.remove();
+          this.initialize();
+        })
+      }
+    })
+  }
+
+  private getDefaultArea() {
+    this.http.get(this.areas).subscribe((res: any) => {
+      if(res.length >  0) {
+        this.defaultServiceArea = res[0].name;
+        CalendarComponent.updateAreaSelected(res[0].name);
+      }
+      else {
+        this.defaultServiceArea = undefined;
+        CalendarComponent.updateAreaSelected(undefined);
+        this.calendarComponent.calComponent.isSelected = false;
+      }
     })
   }
 }

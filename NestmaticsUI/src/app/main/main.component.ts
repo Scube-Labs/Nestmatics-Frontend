@@ -4,6 +4,7 @@ import { PlaybackComponent } from '../playback/playback.component'
 import { PredictionComponent } from '../prediction/prediction.component';
 import { ExperimentComponent } from '../experiment/experiment.component';
 import { ServiceAreaComponent } from '../service-area/service-area.component';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 
 @Component({ 
@@ -13,7 +14,8 @@ import { ServiceAreaComponent } from '../service-area/service-area.component';
 })
 export class MainComponent implements OnInit {
   toolOpened = true;
-  currentComponent: any = MapComponent;
+  currentComponent: any = ServiceAreaComponent;
+  calendarComponent: CalendarComponent = new CalendarComponent();
   constructor() { }
 
   ngOnInit(): void {

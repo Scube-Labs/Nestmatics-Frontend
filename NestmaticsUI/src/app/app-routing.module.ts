@@ -11,7 +11,6 @@ const routes: Routes = [
   {path: '', component: MainComponent},
   {path: 'login', component: LoginComponent},
   {path: 'experiment', component: ExperimentComponent},
-  {path: 'main', component: MainComponent},                                               
 ];
 
 @NgModule({

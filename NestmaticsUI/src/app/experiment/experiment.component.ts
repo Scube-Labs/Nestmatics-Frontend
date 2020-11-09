@@ -13,8 +13,8 @@ import { CalendarComponent } from '../calendar/calendar.component';
 export class ExperimentComponent implements AfterViewInit {
   toolOpened = true;
   private map;
-  calendarComponent: CalendarComponent;
-  private areaSelected = CalendarComponent.areaSelected;
+  calendarComponent: CalendarComponent = new CalendarComponent();
+  private areaSelected = CalendarComponent.getAreaSelected();
   areas: string = 'http://localhost:3000/areas'
   rides: string = 'http://localhost:3000/rides'
   nests: string ='http://localhost:3000/nests'

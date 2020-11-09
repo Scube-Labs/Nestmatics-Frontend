@@ -5,7 +5,7 @@
     <ng-calendar-heatmap [data]="calendarData" [options]="calendarOptionsCustom"></ng-calendar-heatmap>
 </body> -->
 <div class="calendar">
-<div class="areaTitle" [(ngModel)]="areaName">{{areaName}}</div>
+<div class="areaTitle">{{calComponent.areaName}}</div>
     <mat-form-field appearance="fill">
         <mat-label>Calendar</mat-label>
         <input matInput [matDatepicker]="calendarPicker">

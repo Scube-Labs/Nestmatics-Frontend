@@ -15,8 +15,8 @@ export class MapComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map 
 
-  calendarComponent: CalendarComponent;
-  private areaSelected = CalendarComponent.areaSelected; // Variable to obtain service area selected
+  calendarComponent: CalendarComponent = new CalendarComponent();
+  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
 
   areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
@@ -33,9 +33,9 @@ export class MapComponent implements AfterViewInit {
   private initialize() {
 
     this.initMap();
-    this.loadNests();
-    this.initTiles();
     this.restrict();
+    this.initTiles();
+    this.loadNests();
     this.drawControl();
   
   }
@@ -43,13 +43,18 @@ export class MapComponent implements AfterViewInit {
    * Restrict the map view to only the selected Service Area
    */
   private restrict(): void{
-    this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
-      var polygon = L.polygon(res[0].coordinates);
-      this.map.fitBounds(polygon.getBounds());
-      this.map.setMaxBounds(polygon.getBounds());
-      this.map.options.minZoom = this.map.getZoom();
+    if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
+      this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
+        var polygon = L.polygon(res[0].coordinates);
+        this.map.fitBounds(polygon.getBounds());
+        this.map.setMaxBounds(polygon.getBounds());
+        this.map.options.minZoom = this.map.getZoom();
+        console.log("entered");
+      })
+    }  
+    else {
     }
-  )}  
+  }
   
 /**
  * Initialize Main Map
@@ -141,7 +146,7 @@ export class MapComponent implements AfterViewInit {
           "Vehicles: " + c.vehicles
         );
         currNest.addEventListener("click", ()=> {
-          this.openDialog(c.vehicles, c);
+          this.openDialog(DialogNestsComponent, c.vehicles, c);
         })
       }
     });
@@ -151,8 +156,8 @@ export class MapComponent implements AfterViewInit {
    * Internal method used by the nest's event listener. This opens the nest-dialog to edit or delete nests.
    * @param vehicles 
    */
-  private openDialog(vehicles, nest){
-    let dialogRef = this.dialog.open(DialogNestsComponent, {
+  private openDialog(dialog, vehicles, nest){
+    let dialogRef = this.dialog.open(dialog, {
       data: {vehicles: vehicles},
       disableClose: true
     });

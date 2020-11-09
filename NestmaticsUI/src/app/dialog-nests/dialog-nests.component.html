@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Ammount of Vehicles: {{data.vehicles}}</h1>
 
-<input type="number" min="0" max="100" onkeydown="return !isNaN(Number(event.key))" [(ngModel)]="newAmmount"/>
+<input matInput type="number" min="0" max="100" onkeydown="return !isNaN(Number(event.key))" [(ngModel)]="newAmmount"/>
 
-<button (click)="updateNest()">update</button>
-<button (click)="deleteNest()">Delete</button>
+<button (click)="updateNest()" mat-raised-button color="primary">update</button>
+<button (click)="deleteNest()" mat-raised-button color="primary">Delete</button>
