@@ -3,6 +3,7 @@ import { MapComponent } from '../map/map.component';
 import { PlaybackComponent } from '../playback/playback.component'
 import { PredictionComponent } from '../prediction/prediction.component';
 import { ExperimentComponent } from '../experiment/experiment.component';
+import { ServiceAreaComponent } from '../service-area/service-area.component';
 
 
 @Component({ 
@@ -30,6 +31,9 @@ export class MainComponent implements OnInit {
     }
     if(comp == "experiment"){
       this.currentComponent = ExperimentComponent;
+    }
+    if(comp == "service"){
+      this.currentComponent = ServiceAreaComponent;
     }
   }
 }

@@ -10,9 +10,8 @@ import { MainComponent } from './main/main.component';
 const routes: Routes = [
   {path: '', component: MainComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'service-area', component: ServiceAreaComponent},
   {path: 'experiment', component: ExperimentComponent},
-  {path: 'main', component: MainComponent}
+  {path: 'main', component: MainComponent},                                               
 ];
 
 @NgModule({

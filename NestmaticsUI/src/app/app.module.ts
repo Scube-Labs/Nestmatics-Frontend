@@ -16,6 +16,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { MainComponent } from './main/main.component';
 import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { PlaybackComponent } from './playback/playback.component';
+import { ServiceAreaComponent } from './service-area/service-area.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { PlaybackComponent } from './playback/playback.component';
     ExperimentComponent,
     MainComponent,
     DialogNestsComponent,
-    PlaybackComponent
+    PlaybackComponent,
+    ServiceAreaComponent
   ],
   imports: [
     LeafletModule,
