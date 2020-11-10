@@ -18,6 +18,12 @@ import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { PlaybackComponent } from './playback/playback.component';
 import { ServiceAreaComponent } from './service-area/service-area.component';
 import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/auth.guard'
+
+//Google Auth Modules
+import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
+import { GoogleLoginProvider } from 'angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -31,6 +37,7 @@ import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
     PlaybackComponent,
     ServiceAreaComponent,
     DialogAreasComponent,
+    LoginComponent
   ],
   imports: [
     LeafletModule,
@@ -42,8 +49,27 @@ import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
     AngularFileUploaderModule,
     HttpClientModule,
     CalendarHeatmapModule,
+    SocialLoginModule
   ],
-  providers: [CalendarComponent],
+  providers: [
+    AuthGuard,
+    LoginComponent,
+    CalendarComponent,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '724257522743-odkrelv6iqnao7ns1itdufdo2ihhpo5c.apps.googleusercontent.com'
+            )
+          }
+        ]
+      } as SocialAuthServiceConfig,
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [DialogNestsComponent, DialogAreasComponent]
 })

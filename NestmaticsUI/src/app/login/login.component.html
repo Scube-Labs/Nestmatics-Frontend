@@ -1,1 +1,23 @@
-<body>login works!</body>
+<div class="login-box">
+    <mat-card class="mat-elevation-z8">
+      <mat-card-header>
+        <mat-card-title>Nestmatics</mat-card-title>
+        
+      </mat-card-header>
+      <mat-card-content class="login-row">
+        
+        <button mat-raised-button color="primary" (click)="login()">
+          Sign In 
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="user">
+      <img src="{{ user.photoUrl }}">
+      <div>
+        <h4>{{ user.name }}</h4>
+        <p>{{ user.email }}</p>
+      </div>
+    </div>
+    
+  </div>

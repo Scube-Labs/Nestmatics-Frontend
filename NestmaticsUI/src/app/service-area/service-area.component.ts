@@ -15,15 +15,16 @@ export class ServiceAreaComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map
 
-  calendarComponent: CalendarComponent = new CalendarComponent();
+  calendarComponent: CalendarComponent = new CalendarComponent(); //Calendar component reference
   defaultServiceArea = undefined; //Default area selected if a used area is deleted
 
   areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   nests: string ='http://localhost:3000/nests' //Nest Data End-Point
 
+  //Maximum area for the service area.
   maxArea: any = [[18.183610921675665,-67.17015266418457],[18.183610921675665,-67.11831092834473],[18.227965441672286,-67.11831092834473],[18.227965441672286,-67.17015266418457]]
-  currArea = {};
+  currArea = {}; // Current area selected
 
 
   constructor(
@@ -99,6 +100,12 @@ export class ServiceAreaComponent implements AfterViewInit {
     });
 
     })
+
+    /**
+     * Inner function to confirm if a point is inside a polygon using geoJson raytracing technique.
+     * @param point Point to be evaluated
+     * @param poly Polygon to used for evaluation.
+     */
     function isMarkerInsidePolygon(point, poly) {
       var polyPoints = poly;
       var x = point.lat, y = point.lng;
@@ -224,6 +231,9 @@ export class ServiceAreaComponent implements AfterViewInit {
     })
   }
 
+  /**
+   * Retrieve the default area to be used if a selected area is deleted.
+   */
   private getDefaultArea() {
     this.http.get(this.areas).subscribe((res: any) => {
       if(res.length >  0) {

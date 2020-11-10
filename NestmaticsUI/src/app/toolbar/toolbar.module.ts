@@ -1,3 +1,7 @@
+/**
+ * Module used to import the necesary material design components to use on the application.
+ */
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
+import { MatCardModule } from '@angular/material/card'
 
 const MaterialComponents = [
   BrowserModule,
@@ -21,7 +26,8 @@ const MaterialComponents = [
   MatFormFieldModule,
   MatInputModule,
   MatNativeDateModule,
-  MatDialogModule
+  MatDialogModule,
+  MatCardModule
 ]
 
 @NgModule({

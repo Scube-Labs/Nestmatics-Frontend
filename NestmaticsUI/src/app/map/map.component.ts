@@ -30,6 +30,10 @@ export class MapComponent implements AfterViewInit {
     this.initialize();
   }
 
+  /**
+   * Main initialization function.
+   * Initializes all the necesari components in the specified order.
+   */
   private initialize() {
 
     this.initMap();
@@ -49,7 +53,6 @@ export class MapComponent implements AfterViewInit {
         this.map.fitBounds(polygon.getBounds());
         this.map.setMaxBounds(polygon.getBounds());
         this.map.options.minZoom = this.map.getZoom();
-        console.log("entered");
       })
     }  
     else {
@@ -154,7 +157,9 @@ export class MapComponent implements AfterViewInit {
 
   /**
    * Internal method used by the nest's event listener. This opens the nest-dialog to edit or delete nests.
-   * @param vehicles 
+   * @param dialog The dialog component to be used for displaying
+   * @param vehicles Ammount of vehicles in the nest
+   * @param nest Specifies nest reference
    */
   private openDialog(dialog, vehicles, nest){
     let dialogRef = this.dialog.open(dialog, {

@@ -16,11 +16,17 @@ export class DialogNestsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * This function updates the selected nest's vehicle ammount. 0 <= value <= 100
+   */
   updateNest() {
     if(this.newAmmount > 100) this.newAmmount = 100;
     this.dialogRef.close(this.newAmmount);
   }
 
+  /**
+   * This function deletes the selected nest from the database.
+   */
   deleteNest() {
     this.dialogRef.close(-1);
     

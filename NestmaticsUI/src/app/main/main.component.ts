@@ -21,6 +21,10 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * The purpose of this function is to toggle what components are being displayed in the main view.
+   * @param comp Contains the string used for the component selections.
+   */
   changeComponent(comp: string) {
     if(comp == "map"){
       this.currentComponent = MapComponent;

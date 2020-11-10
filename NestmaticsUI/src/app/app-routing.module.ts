@@ -7,8 +7,10 @@ import { PredictionComponent } from './prediction/prediction.component';
 import { ExperimentComponent } from './experiment/experiment.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MainComponent } from './main/main.component';
+import { AuthGuard } from './guards/auth.guard';
+
 const routes: Routes = [
-  {path: '', component: MainComponent},
+  {path: '', component: MainComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'experiment', component: ExperimentComponent},
 ];

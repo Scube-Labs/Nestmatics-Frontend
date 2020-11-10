@@ -40,6 +40,9 @@ export class DialogAreasComponent implements OnInit {
 
   }
 
+  /**
+   * Function to select the service area to be used
+   */
   selectArea() {
 
     this.dialogRef.close(-3);
