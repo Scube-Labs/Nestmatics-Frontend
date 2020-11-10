@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
+import { CalendarComponent } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-prediction',
@@ -12,11 +13,16 @@ import 'leaflet.heat/dist/leaflet-heat.js'
 export class PredictionComponent implements AfterViewInit {
   toolOpened = true;
   private map;
-  private data = [{lat:18.208857284769497, lng:-67.1403479576111, time:0},{lat:18.212057410313477, lng:-67.1408522129059, time:40000}];
+
+  calendarComponent: CalendarComponent = new CalendarComponent();
+  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   
-  nests: string = '/assets/map.json';
-  restNests: string ='http://localhost:3000/nests'
+  areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
+  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
+  nests: string ='http://localhost:3000/nests' //Nest Data End-Point
   restPredict: string ='http://localhost:3000/predictions'
+  
+  currHeat;
   
   constructor(private http: HttpClient) { }
 
@@ -25,22 +31,36 @@ export class PredictionComponent implements AfterViewInit {
     this.loadNests();
     this.initTiles();
     this.restrict();
-    this.predict();
+    this.predict(1);
     
   }
-  private restrict(): void{
-    var polygon = L.polygon([
-      [18.183610921675665, -67.17015266418457],
-      [18.183610921675665, -67.11831092834473],
-      [18.227965441672286, -67.11831092834473],
-      [18.227965441672286,-67.17015266418457]
-  ]);
 
-    this.map.fitBounds(polygon.getBounds());
-    this.map.setMaxBounds(polygon.getBounds());
-    this.map.options.minZoom = this.map.getZoom();
-    
-  }  
+  formatLabel(value: number) {
+    if (value >= 0) {
+      return 'hr' + Math.round(value);
+    }
+    return value;
+  }
+
+  getPrediction(day: number) {
+    this.predict(day);
+  }
+
+  /**
+   * Restrict the map view to only the selected Service Area
+   */
+  private restrict(): void{
+    if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
+      this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
+        var polygon = L.polygon(res[0].coordinates);
+        this.map.fitBounds(polygon.getBounds());
+        this.map.setMaxBounds(polygon.getBounds());
+        this.map.options.minZoom = this.map.getZoom();
+      })
+    }  
+    else {
+    }
+  } 
   
   private initMap(): void {
     this.map = (L as any).map('prediction', {
@@ -64,7 +84,7 @@ export class PredictionComponent implements AfterViewInit {
 
   private loadNests(): void {
     
-    this.http.get(this.restNests).subscribe((res: any) => {
+    this.http.get(this.nests).subscribe((res: any) => {
       for (const c of res) {
         const lat = c.coordinates[0];
         const lon = c.coordinates[1];
@@ -73,10 +93,15 @@ export class PredictionComponent implements AfterViewInit {
     });
   }
 
-  private predict(): void {
+  private predict(day : number): void {
+    console.log(day);
+    if(typeof this.currHeat != 'undefined'){
+      this.map.removeLayer(this.currHeat);
+    }
     this.http.get(this.restPredict).subscribe((res: any) => {
       for (const c of res) {
-        var heat = (L as any).heatLayer(c[7], {radius: 30}).addTo(this.map);
+        console.log(res);
+        this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
       }
     });
   }
