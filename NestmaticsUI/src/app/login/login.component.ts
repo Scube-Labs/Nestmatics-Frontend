@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
   user: SocialUser;
   static loggedIn: boolean;
   compLogin = LoginComponent
+  approvedEmail: string = "eduardo.santiago8@upr.edu";
   
   constructor(private router: Router, private authService: SocialAuthService) {}
 
@@ -23,9 +24,17 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.authService.authState.subscribe((user) => {
       localStorage.setItem('email', user.email);
-      localStorage.setItem('loggedIn', JSON.stringify(user != null));
+      if(localStorage.getItem('email') == this.approvedEmail){
+        localStorage.setItem('loggedIn', JSON.stringify(user != null));
+      }
+
+      else{
+        alert("Account is not approved");
+        this.logout();
+      }
       
       if (localStorage.getItem('loggedIn')) {
+        //validate if the user is approved
         this.router.navigate(['/']);
      }
     });
