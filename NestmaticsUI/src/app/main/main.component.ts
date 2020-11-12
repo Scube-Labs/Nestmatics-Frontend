@@ -5,7 +5,9 @@ import { PredictionComponent } from '../prediction/prediction.component';
 import { ExperimentComponent } from '../experiment/experiment.component';
 import { ServiceAreaComponent } from '../service-area/service-area.component';
 import { CalendarComponent } from '../calendar/calendar.component';
-
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component'
 
 @Component({ 
   selector: 'app-main',
@@ -16,7 +18,10 @@ export class MainComponent implements OnInit {
   toolOpened = true;
   currentComponent: any = ServiceAreaComponent;
   calendarComponent: CalendarComponent = new CalendarComponent();
-  constructor() { }
+  
+  constructor(
+    private http: HttpClient,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -41,5 +46,13 @@ export class MainComponent implements OnInit {
     if(comp == "service"){
       this.currentComponent = ServiceAreaComponent;
     }
+  }
+
+  protected openDialog(){
+    let dialogRef = this.dialog.open(DialogUploadComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    })
   }
 }

@@ -24,16 +24,6 @@
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
-        -67.1408522129059,
-        18.212057410313477
-      ],
-      "vehicles": 7,
-      "id": 4
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
         -67.1451759338379,
         18.205626525135333
       ],
@@ -460,16 +450,6 @@
       "id": 67
     },
     {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14453220367433,
-        18.211211522973027
-      ],
-      "vehicles": 4,
-      "id": 68
-    },
-    {
       "serviceArea": "San Juan",
       "name": "name",
       "coordinates": [
@@ -488,6 +468,36 @@
       ],
       "vehicles": 0,
       "id": 70
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.14476823806764,
+        18.211135087167563
+      ],
+      "vehicles": 0,
+      "id": 71
+    },
+    {
+      "serviceArea": "Isabela",
+      "name": "name",
+      "coordinates": [
+        -67.02875196933748,
+        18.504934302341976
+      ],
+      "vehicles": 0,
+      "id": 72
+    },
+    {
+      "serviceArea": "Isabela",
+      "name": "name",
+      "coordinates": [
+        -67.02402591705324,
+        18.50463925272917
+      ],
+      "vehicles": 0,
+      "id": 73
     }
   ],
   "areas": [
@@ -556,6 +566,28 @@
         }
       ],
       "id": 3
+    },
+    {
+      "name": "Isabela",
+      "coordinates": [
+        {
+          "lat": 18.47948694834921,
+          "lng": -67.05097675323488
+        },
+        {
+          "lat": 18.514853777809684,
+          "lng": -67.05097675323488
+        },
+        {
+          "lat": 18.514853777809684,
+          "lng": -67.01376914978029
+        },
+        {
+          "lat": 18.47948694834921,
+          "lng": -67.01376914978029
+        }
+      ],
+      "id": 4
     }
   ],
   "predictions": [
@@ -3206,7 +3238,5 @@
       ]
     }
   ],
-  "profile": {
-    "name": "typicode"
-  }
+  "files": {}
 }

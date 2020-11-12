@@ -7,7 +7,6 @@ import { MapComponent } from './map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ToolbarModule } from './toolbar/toolbar.module';
 import { FormsModule } from '@angular/forms';
-import { AngularFileUploaderModule } from "angular-file-uploader";
 import { HttpClientModule } from "@angular/common/http";
 import { PredictionComponent } from './prediction/prediction.component';
 import { ExperimentComponent } from './experiment/experiment.component';
@@ -19,11 +18,13 @@ import { PlaybackComponent } from './playback/playback.component';
 import { ServiceAreaComponent } from './service-area/service-area.component';
 import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './guards/auth.guard'
+import { AuthGuard } from './guards/auth.guard';
+import { AngularFileUploaderModule } from 'angular-file-uploader';
 
 //Google Auth Modules
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
+import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { GoogleLoginProvider } from 'angularx-social-login';
     PlaybackComponent,
     ServiceAreaComponent,
     DialogAreasComponent,
-    LoginComponent
+    LoginComponent,
+    DialogUploadComponent
   ],
   imports: [
     LeafletModule,
@@ -71,6 +73,6 @@ import { GoogleLoginProvider } from 'angularx-social-login';
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent, DialogAreasComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent]
 })
 export class AppModule { }

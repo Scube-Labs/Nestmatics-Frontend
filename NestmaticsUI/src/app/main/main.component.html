@@ -9,12 +9,8 @@
                 <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('playback')" mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon><p>Play</p></button>
                 <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('prediction')" mat-stroked-button><mat-icon class="toolbarButtons">blur_on</mat-icon><p>Predictions</p></button>
                 <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('experiment')" mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon><p>Experiment</p></button>
-                <button [disabled]="!calendarComponent.calComponent.isSelected" mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon><p>Upload</p></button>
-                <!-- <angular-file-uploader #fileUpload1
-                      [config]="afuConfig"
-                      [resetUpload]=resetVar
-                      (ApiResponse)="DocUpload($event)">
-                </angular-file-uploader> -->
+                <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="openDialog()" mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon><p>Upload</p></button>
+                
             </div>
         </mat-sidenav>
         <mat-sidenav-content>
