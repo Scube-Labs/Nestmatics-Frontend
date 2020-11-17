@@ -450,26 +450,6 @@
       "id": 67
     },
     {
-      "serviceArea": "San Juan",
-      "name": "name",
-      "coordinates": [
-        -66.06926411390306,
-        18.45418338505445
-      ],
-      "vehicles": 0,
-      "id": 69
-    },
-    {
-      "serviceArea": "San Juan",
-      "name": "name",
-      "coordinates": [
-        -66.0705864429474,
-        18.453750856568213
-      ],
-      "vehicles": 0,
-      "id": 70
-    },
-    {
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
@@ -498,6 +478,16 @@
       ],
       "vehicles": 0,
       "id": 73
+    },
+    {
+      "serviceArea": "Mayaguez",
+      "name": "name",
+      "coordinates": [
+        -67.1369254589081,
+        18.209606364013407
+      ],
+      "vehicles": 4,
+      "id": 74
     }
   ],
   "areas": [

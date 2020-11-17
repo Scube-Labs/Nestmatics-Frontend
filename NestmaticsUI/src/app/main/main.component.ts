@@ -48,7 +48,7 @@ export class MainComponent implements OnInit {
     }
   }
 
-  protected openDialog(){
+  public openDialog(){
     let dialogRef = this.dialog.open(DialogUploadComponent);
 
     dialogRef.afterClosed().subscribe(result => {
