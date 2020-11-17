@@ -1,4 +1,6 @@
 import { Component} from '@angular/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+
 
 @Component({
   selector: 'app-calendar',
@@ -11,6 +13,17 @@ export class CalendarComponent {
   static areaName = undefined;
   static isSelected = false;
   calComponent = CalendarComponent;
+  
+  dataFilter = (d: Date | null): boolean => {
+    const date = (d || new Date()).getDate();
+
+    // Allow specific dates
+    return date === 1 || date === 6;
+  }
+
+  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    console.log(event.value);
+  }
 
   constructor() {
   }

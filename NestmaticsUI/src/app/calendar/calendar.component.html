@@ -3,8 +3,8 @@
 <div class="areaTitle">{{calComponent.areaName}}</div>
     <mat-form-field appearance="fill">
         <mat-label>Calendar</mat-label>
-        <input matInput [matDatepicker]="calendarPicker">
+        <input disabled (dateInput)="addEvent('input', $event)" [matDatepickerFilter]="dataFilter" matInput [matDatepicker]="calendarPicker">
         <mat-datepicker-toggle [for]="calendarPicker" matSuffix></mat-datepicker-toggle>
-        <mat-datepicker #calendarPicker></mat-datepicker>
+        <mat-datepicker disabled = "false" #calendarPicker></mat-datepicker>
     </mat-form-field>
 </div>
