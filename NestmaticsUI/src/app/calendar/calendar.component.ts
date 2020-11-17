@@ -14,9 +14,9 @@ export class CalendarComponent {
 
   static areaName = undefined;
   static isSelected = false;
+  static hasDate = false;
   calComponent = CalendarComponent;
-  
-  static selectedDate;
+  static selectedDate = undefined;
 
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   
@@ -28,17 +28,21 @@ export class CalendarComponent {
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value);
-    CalendarComponent.selectedDate = moment(event.value).format('YYYY-MM-DD');
-    console.log(CalendarComponent.selectedDate);
+    CalendarComponent.updateDateSelected(moment(event.value).format('YYYY-MM-DD'));
   }
 
   constructor() {
-    CalendarComponent.selectedDate = moment(new Date()).format('YYYY-MM-DD');
   }
 
   static getDateSelected() {
     return CalendarComponent.selectedDate;
+  }
+
+  static updateDateSelected(date: String) {
+    this.selectedDate = date;
+    this.hasDate = true;
+  }
+
     /**
    * Update the selected service area name.
    * @param name Name to be used when updating the selected service area name
@@ -55,6 +59,5 @@ export class CalendarComponent {
   static getAreaSelected() {
     return CalendarComponent.areaName;
   }
-  
 
 }

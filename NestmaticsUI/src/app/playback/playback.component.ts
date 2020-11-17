@@ -17,6 +17,7 @@ export class PlaybackComponent implements AfterViewInit {
 
   calendarComponent: CalendarComponent = new CalendarComponent();
   private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
+  private dateSelected = CalendarComponent.getDateSelected(); //Variable to obtain the date selected
 
   areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
@@ -25,7 +26,9 @@ export class PlaybackComponent implements AfterViewInit {
   
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) { }
+      public dialog: MatDialog) { 
+        this.getDatesWithData();
+      }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -101,8 +104,9 @@ export class PlaybackComponent implements AfterViewInit {
    */
   private playback(): void {
     setTimeout(() => {
-    this.http.get(this.rides).subscribe((res: any) => {
-      this.trackplayback = (L as any).trackplayback(res[0].date0, this.map, {
+    this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
+      console.log(res);
+      this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
         trackPointOptions: {
           // whether draw track point
           isDraw: true
@@ -132,5 +136,10 @@ export class PlaybackComponent implements AfterViewInit {
    */
   public playbackReplay() {
     this.trackplayback.rePlaying();
+  }
+
+  public getDatesWithData() {
+    this.http.get(this.rides).subscribe((res: any) => {
+    })
   }
 }
