@@ -1,6 +1,8 @@
 import { Component} from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import * as _moment from 'moment';
 
+const moment = _moment;
 
 @Component({
   selector: 'app-calendar',
@@ -14,6 +16,10 @@ export class CalendarComponent {
   static isSelected = false;
   calComponent = CalendarComponent;
   
+  static selectedDate;
+
+  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
+  
   dataFilter = (d: Date | null): boolean => {
     const date = (d || new Date()).getDate();
 
@@ -23,12 +29,17 @@ export class CalendarComponent {
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     console.log(event.value);
+    CalendarComponent.selectedDate = moment(event.value).format('YYYY-MM-DD');
+    console.log(CalendarComponent.selectedDate);
   }
 
   constructor() {
+    CalendarComponent.selectedDate = moment(new Date()).format('YYYY-MM-DD');
   }
 
-  /**
+  static getDateSelected() {
+    return CalendarComponent.selectedDate;
+    /**
    * Update the selected service area name.
    * @param name Name to be used when updating the selected service area name
    */
@@ -44,6 +55,6 @@ export class CalendarComponent {
   static getAreaSelected() {
     return CalendarComponent.areaName;
   }
-
   
+
 }
