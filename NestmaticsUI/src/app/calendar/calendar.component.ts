@@ -12,19 +12,24 @@ const moment = _moment;
 
 export class CalendarComponent {
 
+  calComponent = CalendarComponent;
+
+  //For Service Area
   static areaName = undefined;
   static isSelected = false;
+
+  //For Date
   static hasDate = false;
-  calComponent = CalendarComponent;
   static selectedDate = undefined;
+  static availableDatesList: string[] = [];
 
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   
   dataFilter = (d: Date | null): boolean => {
-    const date = (d || new Date()).getDate();
+    const date = (d || new Date());
 
     // Allow specific dates
-    return date === 1 || date === 6;
+    return (this.calComponent.availableDatesList.includes((moment(date).format('YYYY-MM-DD'))));
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {

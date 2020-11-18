@@ -94,13 +94,11 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   private predict(day : number): void {
-    console.log(day);
     if(typeof this.currHeat != 'undefined'){
       this.map.removeLayer(this.currHeat);
     }
     this.http.get(this.restPredict).subscribe((res: any) => {
       for (const c of res) {
-        console.log(res);
         this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
       }
     });

@@ -26,9 +26,7 @@ export class PlaybackComponent implements AfterViewInit {
   
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) { 
-        this.getDatesWithData();
-      }
+      public dialog: MatDialog) {}
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -105,7 +103,6 @@ export class PlaybackComponent implements AfterViewInit {
   private playback(): void {
     setTimeout(() => {
     this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
-      console.log(res);
       this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
         trackPointOptions: {
           // whether draw track point
@@ -138,8 +135,5 @@ export class PlaybackComponent implements AfterViewInit {
     this.trackplayback.rePlaying();
   }
 
-  public getDatesWithData() {
-    this.http.get(this.rides).subscribe((res: any) => {
-    })
-  }
+  
 }

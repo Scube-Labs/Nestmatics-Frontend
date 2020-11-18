@@ -22,8 +22,6 @@ export class ServiceAreaComponent implements AfterViewInit {
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   nests: string ='http://localhost:3000/nests' //Nest Data End-Point
 
-  //Maximum area for the service area.
-  maxArea: any = [[18.183610921675665,-67.17015266418457],[18.183610921675665,-67.11831092834473],[18.227965441672286,-67.11831092834473],[18.227965441672286,-67.17015266418457]]
   currArea = {}; // Current area selected
 
 
@@ -212,6 +210,7 @@ export class ServiceAreaComponent implements AfterViewInit {
           this.map.off();
           this.map.remove();
           this.initialize();
+          this.getDatesWithData(); //Get the dates that have data of the selected service area.
         }
         else{
           alert("Unnamed selection is not allowed. Rename the Service Area and try again")
@@ -245,6 +244,21 @@ export class ServiceAreaComponent implements AfterViewInit {
         CalendarComponent.updateAreaSelected(undefined);
         this.calendarComponent.calComponent.isSelected = false;
       }
+    })
+  }
+
+  /**
+   * Retrieve the list of dates of the selected service area that contain ride data.
+   */
+  public getDatesWithData() {
+    var tempData: string[] = [];
+    this.http.get(this.rides + "?area=" + CalendarComponent.getAreaSelected()).subscribe((res: any) => {
+      console.log(res);
+      for(var i=0; i<res.length; i++){
+        console.log(res[i].date);
+        tempData.push(res[i].date)
+      }
+      this.calendarComponent.calComponent.availableDatesList = tempData;
     })
   }
 }
