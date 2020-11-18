@@ -4,6 +4,8 @@ import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
 import { CalendarComponent } from '../calendar/calendar.component';
+import { DialogExperimentListComponent } from '../dialog-experiment-list/dialog-experiment-list.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-experiment',
@@ -17,15 +19,15 @@ export class ExperimentComponent implements AfterViewInit {
   private areaSelected = CalendarComponent.getAreaSelected();
   areas: string = 'http://localhost:3000/areas'
   rides: string = 'http://localhost:3000/rides'
-  nests: string ='http://localhost:3000/nests'
+  nests: string = 'http://localhost:3000/nests'
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    public dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     this.initMap();
     this.loadNests();
     this.initTiles();
-    //this.drawControl();
     this.restrict();
   }
 
@@ -59,13 +61,36 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   private loadNests(): void {
-    
     this.http.get(this.nests + "?serviceArea=" + this.areaSelected).subscribe((res: any) => {
       for (const c of res) {
         const lat = c.coordinates[0];
         const lon = c.coordinates[1];
-        (L as any).circle([lon, lat], 20).addTo(this.map);
+        var currNest = (L as any).circle([lon, lat], 20).addTo(this.map);
+        currNest.bindTooltip(
+          "Vehicles: " + c.vehicles
+        );
+        currNest.addEventListener("click", ()=> {
+          this.openDialog(DialogExperimentListComponent, c.vehicles, c);
+        })
       }
     });
+  }
+
+  private openDialog(dialog, vehicles, nest){
+    let dialogRef = this.dialog.open(dialog, {
+      data: {vehicles: vehicles,
+                    id: nest.id},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === -1){
+        this.http.delete(this.nests + "/" + nest.id).subscribe(res => {
+          this.map.off();
+          this.map.remove();
+        });
+      }
+      else{
+      }
+    })
   }
 }

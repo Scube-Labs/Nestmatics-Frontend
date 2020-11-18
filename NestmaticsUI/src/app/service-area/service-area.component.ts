@@ -207,10 +207,13 @@ export class ServiceAreaComponent implements AfterViewInit {
 
         if(name != "Unnamed"){
           CalendarComponent.updateAreaSelected(name);
+          //this.calendarComponent.resetCalendar();
           this.map.off();
           this.map.remove();
           this.initialize();
           this.getDatesWithData(); //Get the dates that have data of the selected service area.
+          
+
         }
         else{
           alert("Unnamed selection is not allowed. Rename the Service Area and try again")

@@ -1,6 +1,7 @@
-import { Component} from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as _moment from 'moment';
+import { MatInput } from '@angular/material/input';
 
 const moment = _moment;
 
@@ -11,9 +12,12 @@ const moment = _moment;
 })
 
 export class CalendarComponent {
-
+  
+  @ViewChild('input', {
+    read: MatInput
+  }) input: MatInput;
+  
   calComponent = CalendarComponent;
-
   //For Service Area
   static areaName = undefined;
   static isSelected = false;
@@ -28,7 +32,7 @@ export class CalendarComponent {
   dataFilter = (d: Date | null): boolean => {
     const date = (d || new Date());
 
-    // Allow specific dates
+    // Allow specific dates. dates are listen in the availableDatesList array.
     return (this.calComponent.availableDatesList.includes((moment(date).format('YYYY-MM-DD'))));
   }
 
@@ -48,13 +52,13 @@ export class CalendarComponent {
     this.hasDate = true;
   }
 
-    /**
+  /**
    * Update the selected service area name.
    * @param name Name to be used when updating the selected service area name
    */
   static updateAreaSelected(name: string) {
     this.areaName = name;
-    this.isSelected = true;
+    this.isSelected = true; 
   }
 
   /**
@@ -63,6 +67,13 @@ export class CalendarComponent {
    */
   static getAreaSelected() {
     return CalendarComponent.areaName;
+  }
+
+  public resetCalendar() {
+    if(this.input.value != undefined){
+      this.input.value = undefined;
+      this.calComponent.hasDate = false;
+    }
   }
 
 }

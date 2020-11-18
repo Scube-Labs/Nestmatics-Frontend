@@ -37,7 +37,6 @@
         -67.14549779891969,
         18.205218854047093
       ],
-      "vehicles": 6,
       "id": 9
     },
     {
@@ -506,7 +505,6 @@
         -67.1398812532425,
         18.20805214838451
       ],
-      "vehicles": 4,
       "id": 76
     }
   ],
@@ -3237,5 +3235,31 @@
       ]
     }
   ],
-  "files": {}
+  "files": {},
+  "experiments": [
+    {
+      "id": 1,
+      "nestID": 10,
+      "experimentName": "Experiment 1",
+      "experiment": {}
+    },
+    {
+      "id": 2,
+      "nestID": 11,
+      "experimentName": "Experiment 2",
+      "experiment": {}
+    },
+    {
+      "id": 3,
+      "nestID": 12,
+      "experimentName": "Another Experiment",
+      "experiment": {}
+    },
+    {
+      "id": 4,
+      "nestID": 12,
+      "experimentName": "Crazy Experiment",
+      "experiment": {}
+    }
+  ]
 }

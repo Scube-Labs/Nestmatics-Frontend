@@ -25,6 +25,7 @@ import { AngularFileUploaderModule } from 'angular-file-uploader';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
 import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
+import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
     ServiceAreaComponent,
     DialogAreasComponent,
     LoginComponent,
-    DialogUploadComponent
+    DialogUploadComponent,
+    DialogExperimentListComponent
   ],
   imports: [
     LeafletModule,
@@ -73,6 +75,6 @@ import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent]
 })
 export class AppModule { }

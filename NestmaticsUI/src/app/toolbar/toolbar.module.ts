@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
 
 const MaterialComponents = [
   BrowserModule,
@@ -29,7 +30,8 @@ const MaterialComponents = [
   MatNativeDateModule,
   MatDialogModule,
   MatCardModule,
-  MatSliderModule
+  MatSliderModule,
+  MatListModule
 ]
 
 @NgModule({
