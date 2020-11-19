@@ -24,30 +24,10 @@
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
-        -67.1451759338379,
-        18.205626525135333
-      ],
-      "vehicles": 7,
-      "id": 8
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
         -67.14549779891969,
         18.205218854047093
       ],
       "id": 9
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.14389920234682,
-        18.20553479922366
-      ],
-      "vehicles": 1,
-      "id": 10
     },
     {
       "serviceArea": "Mayaguez",
