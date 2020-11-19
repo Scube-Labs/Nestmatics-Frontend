@@ -1,8 +1,12 @@
 <mat-selection-list #exp [multiple]="false">
+  <h1> Select an experiment</h1>
     <mat-list-option *ngFor="let exp of experiments" [value]="exp">
       {{exp}}
     </mat-list-option>
 </mat-selection-list>
+<p>
+  Option selected: {{exp.selectedOptions.selected[0]?.value}}
+</p>
   
-<button (click)="selectExperiment()" mat-raised-button color="primary">select</button>
+<button (click)="selectExperiment(exp)" mat-raised-button color="primary">select</button>
 <button (click)="createExperiment()" mat-raised-button color="accent">create new experiment</button>

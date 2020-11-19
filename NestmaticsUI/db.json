@@ -24,15 +24,6 @@
       "serviceArea": "Mayaguez",
       "name": "name",
       "coordinates": [
-        -67.14549779891969,
-        18.205218854047093
-      ],
-      "id": 9
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
         -67.14430689811708,
         18.204943675523243
       ],
@@ -477,40 +468,9 @@
       ],
       "vehicles": 0,
       "id": 75
-    },
-    {
-      "serviceArea": "Mayaguez",
-      "name": "name",
-      "coordinates": [
-        -67.1398812532425,
-        18.20805214838451
-      ],
-      "id": 76
     }
   ],
   "areas": [
-    {
-      "name": "Mayaguez",
-      "coordinates": [
-        {
-          "lat": 18.189278166799582,
-          "lng": -67.15586185455324
-        },
-        {
-          "lat": 18.22490827753195,
-          "lng": -67.15586185455324
-        },
-        {
-          "lat": 18.22490827753195,
-          "lng": -67.11835384368898
-        },
-        {
-          "lat": 18.189278166799582,
-          "lng": -67.11835384368898
-        }
-      ],
-      "id": 1
-    },
     {
       "name": "San Juan",
       "coordinates": [
@@ -576,6 +536,28 @@
         }
       ],
       "id": 4
+    },
+    {
+      "name": "Mayaguez",
+      "coordinates": [
+        {
+          "lat": 18.19633138727109,
+          "lng": -67.15852260589601
+        },
+        {
+          "lat": 18.231756250599982,
+          "lng": -67.15852260589601
+        },
+        {
+          "lat": 18.231756250599982,
+          "lng": -67.12110042572023
+        },
+        {
+          "lat": 18.19633138727109,
+          "lng": -67.12110042572023
+        }
+      ],
+      "id": 5
     }
   ],
   "predictions": [
@@ -3218,28 +3200,36 @@
   "files": {},
   "experiments": [
     {
-      "id": 1,
-      "nestID": 10,
-      "experimentName": "Experiment 1",
-      "experiment": {}
+      "_id": 1,
+      "nest": 13,
+      "name": "First Experiment",
+      "config1": 1,
+      "config2": 2,
+      "date": "2020-11-06"
     },
     {
-      "id": 2,
-      "nestID": 11,
-      "experimentName": "Experiment 2",
-      "experiment": {}
+      "_id": 2,
+      "nest": 12,
+      "name": "Test",
+      "config1": 1,
+      "config2": 2,
+      "date": "2020-11-06"
     },
     {
-      "id": 3,
-      "nestID": 12,
-      "experimentName": "Another Experiment",
-      "experiment": {}
+      "_id": 3,
+      "nest": 12,
+      "name": "Experiment 3",
+      "config1": 1,
+      "config2": 2,
+      "date": "2020-11-06"
     },
     {
-      "id": 4,
-      "nestID": 12,
-      "experimentName": "Crazy Experiment",
-      "experiment": {}
+      "_id": 4,
+      "nest": 12,
+      "name": "Final Experiment",
+      "config1": 1,
+      "config2": 2,
+      "date": "2020-11-06"
     }
   ]
 }

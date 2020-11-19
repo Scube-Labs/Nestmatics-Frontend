@@ -26,6 +26,7 @@ import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-logi
 import { GoogleLoginProvider } from 'angularx-social-login';
 import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
+import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-e
     DialogAreasComponent,
     LoginComponent,
     DialogUploadComponent,
-    DialogExperimentListComponent
+    DialogExperimentListComponent,
+    DialogExperimentComponent
   ],
   imports: [
     LeafletModule,
@@ -75,6 +77,6 @@ import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-e
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent]
 })
 export class AppModule { }

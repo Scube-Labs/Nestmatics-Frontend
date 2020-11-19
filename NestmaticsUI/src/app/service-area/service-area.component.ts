@@ -256,9 +256,7 @@ export class ServiceAreaComponent implements AfterViewInit {
   public getDatesWithData() {
     var tempData: string[] = [];
     this.http.get(this.rides + "?area=" + CalendarComponent.getAreaSelected()).subscribe((res: any) => {
-      console.log(res);
       for(var i=0; i<res.length; i++){
-        console.log(res[i].date);
         tempData.push(res[i].date)
       }
       this.calendarComponent.calComponent.availableDatesList = tempData;

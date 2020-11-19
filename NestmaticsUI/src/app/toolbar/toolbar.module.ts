@@ -31,7 +31,7 @@ const MaterialComponents = [
   MatDialogModule,
   MatCardModule,
   MatSliderModule,
-  MatListModule
+  MatListModule,
 ]
 
 @NgModule({

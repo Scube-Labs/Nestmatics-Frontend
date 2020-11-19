@@ -5,3 +5,23 @@
       <div id="experiment"></div>
     </div>
 </div>
+
+<mat-card class="experiment-card">
+  <mat-card-header>
+    <mat-card-title> Experiments: </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="experiment-list">
+      <mat-selection-list #exp [multiple]="false">
+        <mat-list-option *ngFor="let exp of experiments" [value]="exp">
+            {{exp}}
+          </mat-list-option>
+      </mat-selection-list>
+  </mat-card-content>
+
+  <p>
+    Option selected: {{exp.selectedOptions.selected[0]?.value}}
+  </p>
+
+  <button (click)="getIndexOfExperiment(exp)" mat-raised-button color="primary">select</button>
+</mat-card>

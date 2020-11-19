@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
 import { CalendarComponent } from '../calendar/calendar.component';
 import { DialogExperimentListComponent } from '../dialog-experiment-list/dialog-experiment-list.component';
+import { DialogExperimentComponent } from '../dialog-experiment/dialog-experiment.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -20,6 +21,10 @@ export class ExperimentComponent implements AfterViewInit {
   areas: string = 'http://localhost:3000/areas'
   rides: string = 'http://localhost:3000/rides'
   nests: string = 'http://localhost:3000/nests'
+  exp: string = 'http://localhost:3000/experiments';
+  
+  experiments: string[] = [];
+  experimentIDs: string[] = [];
   
   constructor(private http: HttpClient,
     public dialog: MatDialog) { }
@@ -29,6 +34,7 @@ export class ExperimentComponent implements AfterViewInit {
     this.loadNests();
     this.initTiles();
     this.restrict();
+    this.getAllExperiments();
   }
 
   private restrict(): void{
@@ -70,26 +76,52 @@ export class ExperimentComponent implements AfterViewInit {
           "Vehicles: " + c.vehicles
         );
         currNest.addEventListener("click", ()=> {
-          this.openDialog(DialogExperimentListComponent, c.vehicles, c);
+          this.openDialog(DialogExperimentListComponent, c);
         })
       }
     });
   }
 
-  private openDialog(dialog, vehicles, nest){
+  private openDialog(dialog, nest){
     let dialogRef = this.dialog.open(dialog, {
-      data: {vehicles: vehicles,
+      data: {vehicles: nest.vehicles,
                     id: nest.id},
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result === -1){
-        this.http.delete(this.nests + "/" + nest.id).subscribe(res => {
-          this.map.off();
-          this.map.remove();
-        });
+        //Create New Experiment
       }
-      else{
+      else if(typeof result != 'undefined'){
+        this.openExperimentDialog(result);
+      }
+    })
+  }
+
+  public getIndexOfExperiment(expID){
+    if(typeof expID._value != 'undefined'){
+      this.openExperimentDialog(this.experimentIDs[this.experiments.indexOf(expID.selectedOptions.selected[0]._value)])
+    }
+  }
+
+  public openExperimentDialog(expID){
+    if(typeof expID != 'undefined'){
+      let dialogRef = this.dialog.open(DialogExperimentComponent);
+
+      dialogRef.afterClosed().subscribe(result => {
+      })
+    }
+  }
+
+  /**
+   * Retrieve the list of all the experiments in the selected service area
+   */
+  private getAllExperiments() {
+    this.http.get(this.exp).subscribe((res: any) => {
+      if(res.length == 0) alert("No Experiments have been created yet.")
+      for(var i=0; i<res.length; i++){
+        this.experiments.push(res[i].name);
+        this.experimentIDs.push(res[i]._id);
       }
     })
   }
