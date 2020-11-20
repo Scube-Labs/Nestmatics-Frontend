@@ -20,6 +20,7 @@ export class CalendarComponent {
   calComponent = CalendarComponent;
   //For Service Area
   static areaName = undefined;
+  static areaSelectedID = undefined;
   static isSelected = false;
 
   //For Date
@@ -56,8 +57,9 @@ export class CalendarComponent {
    * Update the selected service area name.
    * @param name Name to be used when updating the selected service area name
    */
-  static updateAreaSelected(name: string) {
+  static updateAreaSelected(id: string, name: string) {
     this.areaName = name;
+    this.areaSelectedID = id;
     this.isSelected = true; 
   }
 
@@ -67,6 +69,10 @@ export class CalendarComponent {
    */
   static getAreaSelected() {
     return CalendarComponent.areaName;
+  }
+
+  static getAreaSelectedID(){
+    
   }
 
   public resetCalendar() {

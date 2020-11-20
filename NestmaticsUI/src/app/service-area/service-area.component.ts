@@ -17,8 +17,9 @@ export class ServiceAreaComponent implements AfterViewInit {
 
   calendarComponent: CalendarComponent = new CalendarComponent(); //Calendar component reference
   defaultServiceArea = undefined; //Default area selected if a used area is deleted
+  defaultServiceAreaID = undefined;
 
-  areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
+  areas: string = 'http://localhost/nestmatics/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   nests: string ='http://localhost:3000/nests' //Nest Data End-Point
 
@@ -87,8 +88,11 @@ export class ServiceAreaComponent implements AfterViewInit {
        }
        if(valid){
         this.http.post(this.areas, {
-          "name": "Unnamed",
-          "coordinates": layer._latlngs[0]
+          "area_name": "--unnamed",
+          "coords": 
+            {
+              "coordinates": layer._latlngs[0]
+            }
         }).subscribe(res => {
             this.map.off();
             this.map.remove();
@@ -165,13 +169,14 @@ export class ServiceAreaComponent implements AfterViewInit {
    */
   private loadAreas(): void {
     this.http.get(this.areas).subscribe((res: any) => {
-      for (const c of res) {
-        var currArea = L.polygon(c.coordinates);
-        currArea.bindTooltip(c.name);
+      
+      for (const c of res.ok) {
+        var currArea = L.polygon(c.coords.coordinates);
+        currArea.bindTooltip(c.area_name);
         currArea.addTo(this.map);
 
         currArea.addEventListener("click", ()=> {
-          this.openDialog(c.name, c);
+          this.openDialog(c);
         })
       }
     });
@@ -181,18 +186,18 @@ export class ServiceAreaComponent implements AfterViewInit {
    * Internal method used by the nest's event listener. This opens the nest-dialog to edit or delete nests.
    * @param vehicles
    */
-  private openDialog(name, area){
+  private openDialog(area){
     let dialogRef = this.dialog.open(DialogAreasComponent, {
-      data: {name: name},
+      data: {name: area.area_name,
+            area: area},
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      
       if(result === -1){
         //Delete service area.
-        this.http.delete(this.areas + "/" + area.id).subscribe(res => {
-          CalendarComponent.updateAreaSelected(this.defaultServiceArea);
+        this.http.delete(this.areas + "/" + area._id).subscribe((res: any) => {
+          CalendarComponent.updateAreaSelected(this.defaultServiceAreaID, this.defaultServiceArea);
           this.getDefaultArea();
           this.map.off();
           this.map.remove();
@@ -205,8 +210,8 @@ export class ServiceAreaComponent implements AfterViewInit {
       else if (result === -3){
         //Select Service Area
 
-        if(name != "Unnamed"){
-          CalendarComponent.updateAreaSelected(name);
+        if(area.area_name != "--unnamed"){
+          CalendarComponent.updateAreaSelected(area._id, area.area_name);
           //this.calendarComponent.resetCalendar();
           this.map.off();
           this.map.remove();
@@ -220,11 +225,10 @@ export class ServiceAreaComponent implements AfterViewInit {
         }
       }
       else{
-        this.http.put(this.areas + "/" + area.id, {
-          "name": result,
-          "coordinates": area.coordinates
+        this.http.put(this.areas + "/" + area._id, {
+          "area_name": result[1]
         }).subscribe(res => {
-          CalendarComponent.updateAreaSelected(result);
+          CalendarComponent.updateAreaSelected(result[0], result[1]);
           this.map.off();
           this.map.remove();
           this.initialize();
@@ -240,11 +244,13 @@ export class ServiceAreaComponent implements AfterViewInit {
     this.http.get(this.areas).subscribe((res: any) => {
       if(res.length >  0) {
         this.defaultServiceArea = res[0].name;
-        CalendarComponent.updateAreaSelected(res[0].name);
+        this.defaultServiceAreaID = res[0].id;
+        CalendarComponent.updateAreaSelected(res[0].id, res[0].name);
       }
       else {
         this.defaultServiceArea = undefined;
-        CalendarComponent.updateAreaSelected(undefined);
+        this.defaultServiceAreaID = undefined;
+        CalendarComponent.updateAreaSelected(undefined, undefined);
         this.calendarComponent.calComponent.isSelected = false;
       }
     })

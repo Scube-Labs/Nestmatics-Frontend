@@ -8,9 +8,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class DialogAreasComponent implements OnInit {
   nestName; // Nest Name Variable
+  nestID; //Nest ID Variable
+
   constructor(public dialogRef: MatDialogRef<DialogAreasComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.nestName = data.name;
+      this.nestID = data.area._id
      }
 
   ngOnInit(): void {
@@ -20,7 +23,7 @@ export class DialogAreasComponent implements OnInit {
    * Update the Service Area Name
    */
   updateArea() {
-    this.dialogRef.close(this.nestName);
+    this.dialogRef.close([this.nestID, this.nestName]);
 
   }
 

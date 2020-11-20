@@ -17,6 +17,7 @@ import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
 
 const MaterialComponents = [
   BrowserModule,
@@ -32,6 +33,7 @@ const MaterialComponents = [
   MatCardModule,
   MatSliderModule,
   MatListModule,
+  MatSelectModule
 ]
 
 @NgModule({

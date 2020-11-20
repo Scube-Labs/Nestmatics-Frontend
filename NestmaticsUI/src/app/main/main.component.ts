@@ -18,6 +18,7 @@ export class MainComponent implements OnInit {
   toolOpened = true;
   currentComponent: any = ServiceAreaComponent;
   calendarComponent: CalendarComponent = new CalendarComponent();
+
   
   constructor(
     private http: HttpClient,
@@ -48,6 +49,9 @@ export class MainComponent implements OnInit {
     }
   }
 
+  /**
+   * Open the upload component dialog
+   */
   public openDialog(){
     let dialogRef = this.dialog.open(DialogUploadComponent);
 

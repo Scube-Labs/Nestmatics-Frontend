@@ -23,8 +23,9 @@ export class ExperimentComponent implements AfterViewInit {
   nests: string = 'http://localhost:3000/nests'
   exp: string = 'http://localhost:3000/experiments';
   
-  experiments: string[] = [];
+  experimentsList: string[] = [];
   experimentIDs: string[] = [];
+  nestsList: string[][] = [];
   
   constructor(private http: HttpClient,
     public dialog: MatDialog) { }
@@ -69,6 +70,7 @@ export class ExperimentComponent implements AfterViewInit {
   private loadNests(): void {
     this.http.get(this.nests + "?serviceArea=" + this.areaSelected).subscribe((res: any) => {
       for (const c of res) {
+        this.nestsList.push([c.id, c.name]);
         const lat = c.coordinates[0];
         const lon = c.coordinates[1];
         var currNest = (L as any).circle([lon, lat], 20).addTo(this.map);
@@ -98,9 +100,13 @@ export class ExperimentComponent implements AfterViewInit {
     })
   }
 
-  public getIndexOfExperiment(expID){
-    if(typeof expID._value != 'undefined'){
-      this.openExperimentDialog(this.experimentIDs[this.experiments.indexOf(expID.selectedOptions.selected[0]._value)])
+  /**
+   * This function retrieves the id of the Experiment selected by user
+   * @param expID 
+   */
+  public getIndexOfExperiment(exp){
+    if(typeof exp._value != 'undefined'){
+      this.openExperimentDialog(this.experimentIDs[this.experimentsList.indexOf(exp.selectedOptions.selected[0]._value)])
     }
   }
 
@@ -120,7 +126,7 @@ export class ExperimentComponent implements AfterViewInit {
     this.http.get(this.exp).subscribe((res: any) => {
       if(res.length == 0) alert("No Experiments have been created yet.")
       for(var i=0; i<res.length; i++){
-        this.experiments.push(res[i].name);
+        this.experimentsList.push(res[i].name);
         this.experimentIDs.push(res[i]._id);
       }
     })

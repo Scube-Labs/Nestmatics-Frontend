@@ -11,9 +11,18 @@
     <mat-card-title> Experiments: </mat-card-title>
   </mat-card-header>
 
+  <mat-form-field appearance="fill">
+      <mat-label>Filter</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let exp of experimentsList" [value]="exp">
+        {{exp}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <mat-card-content class="experiment-list">
       <mat-selection-list #exp [multiple]="false">
-        <mat-list-option *ngFor="let exp of experiments" [value]="exp">
+        <mat-list-option *ngFor="let exp of experimentsList" [value]="exp">
             {{exp}}
           </mat-list-option>
       </mat-selection-list>
