@@ -123,6 +123,7 @@ export class ExperimentComponent implements AfterViewInit {
    * Retrieve the list of all the experiments in the selected service area
    */
   private getAllExperiments() {
+    console.log(localStorage.getItem('currUserID'))
     this.http.get(this.exp).subscribe((res: any) => {
       if(res.length == 0) alert("No Experiments have been created yet.")
       for(var i=0; i<res.length; i++){
@@ -130,5 +131,20 @@ export class ExperimentComponent implements AfterViewInit {
         this.experimentIDs.push(res[i]._id);
       }
     })
+  }
+  
+  public getFilteredExperiments(nest) {
+    console.log(localStorage.getItem('currUserID'))
+    this.http.get(this.exp).subscribe((res: any) => {
+      if(res.length == 0) alert("No Experiments have been created yet.")
+      for(var i=0; i<res.length; i++){
+        this.experimentsList.push(res[i].name);
+        this.experimentIDs.push(res[i]._id);
+      }
+    })
+  }
+
+  public filterExperiments(nest) {
+    console.log(nest);
   }
 }

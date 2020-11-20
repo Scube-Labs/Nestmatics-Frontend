@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
       if(user != null){
         if(this.approvedEmails.indexOf(user.email) > 0){
           localStorage.setItem('loggedIn', JSON.stringify(user != null));
+          localStorage.setItem('currUserID', user.id);
         }
   
         else{

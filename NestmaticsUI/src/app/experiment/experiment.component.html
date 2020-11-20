@@ -13,13 +13,14 @@
 
   <mat-form-field appearance="fill">
       <mat-label>Filter</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let exp of experimentsList" [value]="exp">
-        {{exp}}
+    <mat-select #filt>
+      <mat-option *ngFor="let filt of nestsList" [value]="filt">
+        {{filt}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
+  <p>Experiments List</p>
   <mat-card-content class="experiment-list">
       <mat-selection-list #exp [multiple]="false">
         <mat-list-option *ngFor="let exp of experimentsList" [value]="exp">
@@ -28,9 +29,7 @@
       </mat-selection-list>
   </mat-card-content>
 
-  <p>
-    Option selected: {{exp.selectedOptions.selected[0]?.value}}
-  </p>
 
-  <button (click)="getIndexOfExperiment(exp)" mat-raised-button color="primary">select</button>
+  <button (click)="getFilteredExperiments(filt)" mat-raised-button color="primary">filter by nest</button>
+  <button (click)="getIndexOfExperiment(exp)" mat-raised-button color="accent">select</button>
 </mat-card>

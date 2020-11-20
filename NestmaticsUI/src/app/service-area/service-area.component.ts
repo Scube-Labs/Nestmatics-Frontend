@@ -88,7 +88,7 @@ export class ServiceAreaComponent implements AfterViewInit {
        }
        if(valid){
         this.http.post(this.areas, {
-          "area_name": "--unnamed",
+          "area_name": "Area-" + new Date().toISOString(),
           "coords": 
             {
               "coordinates": layer._latlngs[0]
@@ -212,6 +212,7 @@ export class ServiceAreaComponent implements AfterViewInit {
 
         if(area.area_name != "--unnamed"){
           CalendarComponent.updateAreaSelected(area._id, area.area_name);
+          localStorage.setItem('currAreaID', area._id);
           //this.calendarComponent.resetCalendar();
           this.map.off();
           this.map.remove();

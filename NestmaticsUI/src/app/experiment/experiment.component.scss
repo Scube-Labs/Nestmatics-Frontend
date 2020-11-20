@@ -26,3 +26,6 @@ mat-card {
   max-width: 230px;
 }
 
+::ng-deep {
+  .mat-card.ng-star-inserted { padding: 0; }
+}
