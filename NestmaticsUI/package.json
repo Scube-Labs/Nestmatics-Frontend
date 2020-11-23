@@ -27,7 +27,6 @@
     "@types/leaflet.heat": "^0.2.0",
     "angular-calendar": "^0.28.22",
     "angular-file-uploader": "^7.0.2",
-    "angular2-calendar-heatmap": "^0.2.3",
     "angularx-social-login": "^3.4.1",
     "d3": "^6.2.0",
     "json-server": "^0.16.2",
@@ -36,7 +35,6 @@
     "leaflet-plugin-trackplayback": "^1.0.5",
     "leaflet.heat": "^0.2.0",
     "moment": "^2.29.1",
-    "ng-calendar-heatmap": "^0.4.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
