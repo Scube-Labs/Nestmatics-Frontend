@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-service-area',
@@ -19,9 +20,9 @@ export class ServiceAreaComponent implements AfterViewInit {
   defaultServiceArea = undefined; //Default area selected if a used area is deleted
   defaultServiceAreaID = undefined;
 
-  areas: string = 'http://localhost/nestmatics/areas' //Service Area Data End-point
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
-  nests: string ='http://localhost:3000/nests' //Nest Data End-Point
+  areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
+  rides: string = environment.baseURL + '/nestmatics/rides' //Ride Data End-point
+  nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
 
   currArea = {}; // Current area selected
 
@@ -217,7 +218,7 @@ export class ServiceAreaComponent implements AfterViewInit {
           this.map.off();
           this.map.remove();
           this.initialize();
-          this.getDatesWithData(); //Get the dates that have data of the selected service area.
+          //this.getDatesWithData(); //Get the dates that have data of the selected service area.
           
 
         }
@@ -262,7 +263,7 @@ export class ServiceAreaComponent implements AfterViewInit {
    */
   public getDatesWithData() {
     var tempData: string[] = [];
-    this.http.get(this.rides + "?area=" + CalendarComponent.getAreaSelected()).subscribe((res: any) => {
+    this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/alldates").subscribe((res: any) => {
       for(var i=0; i<res.length; i++){
         tempData.push(res[i].date)
       }

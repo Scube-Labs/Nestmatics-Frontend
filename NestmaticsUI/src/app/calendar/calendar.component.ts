@@ -2,6 +2,7 @@ import { Component, ViewChild} from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { MatInput } from '@angular/material/input';
+import { FormControl } from '@angular/forms';
 
 const moment = _moment;
 
@@ -25,8 +26,10 @@ export class CalendarComponent {
 
   //For Date
   static hasDate = false;
-  static selectedDate = undefined;
+  static selectedDate = moment(new Date()).format('YYYY-MM-DD');
   static availableDatesList: string[] = [];
+
+  todaysDate = new FormControl(new Date());
 
   
   dataFilter = (d: Date | null): boolean => {
@@ -47,7 +50,7 @@ export class CalendarComponent {
     return CalendarComponent.selectedDate;
   }
 
-  static updateDateSelected(date: String) {
+  static updateDateSelected(date: string) {
     this.selectedDate = date;
     this.hasDate = true;
   }

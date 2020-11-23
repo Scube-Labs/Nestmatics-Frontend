@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-dialog-upload',
@@ -10,7 +11,7 @@ export class DialogUploadComponent implements OnInit {
   constructor() { }
   afuConfig = {
     uploadAPI: {
-      url:"http://localhost:3000/files" 
+      url: environment.baseURL + "/files" 
     },
     formatsAllowed: ".csv",
     theme: "dragNDrop"

@@ -172,7 +172,7 @@ export class MapComponent implements AfterViewInit {
       }
     },
     (error) => {
-      console.log("Unable to load Nests");
+      console.log(error.error.Error);
     });
   }
 

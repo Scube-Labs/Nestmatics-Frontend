@@ -114,18 +114,24 @@ export class PlaybackComponent implements AfterViewInit {
    */
   private playback(): void {
     setTimeout(() => {
-    this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
-      this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
-        trackPointOptions: {
-          // whether draw track point
+    if(typeof this.dateSelected != 'undefined') {
+      this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
+        console.log(res);
+        this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
+          trackPointOptions: {
+            // whether draw track point
+            isDraw: true
+          },
+          trackLineOptions: {
+          // whether draw track line
           isDraw: true
-        },
-        trackLineOptions: {
-        // whether draw track line
-        isDraw: true
-      }});
-    });
-    }, 200);
+        }});
+      },
+      (error) => {
+        console.log("No playback data available");
+      });
+    }
+    }, 400);
   }
 
   /**
