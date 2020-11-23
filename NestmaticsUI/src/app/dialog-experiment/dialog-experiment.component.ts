@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-dialog-experiment',
@@ -7,7 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DialogExperimentComponent implements OnInit {
 
-  constructor() { }
+  exp = environment.baseURL + "/nestmatics/experiment"
+
+  constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+      console.log(data);
+      this.http.get(this.exp + "/" + data.id).subscribe((res: any) => {
+        console.log(res);
+      })
+     }
 
   ngOnInit(): void {
   }

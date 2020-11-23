@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import 'leaflet-plugin-trackplayback';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-playback',
@@ -19,9 +20,9 @@ export class PlaybackComponent implements AfterViewInit {
   private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   private dateSelected = CalendarComponent.getDateSelected(); //Variable to obtain the date selected
 
-  areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
+  areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
-  nests: string ='http://localhost:3000/nests' //Nest Data End-Point
+  nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   trackplayback: any;
   
   constructor(
@@ -44,17 +45,25 @@ export class PlaybackComponent implements AfterViewInit {
     this.playback();
   
   }
+  
   /**
    * Restrict the map view to only the selected Service Area
    */
   private restrict(): void{
-    this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
-      var polygon = L.polygon(res[0].coordinates);
-      this.map.fitBounds(polygon.getBounds());
-      this.map.setMaxBounds(polygon.getBounds());
-      this.map.options.minZoom = this.map.getZoom();
+    if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
+      this.http.get(this.areas + "/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+        var polygon = L.polygon(res.ok.coords.coordinates);
+        this.map.fitBounds(polygon.getBounds());
+        this.map.setMaxBounds(polygon.getBounds());
+        this.map.options.minZoom = this.map.getZoom();
+      },
+      (error) => {
+        console.log("Unable to restrict area");
+      })
+    }  
+    else {
     }
-  )}  
+  } 
   
 /**
  * Initialize Main Map
@@ -85,15 +94,18 @@ export class PlaybackComponent implements AfterViewInit {
    * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
    */
   private loadNests(): void {
-    this.http.get(this.nests + "?serviceArea=" + this.areaSelected).subscribe((res: any) => {
-      for (const c of res) {
-        const lat = c.coordinates[0];
-        const lon = c.coordinates[1];
-        var currNest = (L as any).circle([lon, lat], 20).addTo(this.map);
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
+      for (const c of res.ok) {
+        const lat = c.coords.lat;
+        const lon = c.coords.lon;
+        var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
         currNest.bindTooltip(
-          "Vehicles: " + c.vehicles
+          "Vehicles: " + c.vehicle_qty
         );
       }
+    },
+    (error) => {
+      console.log("Unable to load Nests");
     });
   }
 

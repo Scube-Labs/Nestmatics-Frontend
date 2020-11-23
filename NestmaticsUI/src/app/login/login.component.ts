@@ -13,6 +13,7 @@ import { environment } from '../../environments/environment';
 export class LoginComponent implements OnInit {
 
   approvedEmails: string[] = [];
+  approvedIDs: string[] = [];
 
   userRoute: string = environment.baseURL + "/nestmatics/users";
   
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
       if(user != null){
         if(this.approvedEmails.indexOf(user.email) > 0){
           localStorage.setItem('loggedIn', JSON.stringify(user != null));
-          localStorage.setItem('currUserID', user.id);
+          localStorage.setItem('currUserID', this.approvedIDs[this.approvedEmails.indexOf(user.email)]);
         }
   
         else{
@@ -65,6 +66,7 @@ export class LoginComponent implements OnInit {
     this.http.get(this.userRoute).subscribe((res: any) => {
       for(var i=0; i<res.length; i++){
         this.approvedEmails.push(res[i].email);
+        this.approvedIDs.push(res[i]._id)
       }
     })
 

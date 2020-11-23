@@ -5,12 +5,17 @@ import { HttpClient } from '@angular/common/http';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
+import { environment } from '../../environments/environment';
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
+
 export class MapComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map 
@@ -18,9 +23,8 @@ export class MapComponent implements AfterViewInit {
   calendarComponent: CalendarComponent = new CalendarComponent();
   private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
 
-  areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
-  nests: string ='http://localhost:3000/nests' //Nest Data End-Point
+  areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
+  nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   
   constructor(
       private http: HttpClient,
@@ -48,11 +52,14 @@ export class MapComponent implements AfterViewInit {
    */
   private restrict(): void{
     if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
-      this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
-        var polygon = L.polygon(res[0].coordinates);
+      this.http.get(this.areas + "/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+        var polygon = L.polygon(res.ok.coords.coordinates);
         this.map.fitBounds(polygon.getBounds());
         this.map.setMaxBounds(polygon.getBounds());
         this.map.options.minZoom = this.map.getZoom();
+      },
+      (error) => {
+        console.log("Unable to restrict area");
       })
     }  
     else {
@@ -121,17 +128,28 @@ export class MapComponent implements AfterViewInit {
 
       //Add new nest to DB
       this.http.post(this.nests, {
-        "serviceArea": this.areaSelected,
-        "name": "name",
-        "coordinates": [
-            lon,
-            lat
-          ],
-        "vehicles": 0 //The new nest is initialized to have 0 vehicles
-      }).subscribe(res => {
+        "service_area": localStorage.getItem('currAreaID'),
+        "nest_name": "Nest-" + new Date().toISOString(),
+        "coords": {
+          "lat": lat,
+          "lon": lon
+        },
+        "nest_radius": 30,
+        "user": localStorage.getItem('currUserID'),
+      }).subscribe((res: any) => {
+        console.log(res);
+        this.http.post(this.nests + "/nestconfig", {
+          "nest": res.ok._id,
+          "start_date":  this.calendarComponent.calComponent.getDateSelected(),
+          "end_date":  this.calendarComponent.calComponent.getDateSelected(),
+          "vehicle_qty": 0,
+        }).subscribe((done: any) => {
+          console.log(done);
           this.map.off();
           this.map.remove();
           this.initialize();
+        })
+
       }) 
    });
   }
@@ -140,18 +158,21 @@ export class MapComponent implements AfterViewInit {
    * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
    */
   private loadNests(): void {
-    this.http.get(this.nests + "?serviceArea=" + this.areaSelected).subscribe((res: any) => {
-      for (const c of res) {
-        const lat = c.coordinates[0];
-        const lon = c.coordinates[1];
-        var currNest = (L as any).circle([lon, lat], 20).addTo(this.map);
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
+      for (const c of res.ok) {
+        const lat = c.coords.lat;
+        const lon = c.coords.lon;
+        var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
         currNest.bindTooltip(
-          "Vehicles: " + c.vehicles
+          "Vehicles: " + c.vehicle_qty
         );
         currNest.addEventListener("click", ()=> {
-          this.openDialog(DialogNestsComponent, c.vehicles, c);
+          this.openDialog(DialogNestsComponent, c.vehicle_qty, c);
         })
       }
+    },
+    (error) => {
+      console.log("Unable to load Nests");
     });
   }
 
@@ -168,27 +189,26 @@ export class MapComponent implements AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      //Delete the nest
       if(result === -1){
-        this.http.delete(this.nests + "/" + nest.id).subscribe(res => {
+        this.http.delete(this.nests + "/nest/" + nest._id).subscribe(res => {
           this.map.off();
           this.map.remove();
           this.initialize();
         });
       }
+      //Update the nest
       else{
-        this.http.put(this.nests + "/" + nest.id, {
-          "serviceArea": this.areaSelected,
-          "name": "name",
-          "coordinates": [
-            nest.coordinates[0],
-            nest.coordinates[1]
-            ],
-          "vehicles": result //The new nest is initialized to have 0 vehicles
-        }).subscribe(res => {
-          this.map.off();
-          this.map.remove();
-          this.initialize();
-        })
+        this.http.get(this.nests + "/nestconfig/nest/" + nest._id).subscribe((res: any) => {
+          //FIX
+          this.http.put(this.nests + "/nestconfig/" + res.ok[0]._id , {
+            "vehicle_qty": result
+          }).subscribe(res => {
+            this.map.off();
+            this.map.remove();
+            this.initialize();
+          })
+        });
       }
     })
   }

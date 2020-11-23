@@ -7,6 +7,7 @@ import { CalendarComponent } from '../calendar/calendar.component';
 import { DialogExperimentListComponent } from '../dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from '../dialog-experiment/dialog-experiment.component';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-experiment',
@@ -18,10 +19,11 @@ export class ExperimentComponent implements AfterViewInit {
   private map;
   calendarComponent: CalendarComponent = new CalendarComponent();
   private areaSelected = CalendarComponent.getAreaSelected();
-  areas: string = 'http://localhost:3000/areas'
   rides: string = 'http://localhost:3000/rides'
-  nests: string = 'http://localhost:3000/nests'
   exp: string = 'http://localhost:3000/experiments';
+
+  areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
+  nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   
   experimentsList: string[] = [];
   experimentIDs: string[] = [];
@@ -38,14 +40,24 @@ export class ExperimentComponent implements AfterViewInit {
     this.getAllExperiments();
   }
 
+  /**
+   * Restrict the map view to only the selected Service Area
+   */
   private restrict(): void{
-    this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
-      var polygon = L.polygon(res[0].coordinates);
-      this.map.fitBounds(polygon.getBounds());
-      this.map.setMaxBounds(polygon.getBounds());
-      this.map.options.minZoom = this.map.getZoom();
+    if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
+      this.http.get(this.areas + "/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+        var polygon = L.polygon(res.ok.coords.coordinates);
+        this.map.fitBounds(polygon.getBounds());
+        this.map.setMaxBounds(polygon.getBounds());
+        this.map.options.minZoom = this.map.getZoom();
+      },
+      (error) => {
+        console.log("Unable to restrict area");
+      })
+    }  
+    else {
     }
-  )}  
+  }  
 
   private initMap(): void {
     this.map = (L as any).map('experiment', {
@@ -67,27 +79,33 @@ export class ExperimentComponent implements AfterViewInit {
     tiles.addTo(this.map);
   }
 
+  /**
+   * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
+   */
   private loadNests(): void {
-    this.http.get(this.nests + "?serviceArea=" + this.areaSelected).subscribe((res: any) => {
-      for (const c of res) {
-        this.nestsList.push([c.id, c.name]);
-        const lat = c.coordinates[0];
-        const lon = c.coordinates[1];
-        var currNest = (L as any).circle([lon, lat], 20).addTo(this.map);
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID')).subscribe((res: any) => {
+      for (const c of res.ok) {
+        const lat = c.coords.lat;
+        const lon = c.coords.lon;
+        var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
         currNest.bindTooltip(
-          "Vehicles: " + c.vehicles
+          "Vehicles: " + c.vehicle_qty
         );
         currNest.addEventListener("click", ()=> {
           this.openDialog(DialogExperimentListComponent, c);
         })
       }
+    },
+    (error) => {
+      console.log("Unable to load Nests");
     });
   }
 
   private openDialog(dialog, nest){
+    console.log(nest);
     let dialogRef = this.dialog.open(dialog, {
       data: {vehicles: nest.vehicles,
-                    id: nest.id},
+                    id: nest._id},
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -104,7 +122,7 @@ export class ExperimentComponent implements AfterViewInit {
    * This function retrieves the id of the Experiment selected by user
    * @param expID 
    */
-  public getIndexOfExperiment(exp){
+  public getIDsOfExperiment(exp){
     if(typeof exp._value != 'undefined'){
       this.openExperimentDialog(this.experimentIDs[this.experimentsList.indexOf(exp.selectedOptions.selected[0]._value)])
     }
@@ -112,9 +130,16 @@ export class ExperimentComponent implements AfterViewInit {
 
   public openExperimentDialog(expID){
     if(typeof expID != 'undefined'){
-      let dialogRef = this.dialog.open(DialogExperimentComponent);
+      let dialogRef = this.dialog.open(DialogExperimentComponent, {
+        data: {id: expID}
+      });
 
       dialogRef.afterClosed().subscribe(result => {
+        if(result === -1){
+          this.http.get(this.exp + "/" + expID + "/report").subscribe((res: any) => {
+            console.log(res);
+          })
+        }
       })
     }
   }
@@ -123,7 +148,6 @@ export class ExperimentComponent implements AfterViewInit {
    * Retrieve the list of all the experiments in the selected service area
    */
   private getAllExperiments() {
-    console.log(localStorage.getItem('currUserID'))
     this.http.get(this.exp).subscribe((res: any) => {
       if(res.length == 0) alert("No Experiments have been created yet.")
       for(var i=0; i<res.length; i++){
@@ -134,7 +158,6 @@ export class ExperimentComponent implements AfterViewInit {
   }
   
   public getFilteredExperiments(nest) {
-    console.log(localStorage.getItem('currUserID'))
     this.http.get(this.exp).subscribe((res: any) => {
       if(res.length == 0) alert("No Experiments have been created yet.")
       for(var i=0; i<res.length; i++){

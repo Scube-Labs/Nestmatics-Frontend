@@ -28,7 +28,6 @@ export class CalendarComponent {
   static selectedDate = undefined;
   static availableDatesList: string[] = [];
 
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   
   dataFilter = (d: Date | null): boolean => {
     const date = (d || new Date());
