@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapComponent } from './map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ToolbarModule } from './toolbar/toolbar.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from "@angular/common/http";
 import { PredictionComponent } from './prediction/prediction.component';
 import { ExperimentComponent } from './experiment/experiment.component';
@@ -55,7 +55,8 @@ import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment
     AngularFileUploaderModule,
     HttpClientModule,
     CalendarHeatmapModule,
-    SocialLoginModule
+    SocialLoginModule,
+    ReactiveFormsModule
   ],
   providers: [
     AuthGuard,
