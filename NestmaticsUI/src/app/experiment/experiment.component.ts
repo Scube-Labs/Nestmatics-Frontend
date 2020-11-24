@@ -8,6 +8,7 @@ import { DialogExperimentListComponent } from '../dialog-experiment-list/dialog-
 import { DialogExperimentComponent } from '../dialog-experiment/dialog-experiment.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
+import { DialogCreateExperimentComponent } from '../dialog-create-experiment/dialog-create-experiment.component';
 
 @Component({
   selector: 'app-experiment',
@@ -19,9 +20,8 @@ export class ExperimentComponent implements AfterViewInit {
   private map;
   calendarComponent: CalendarComponent = new CalendarComponent();
   private areaSelected = CalendarComponent.getAreaSelected();
-  rides: string = 'http://localhost:3000/rides'
-  exp: string = 'http://localhost:3000/experiments';
 
+  exp: string = environment.baseURL + '/nestmatics/experiment' //Route for experiments End-point
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   
@@ -88,9 +88,7 @@ export class ExperimentComponent implements AfterViewInit {
         const lat = c.coords.lat;
         const lon = c.coords.lon;
         var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
-        currNest.bindTooltip(
-          "Vehicles: " + c.vehicle_qty
-        );
+        
         currNest.addEventListener("click", ()=> {
           this.openDialog(DialogExperimentListComponent, c);
         })
@@ -102,7 +100,6 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   private openDialog(dialog, nest){
-    console.log(nest);
     let dialogRef = this.dialog.open(dialog, {
       data: {vehicles: nest.vehicles,
                     id: nest._id},
@@ -111,6 +108,7 @@ export class ExperimentComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result === -1){
         //Create New Experiment
+        this.openCreateExperimentDialog(nest._id);
       }
       else if(typeof result != 'undefined'){
         this.openExperimentDialog(result);
@@ -137,8 +135,21 @@ export class ExperimentComponent implements AfterViewInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result === -1){
           this.http.get(this.exp + "/" + expID + "/report").subscribe((res: any) => {
-            console.log(res);
           })
+        }
+      })
+    }
+  }
+
+  public openCreateExperimentDialog(nest_id: string) {
+    if(typeof nest_id != 'undefined'){
+      let dialogRef = this.dialog.open(DialogCreateExperimentComponent, {
+        data: {id: nest_id}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if(result === -1){
+
         }
       })
     }
@@ -148,12 +159,13 @@ export class ExperimentComponent implements AfterViewInit {
    * Retrieve the list of all the experiments in the selected service area
    */
   private getAllExperiments() {
-    this.http.get(this.exp).subscribe((res: any) => {
-      if(res.length == 0) alert("No Experiments have been created yet.")
-      for(var i=0; i<res.length; i++){
-        this.experimentsList.push(res[i].name);
-        this.experimentIDs.push(res[i]._id);
+    this.http.get(this.exp + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID')).subscribe((res: any) => {
+      if(res.ok.length == 0) alert("No Experiments have been created yet.")
+      for(var i=0; i<res.ok.length; i++){
+        this.experimentsList.push(res.ok[i].name);
+        this.experimentIDs.push(res.ok[i]._id);
       }
+
     })
   }
   
@@ -168,6 +180,5 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   public filterExperiments(nest) {
-    console.log(nest);
   }
 }

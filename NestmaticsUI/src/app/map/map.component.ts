@@ -137,14 +137,12 @@ export class MapComponent implements AfterViewInit {
         "nest_radius": 30,
         "user": localStorage.getItem('currUserID'),
       }).subscribe((res: any) => {
-        console.log(res);
         this.http.post(this.nests + "/nestconfig", {
           "nest": res.ok._id,
           "start_date":  this.calendarComponent.calComponent.getDateSelected(),
           "end_date":  this.calendarComponent.calComponent.getDateSelected(),
           "vehicle_qty": 0,
         }).subscribe((done: any) => {
-          console.log(done);
           this.map.off();
           this.map.remove();
           this.initialize();

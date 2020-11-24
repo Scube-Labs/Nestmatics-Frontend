@@ -6,6 +6,6 @@
       </div>
     </div>
 </div>
-<button (click)="playbackPlay()" mat-raised-button><mat-icon class="toolbarButtons">play_arrow</mat-icon></button>
-<button (click)="playbackPause()"mat-raised-button><mat-icon class="toolbarButtons">pause</mat-icon></button> 
-<button (click)="playbackReplay()"mat-raised-button><mat-icon class="toolbarButtons">replay</mat-icon></button> 
+<button [disabled]="disableControls" (click)="playbackPlay()" mat-raised-button><mat-icon class="toolbarButtons">play_arrow</mat-icon></button>
+<button [disabled]="disableControls" (click)="playbackPause()"mat-raised-button><mat-icon class="toolbarButtons">pause</mat-icon></button> 
+<button [disabled]="disableControls" (click)="playbackReplay()"mat-raised-button><mat-icon class="toolbarButtons">replay</mat-icon></button> 

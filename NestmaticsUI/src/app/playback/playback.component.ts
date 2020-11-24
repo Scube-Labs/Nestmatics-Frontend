@@ -24,6 +24,7 @@ export class PlaybackComponent implements AfterViewInit {
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   trackplayback: any;
+  disableControls: boolean = true;
   
   constructor(
       private http: HttpClient,
@@ -116,19 +117,24 @@ export class PlaybackComponent implements AfterViewInit {
     setTimeout(() => {
     if(typeof this.dateSelected != 'undefined') {
       this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
-        console.log(res);
-        this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
-          trackPointOptions: {
-            // whether draw track point
+        if(res.length > 0){
+          this.disableControls = false;
+          this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
+            trackPointOptions: {
+              // whether draw track point
+              isDraw: true
+            },
+            trackLineOptions: {
+            // whether draw track line
             isDraw: true
-          },
-          trackLineOptions: {
-          // whether draw track line
-          isDraw: true
-        }});
+          }});
+        }
+        else {
+          alert('No playback data available')
+        }
       },
       (error) => {
-        console.log("No playback data available");
+        console.log(error.error.Error);
       });
     }
     }, 400);

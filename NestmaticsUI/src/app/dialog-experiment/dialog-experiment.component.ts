@@ -14,9 +14,7 @@ export class DialogExperimentComponent implements OnInit {
 
   constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-      console.log(data);
       this.http.get(this.exp + "/" + data.id).subscribe((res: any) => {
-        console.log(res);
       })
      }
 

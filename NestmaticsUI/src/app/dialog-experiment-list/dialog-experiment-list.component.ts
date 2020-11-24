@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-dialog-experiment-list',
@@ -9,24 +10,26 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DialogExperimentListComponent {
 
-  exp: string = 'http://localhost:3000/experiments';
+  exp: string = environment.baseURL + '/nestmatics/experiment';
   experiments: string[] = [];
   experimentIDs: string[] = [];
 
   constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-      this.http.get(this.exp + "?nest=" + data.id).subscribe((res: any) => {
-        for(var i=0; i<res.length; i++){
-          this.experiments.push(res[i].name);
-          this.experimentIDs.push(res[i]._id);
+      this.http.get(this.exp + "/nest/" + data.id).subscribe((res: any) => {
+        for(var i=0; i<res.ok.length; i++){
+          this.experiments.push(res.ok[i].name);
+          this.experimentIDs.push(res.ok[i]._id);
         }
-      })
+      }),
+      (error) => {
+        console.log(error.error.Error);
+      }
      }
 
 
   public selectExperiment(e: any) {
     if(e.selectedOptions.selected.length > 0){
-      //console.log(this.experimentIDs[this.experiments.indexOf(e.selectedOptions.selected[0]._value)]);
       this.dialogRef.close(this.experimentIDs[this.experiments.indexOf(e.selectedOptions.selected[0]._value)]);
     }
   }

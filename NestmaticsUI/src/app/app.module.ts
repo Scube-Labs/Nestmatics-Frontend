@@ -13,10 +13,8 @@ import { ExperimentComponent } from './experiment/experiment.component';
 import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MainComponent } from './main/main.component';
-import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { PlaybackComponent } from './playback/playback.component';
 import { ServiceAreaComponent } from './service-area/service-area.component';
-import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
@@ -24,9 +22,14 @@ import { AngularFileUploaderModule } from 'angular-file-uploader';
 //Google Auth Modules
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
+
+//Dialogs
+import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
+import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
+import { DialogCreateExperimentComponent } from './dialog-create-experiment/dialog-create-experiment.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,8 @@ import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment
     LoginComponent,
     DialogUploadComponent,
     DialogExperimentListComponent,
-    DialogExperimentComponent
+    DialogExperimentComponent,
+    DialogCreateExperimentComponent
   ],
   imports: [
     LeafletModule,
@@ -78,6 +82,6 @@ import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent, DialogCreateExperimentComponent]
 })
 export class AppModule { }
