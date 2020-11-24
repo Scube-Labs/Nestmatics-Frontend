@@ -11,7 +11,7 @@ export class DialogUploadComponent implements OnInit {
   constructor() { }
   afuConfig = {
     uploadAPI: {
-      url: environment.baseURL + "/files" 
+      url: environment.baseURL + "/nestmatics/rides" 
     },
     formatsAllowed: ".csv",
     theme: "dragNDrop"

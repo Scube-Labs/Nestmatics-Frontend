@@ -11,14 +11,43 @@ import {environment } from '../../environments/environment';
 export class DialogExperimentComponent implements OnInit {
 
   exp = environment.baseURL + "/nestmatics/experiment"
+  nests = environment.baseURL + "/nestmatics/nests"
 
+  expName = ''
+  
   constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.http.get(this.exp + "/" + data.id).subscribe((res: any) => {
+        console.log(res.ok.config1);
+        this.expName = res.ok.name;
+
+        this.http.get(this.nests + "/nestconfig/" + res.ok.config1 + "/revenue").subscribe((res: any) => {
+
+        })
+
+        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/revenue").subscribe((res: any) => {
+
+        })
+
+        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/actvehicles").subscribe((res: any) => {
+
+        })
+        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/actvehicles").subscribe((res: any) => {
+
+        })
+
       })
      }
 
   ngOnInit(): void {
+  }
+
+  /**
+   * Close with code to generate report
+   */
+  report() {
+    this.dialogRef.close(-1);
+    
   }
 
 }

@@ -102,7 +102,8 @@ export class ExperimentComponent implements AfterViewInit {
   private openDialog(dialog, nest){
     let dialogRef = this.dialog.open(dialog, {
       data: {vehicles: nest.vehicles,
-                    id: nest._id},
+                    id: nest._id,
+                    name: nest.name},
     });
 
     dialogRef.afterClosed().subscribe(result => {
