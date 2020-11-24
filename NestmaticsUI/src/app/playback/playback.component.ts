@@ -21,7 +21,7 @@ export class PlaybackComponent implements AfterViewInit {
   private dateSelected = CalendarComponent.getDateSelected(); //Variable to obtain the date selected
 
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
+  rides: string = environment.baseURL + '/nestmatics/rides' //Ride Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   trackplayback: any;
   disableControls: boolean = true;
@@ -116,7 +116,8 @@ export class PlaybackComponent implements AfterViewInit {
   private playback(): void {
     setTimeout(() => {
     if(typeof this.dateSelected != 'undefined') {
-      this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
+      this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/date/" + this.dateSelected).subscribe((res: any) => {
+        console.log(res);
         if(res.length > 0){
           this.disableControls = false;
           this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
