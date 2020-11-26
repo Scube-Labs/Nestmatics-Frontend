@@ -14,6 +14,13 @@ export class DialogExperimentComponent implements OnInit {
   nests = environment.baseURL + "/nestmatics/nests"
 
   expName = ''
+
+  revenue1;
+  revenue2;
+  active1;
+  active2;
+  ridesFrom1;
+  ridesFrom2;
   
   constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -21,21 +28,25 @@ export class DialogExperimentComponent implements OnInit {
         console.log(res.ok.config1);
         this.expName = res.ok.name;
 
-        this.http.get(this.nests + "/nestconfig/" + res.ok.config1 + "/revenue").subscribe((res: any) => {
-
+        this.http.get(this.nests + "/nestconfig/" + res.ok.config1 + "/stats").subscribe((res: any) => {
+          this.revenue1 = "$" + res.ok.revenue.toFixed(2);
+          this.active1 = res.ok.total_rides;
+        },
+        (error) => {
+          this.revenue1 = "$0";
+          this.active1 = "0";
         })
+        
 
-        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/revenue").subscribe((res: any) => {
-
+        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/stats").subscribe((res: any) => {
+          this.revenue2 = "$" + res.ok.revenue.toFixed(2);
+          this.active2 = res.ok.total_rides;
+        },
+        (error) => {
+          this.revenue2 = "$0";
+          this.active2 = "0";
         })
-
-        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/actvehicles").subscribe((res: any) => {
-
-        })
-        this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/actvehicles").subscribe((res: any) => {
-
-        })
-
+        
       })
      }
 

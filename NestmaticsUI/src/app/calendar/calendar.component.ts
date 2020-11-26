@@ -1,5 +1,5 @@
 import { Component, ViewChild} from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent, MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { MatInput } from '@angular/material/input';
 import { FormControl } from '@angular/forms';
@@ -41,6 +41,19 @@ export class CalendarComponent {
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     CalendarComponent.updateDateSelected(moment(event.value).format('YYYY-MM-DD'));
+  }
+
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    // Only highligh dates inside the month view.
+    if (view === 'month') {
+      const date = cellDate.getDate();
+
+      console.log(date)
+      // Highlight the 1st and 20th day of each month.
+      return (date === 1 || date === 20) ? 'example-custom-date-class' : '';
+    }
+
+    return '';
   }
 
   constructor() {

@@ -5,8 +5,7 @@
         <mat-label>Calendar</mat-label>
         <input #input disabled (dateInput)="addEvent('input', $event)" matInput [matDatepicker]="calendarPicker" [formControl]="todaysDate">
         <mat-datepicker-toggle [for]="calendarPicker" matSuffix></mat-datepicker-toggle>
-        <mat-datepicker [startAt]="todaysDate" disabled = "false" #calendarPicker></mat-datepicker>
+        <mat-datepicker [dateClass]="dateClass" [startAt]="todaysDate" disabled = "false" #calendarPicker></mat-datepicker>
     </mat-form-field>
 
-    <button (click)="resetCalendar()">Reset</button>
 </div>

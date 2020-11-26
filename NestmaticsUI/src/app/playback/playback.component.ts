@@ -6,6 +6,9 @@ import 'leaflet-plugin-trackplayback';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-playback',
@@ -25,7 +28,6 @@ export class PlaybackComponent implements AfterViewInit {
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   trackplayback: any;
   disableControls: boolean = true;
-  
   constructor(
       private http: HttpClient,
       public dialog: MatDialog) {}
@@ -114,13 +116,36 @@ export class PlaybackComponent implements AfterViewInit {
    * Method to initialize playback of vehicle ride data
    */
   private playback(): void {
+    let distincstRideIDs = new Set();
     setTimeout(() => {
     if(typeof this.dateSelected != 'undefined') {
       this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/date/" + this.dateSelected).subscribe((res: any) => {
-        console.log(res);
-        if(res.length > 0){
-          this.disableControls = false;
-          this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
+        var playbackArray = [];
+
+        for(var i=0; i<res.ok.length; i++){
+          var rideArray = new Array();
+          if(Number(res.ok[i].coords.start_lat) != -1 && Number(res.ok[i].coords.start_lon) != -1 && Number(res.ok[i].start_time) != -1 && Number(res.ok[i].coords.end_lat) != -1 && Number(res.ok[i].coords.end_lon) != -1 && Number(res.ok[i].end_time) != -1){
+            rideArray.push({
+              "lat": Number(res.ok[i].coords.start_lat),
+              "lng": Number(res.ok[i].coords.start_lon),
+              "time": Number(moment(res.ok[i].start_time).format('HmmssS')) * 1
+            });
+            rideArray.push({
+              "lat": Number(res.ok[i].coords.end_lat),
+              "lng": Number(res.ok[i].coords.end_lon),
+              "time": Number(moment(res.ok[i].end_time).format('HmmssS')) * 1
+            });
+  
+            playbackArray.push(rideArray);
+          }
+          
+        }
+        
+        console.log(playbackArray);
+        
+        if(res.ok.length > 0){
+          
+          this.trackplayback = (L as any).trackplayback(playbackArray, this.map, {
             trackPointOptions: {
               // whether draw track point
               isDraw: true
@@ -129,6 +154,8 @@ export class PlaybackComponent implements AfterViewInit {
             // whether draw track line
             isDraw: true
           }});
+          this.disableControls = false;
+          
         }
         else {
           alert('No playback data available')
@@ -160,5 +187,13 @@ export class PlaybackComponent implements AfterViewInit {
     this.trackplayback.rePlaying();
   }
 
-  
+  public showLines(event) {
+    console.log(event)
+    if(event.checked == false){
+      this.trackplayback.hideTrackLine();
+    }
+    else{
+      this.trackplayback.showTrackLine();
+    }
+  }
 }

@@ -157,6 +157,7 @@ export class MapComponent implements AfterViewInit {
    */
   private loadNests(): void {
     this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
+      console.log(res)
       for (const c of res.ok) {
         const lat = c.coords.lat;
         const lon = c.coords.lon;
