@@ -17,10 +17,14 @@ export class DialogExperimentComponent implements OnInit {
 
   revenue1;
   revenue2;
-  active1;
-  active2;
   ridesFrom1;
   ridesFrom2;
+  vehicle_qty1;
+  vehicle_qty2;
+  started1;
+  started2;
+  ended1;
+  ended2;
   
   constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -29,22 +33,32 @@ export class DialogExperimentComponent implements OnInit {
         this.expName = res.ok.name;
 
         this.http.get(this.nests + "/nestconfig/" + res.ok.config1 + "/stats").subscribe((res: any) => {
+          console.log(res)
+          this.vehicle_qty1 = res.ok.vehicle_qty;
           this.revenue1 = "$" + res.ok.revenue.toFixed(2);
-          this.active1 = res.ok.total_rides;
+          this.started1 = res.ok.rides_started_nest.length;
+          this.ended1 = res.ok.rides_end_nest.length;
         },
         (error) => {
+          this.vehicle_qty1 = "N/A";
           this.revenue1 = "$0";
-          this.active1 = "0";
+          this.started1 = "0";
+          this.ended1 = "0";
         })
         
 
         this.http.get(this.nests + "/nestconfig/" + res.ok.config2 + "/stats").subscribe((res: any) => {
+          console.log(res)
+          this.vehicle_qty2 = res.ok.vehicle_qty;
           this.revenue2 = "$" + res.ok.revenue.toFixed(2);
-          this.active2 = res.ok.total_rides;
+          this.started2 = res.ok.rides_started_nest.length;
+          this.ended2 = res.ok.rides_end_nest.length;
         },
         (error) => {
+          this.vehicle_qty2 = "N/A";
           this.revenue2 = "$0";
-          this.active2 = "0";
+          this.started2 = "0";
+          this.ended2 = "0";
         })
         
       })
