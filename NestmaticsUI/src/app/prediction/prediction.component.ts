@@ -14,9 +14,11 @@ export class PredictionComponent implements AfterViewInit {
   toolOpened = true;
   private map;
 
-  calendarComponent: CalendarComponent = new CalendarComponent();
-  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
+  //calendarComponent: CalendarComponent = new CalendarComponent();
+  //private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   
+  private areaSelected = localStorage.getItem('currAreaID');
+
   areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
   nests: string ='http://localhost:3000/nests' //Nest Data End-Point

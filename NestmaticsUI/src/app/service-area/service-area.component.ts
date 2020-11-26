@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
-import { CalendarComponent } from '../calendar/calendar.component';
+//import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
 import { environment } from '../../environments/environment';
@@ -16,7 +16,7 @@ export class ServiceAreaComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map
 
-  calendarComponent: CalendarComponent = new CalendarComponent(); //Calendar component reference
+ // calendarComponent: CalendarComponent = new CalendarComponent(); //Calendar component reference
   defaultServiceArea = undefined; //Default area selected if a used area is deleted
   defaultServiceAreaID = undefined;
 
@@ -25,6 +25,7 @@ export class ServiceAreaComponent implements AfterViewInit {
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
 
   currArea = {}; // Current area selected
+
 
 
   constructor(
@@ -36,7 +37,6 @@ export class ServiceAreaComponent implements AfterViewInit {
   }
 
   private initialize() {
-
     this.initMap();
     this.initTiles();
     this.loadAreas();
@@ -198,7 +198,7 @@ export class ServiceAreaComponent implements AfterViewInit {
       if(result === -1){
         //Delete service area.
         this.http.delete(this.areas + "/" + area._id).subscribe((res: any) => {
-          CalendarComponent.updateAreaSelected(this.defaultServiceAreaID, this.defaultServiceArea);
+         // CalendarComponent.updateAreaSelected(this.defaultServiceAreaID, this.defaultServiceArea);
           this.getDefaultArea();
           this.map.off();
           this.map.remove();
@@ -212,14 +212,18 @@ export class ServiceAreaComponent implements AfterViewInit {
         //Select Service Area
 
         if(area.area_name != "--unnamed"){
-          CalendarComponent.updateAreaSelected(area._id, area.area_name);
+
+       //   CalendarComponent.updateAreaSelected(area._id, area.area_name);
           localStorage.setItem('currAreaID', area._id);
+          localStorage.setItem('currAreaName', area.area_name);
+          console.log(localStorage.getItem('currAreaID'))
+          console.log(localStorage.getItem('currDate'))
           //this.calendarComponent.resetCalendar();
           this.map.off();
           this.map.remove();
           this.initialize();
           //this.getDatesWithData(); //Get the dates that have data of the selected service area.
-          
+          localStorage.setItem('isSelected', 'true');
 
         }
         else{
@@ -230,7 +234,9 @@ export class ServiceAreaComponent implements AfterViewInit {
         this.http.put(this.areas + "/" + area._id, {
           "area_name": result[1]
         }).subscribe(res => {
-          CalendarComponent.updateAreaSelected(result[0], result[1]);
+          localStorage.setItem('currAreaID', result[0]);
+          localStorage.setItem('currAreaName',result[1]);
+        //  CalendarComponent.updateAreaSelected(result[0], result[1]);
           this.map.off();
           this.map.remove();
           this.initialize();
@@ -247,13 +253,17 @@ export class ServiceAreaComponent implements AfterViewInit {
       if(res.length >  0) {
         this.defaultServiceArea = res[0].name;
         this.defaultServiceAreaID = res[0].id;
-        CalendarComponent.updateAreaSelected(res[0].id, res[0].name);
+        localStorage.setItem('currAreaID',res[0].id);
+        localStorage.setItem('currAreaName', res[0].name);
+      //  CalendarComponent.updateAreaSelected(res[0].id, res[0].name);
       }
       else {
         this.defaultServiceArea = undefined;
         this.defaultServiceAreaID = undefined;
-        CalendarComponent.updateAreaSelected(undefined, undefined);
-        this.calendarComponent.calComponent.isSelected = false;
+        localStorage.setItem('currAreaID', undefined);
+        localStorage.setItem('currAreaName', undefined);
+      //  CalendarComponent.updateAreaSelected(undefined, undefined);
+      //  this.calendarComponent.calComponent.isSelected = false;
       }
     })
   }
@@ -267,7 +277,7 @@ export class ServiceAreaComponent implements AfterViewInit {
       for(var i=0; i<res.length; i++){
         tempData.push(res[i].date)
       }
-      this.calendarComponent.calComponent.availableDatesList = tempData;
+     // this.calendarComponent.calComponent.availableDatesList = tempData;
     })
   }
 }

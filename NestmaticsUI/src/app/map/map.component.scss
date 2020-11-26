@@ -14,3 +14,62 @@
   #map {
     height: 100%;
   }
+
+  .drop-card{
+    max-height: 800px !important;
+  }
+  
+  .nests-list {
+    width: 300px;
+    max-height: 200px !important;
+    overflow-y: scroll;
+  }
+
+  .custom-scroll{
+    width: 300px;
+    flex-direction: column;
+    overflow-y:scroll;
+    max-height: 400px !important;
+  }
+
+  mat-list-item{
+    display:flex;
+    flex-direction: column;
+    font-size: medium;
+    height: 80px !important;
+  }
+
+  .item-content{
+    display:flex;
+    height: 55px;
+    flex-direction: column;
+    font-size: medium;
+    margin-top: 2px;
+    margin-bottom: 3px;
+    padding: 0px;
+    height: 55px !important;
+
+  }
+
+  .item {
+    display:flex;
+    height: 55px;
+    flex-direction: column;
+    font-size: small;
+    margin-top: 2px;
+    margin-bottom: 3px;
+    padding: 0px;
+  }
+  
+  mat-card {
+    margin: 2px;
+    width: 300px;
+    position:fixed;
+    top: 100px;
+    right: 5;
+  }
+  
+  ::ng-deep {
+    .mat-card.ng-star-inserted { padding: 0; }
+  }
+  

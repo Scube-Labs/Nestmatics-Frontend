@@ -17,8 +17,10 @@ import { environment } from '../../environments/environment';
 export class ExperimentComponent implements AfterViewInit {
   toolOpened = true;
   private map;
-  calendarComponent: CalendarComponent = new CalendarComponent();
-  private areaSelected = CalendarComponent.getAreaSelected();
+  //calendarComponent: CalendarComponent = new CalendarComponent();
+ // private areaSelected = CalendarComponent.getAreaSelected();
+  private areaSelected = localStorage.getItem('currAreaName');
+
   rides: string = 'http://localhost:3000/rides'
   exp: string = 'http://localhost:3000/experiments';
 

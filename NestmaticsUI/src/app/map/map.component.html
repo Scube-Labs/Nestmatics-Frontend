@@ -5,3 +5,35 @@
       <div id="map"></div>
     </div>
 </div>
+
+<mat-card class="drop-card">
+  <mat-card-header>
+    <mat-card-title> Drop Strategies: </mat-card-title>
+  </mat-card-header>
+
+  <form>
+  <mat-form-field appearance="fill">
+    <mat-label>Vehicle quantity</mat-label>
+    <input #qty matInput placeholder="Vehicle Quantity">
+    <mat-hint>Input total number of vehicles</mat-hint>
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="button" (click)="addVehicles(qty.value)">Add Total Vehicle qty
+  </button> 
+  </form>
+
+  <mat-label>Total vehicles for the day: {{vehicle_qty}}</mat-label>
+
+  <p>Nest List</p>
+  <mat-card-content class="nest-list">
+    <mat-list class="custom-scroll">
+      <mat-list-item *ngFor="let nest of nestList" class="item">
+        <mat-list-item-content class="item-content">
+          <span>Nest Name: {{nest.nest_name}}</span>
+          <span>Vehicle qty: {{nest.vehicle_qty}}</span>
+        </mat-list-item-content>
+      </mat-list-item>
+    </mat-list>
+</mat-card-content>
+
+
+</mat-card>

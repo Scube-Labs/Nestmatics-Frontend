@@ -4,10 +4,11 @@ import { PlaybackComponent } from '../playback/playback.component'
 import { PredictionComponent } from '../prediction/prediction.component';
 import { ExperimentComponent } from '../experiment/experiment.component';
 import { ServiceAreaComponent } from '../service-area/service-area.component';
-import { CalendarComponent } from '../calendar/calendar.component';
+//import { CalendarComponent } from '../calendar/calendar.component';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component'
+import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component';
+import { EventEmitterService } from '../event-emitter.service'
 
 @Component({ 
   selector: 'app-main',
@@ -16,15 +17,19 @@ import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component'
 })
 export class MainComponent implements OnInit {
   toolOpened = true;
+  defaultAreaName = "Puerto Rico"
+  defaultName = localStorage.setItem('currAreaName', this.defaultAreaName)
   currentComponent: any = ServiceAreaComponent;
-  calendarComponent: CalendarComponent = new CalendarComponent();
-
+ // calendarComponent: CalendarComponent = new CalendarComponent();
+  isSelected = false;
   
   constructor(
     private http: HttpClient,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private eventEmitterService: EventEmitterService) { }
 
   ngOnInit(): void {
+    //localStorage.setItem('currAreaName', "Puerto Rico")
   }
 
   /**
@@ -34,6 +39,7 @@ export class MainComponent implements OnInit {
   changeComponent(comp: string) {
     if(comp == "map"){
       this.currentComponent = MapComponent;
+      this.eventEmitterService.onChangeToArea(localStorage.getItem('currAreaName'));
     }
     if(comp == "playback"){
       this.currentComponent = PlaybackComponent;
@@ -46,6 +52,7 @@ export class MainComponent implements OnInit {
     }
     if(comp == "service"){
       this.currentComponent = ServiceAreaComponent;
+      this.eventEmitterService.onChangeToArea("Puerto Rico");
     }
   }
 

@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
+import { EventEmitterService } from '../event-emitter.service'
 
 const moment = _moment;
 
@@ -20,15 +21,33 @@ export class MapComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map 
 
-  calendarComponent: CalendarComponent = new CalendarComponent();
-  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
+  mapNestList = new Array<any>();
+  nestList = new Array<any>();
+  nestConfigList = new Array<any>();
 
+  vehicle_qty :string;
+
+  //calendarComponent: CalendarComponent = new CalendarComponent();
+  //private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
+
+  private areaSelected = localStorage.getItem('currAreaName');
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) { }
+      public dialog: MatDialog, 
+      private eventEmitterService: EventEmitterService) { }
+
+
+  ngOnInit(){
+    if(this.eventEmitterService.subsVar == undefined){
+      this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefresh.
+      subscribe((date:string)=> {
+        this.refresh()
+      });
+    }
+  }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -36,7 +55,7 @@ export class MapComponent implements AfterViewInit {
 
   /**
    * Main initialization function.
-   * Initializes all the necesari components in the specified order.
+   * Initializes all the necessary components in the specified order.
    */
   private initialize() {
 
@@ -47,11 +66,20 @@ export class MapComponent implements AfterViewInit {
     this.drawControl();
   
   }
+
+  refresh(){
+    console.log(localStorage.getItem('currDate'))
+    this.map.off();
+    this.map.remove();
+    this.initialize();
+  }
+
   /**
    * Restrict the map view to only the selected Service Area
    */
   private restrict(): void{
     if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
+      console.log(localStorage.getItem('currAreaID'))
       this.http.get(this.areas + "/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
         var polygon = L.polygon(res.ok.coords.coordinates);
         this.map.fitBounds(polygon.getBounds());
@@ -63,6 +91,7 @@ export class MapComponent implements AfterViewInit {
       })
     }  
     else {
+      console.log(localStorage.getItem('did not restrict'))
     }
   }
   
@@ -140,8 +169,8 @@ export class MapComponent implements AfterViewInit {
         console.log(res);
         this.http.post(this.nests + "/nestconfig", {
           "nest": res.ok._id,
-          "start_date":  this.calendarComponent.calComponent.getDateSelected(),
-          "end_date":  this.calendarComponent.calComponent.getDateSelected(),
+          "start_date":  localStorage.getItem('currDate'),
+          "end_date":  localStorage.getItem('currDate'),
           "vehicle_qty": 0,
         }).subscribe((done: any) => {
           console.log(done);
@@ -158,17 +187,27 @@ export class MapComponent implements AfterViewInit {
    * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
    */
   private loadNests(): void {
-    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
-      for (const c of res.ok) {
-        const lat = c.coords.lat;
-        const lon = c.coords.lon;
-        var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
-        currNest.bindTooltip(
-          "Vehicles: " + c.vehicle_qty
-        );
-        currNest.addEventListener("click", ()=> {
-          this.openDialog(DialogNestsComponent, c.vehicle_qty, c);
-        })
+   // console.log(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate'));
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+    //  console.log(res.ok);
+      if (res.ok){
+        for (const c of res.ok) {
+
+          this.nestList.push(c);
+          
+          const lat = c.coords.lat;
+          const lon = c.coords.lon;
+          
+          var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
+          this.mapNestList.push(currNest);
+          
+          currNest.bindTooltip(
+            "Name: " + c.nest_name
+          );
+          currNest.addEventListener("click", ()=> {
+            this.openDialog(DialogNestsComponent, c.vehicle_qty, c);
+          })
+        }
       }
     },
     (error) => {
@@ -184,8 +223,8 @@ export class MapComponent implements AfterViewInit {
    */
   private openDialog(dialog, vehicles, nest){
     let dialogRef = this.dialog.open(dialog, {
-      data: {vehicles: vehicles},
-      disableClose: true
+      data: {vehicles: vehicles, name: nest.nest_name},
+      disableClose: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -197,19 +236,40 @@ export class MapComponent implements AfterViewInit {
           this.initialize();
         });
       }
-      //Update the nest
+      else if(result == -2){
+        // do nothing
+      }
+      //Update the nest name
       else{
-        this.http.get(this.nests + "/nestconfig/nest/" + nest._id).subscribe((res: any) => {
           //FIX
-          this.http.put(this.nests + "/nestconfig/" + res.ok[0]._id , {
-            "vehicle_qty": result
+          this.http.put(this.nests + "/nest/" + nest._id , {
+            "nest_name": result
           }).subscribe(res => {
             this.map.off();
             this.map.remove();
             this.initialize();
-          })
-        });
+          });
+        
+
+        // this.http.get(this.nests + "/nestconfig/nest/" + nest._id).subscribe((res: any) => {
+        //   //FIX
+        //   this.http.put(this.nests + "/nestconfig/" + res.ok[0]._id , {
+        //     "vehicle_qty": result
+        //   }).subscribe(res => {
+        //     this.map.off();
+        //     this.map.remove();
+        //     this.initialize();
+        //   })
+        // });
+        
       }
     })
+  }
+
+  addVehicles(qty:string) {
+    if (!this.vehicle_qty) {
+       return;
+    }
+    this.vehicle_qty = qty;
   }
 }

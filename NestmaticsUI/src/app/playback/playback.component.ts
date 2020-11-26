@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet-plugin-trackplayback';
-import { CalendarComponent } from '../calendar/calendar.component';
+//import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 
@@ -16,9 +16,12 @@ export class PlaybackComponent implements AfterViewInit {
   toolOpened = true; //Variable used for opening and closing the toolbar
   private map; //Main map 
 
-  calendarComponent: CalendarComponent = new CalendarComponent();
-  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
-  private dateSelected = CalendarComponent.getDateSelected(); //Variable to obtain the date selected
+  // calendarComponent: CalendarComponent = new CalendarComponent();
+  // private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
+  // private dateSelected = CalendarComponent.getDateSelected(); //Variable to obtain the date selected
+
+  private areaSelected = localStorage.getItem('currAreaName');
+  private dateSelected = localStorage.getItem('currDate');
 
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
   rides: string = 'http://localhost:3000/rides' //Ride Data End-point
@@ -94,7 +97,7 @@ export class PlaybackComponent implements AfterViewInit {
    * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
    */
   private loadNests(): void {
-    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
       for (const c of res.ok) {
         const lat = c.coords.lat;
         const lon = c.coords.lon;

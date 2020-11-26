@@ -1,6 +1,6 @@
 <!--View for the main calendar/control component-->
 <div class="calendar">
-<div class="areaTitle">{{calComponent.areaName}}</div>
+<div class="areaTitle">{{areaName}}</div>
     <mat-form-field appearance="fill">
         <mat-label>Calendar</mat-label>
         <input #input disabled (dateInput)="addEvent('input', $event)" matInput [matDatepicker]="calendarPicker" [formControl]="todaysDate">

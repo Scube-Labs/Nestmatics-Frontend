@@ -27,6 +27,8 @@ import { GoogleLoginProvider } from 'angularx-social-login';
 import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
+import { EventEmitterService } from './event-emitter.service';
+import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment
     LoginComponent,
     DialogUploadComponent,
     DialogExperimentListComponent,
-    DialogExperimentComponent
+    DialogExperimentComponent,
+    DropStrategyComponent
   ],
   imports: [
     LeafletModule,
@@ -59,6 +62,7 @@ import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment
     ReactiveFormsModule
   ],
   providers: [
+    EventEmitterService,
     AuthGuard,
     LoginComponent,
     CalendarComponent,
