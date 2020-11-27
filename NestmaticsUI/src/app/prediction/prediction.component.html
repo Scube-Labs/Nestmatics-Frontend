@@ -5,11 +5,14 @@
       <div id="prediction"></div>
     </div>
 </div>
-
-<mat-slider #daySlider
-  thumbLabel
-  [displayWith]="formatLabel"
-  (change)="getPrediction(daySlider.value)"
-  tickInterval="24"
-  min="1"
-  max="24"></mat-slider>
+<mat-card style="width: 160px;">
+  <p>Hour selection slider (24 hours)</p>
+  <mat-slider #daySlider
+    thumbLabel
+    [displayWith]="formatLabel"
+    (change)="getPrediction(daySlider.value)"
+    tickInterval="2"
+    min="1"
+    max="24">
+  </mat-slider>
+</mat-card>

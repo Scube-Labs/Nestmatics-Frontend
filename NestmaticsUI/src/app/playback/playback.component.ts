@@ -168,6 +168,18 @@ export class PlaybackComponent implements AfterViewInit {
     }, 400);
   }
 
+  formatLabel(value: number) {
+    if (value >= 0) {
+      return Math.round(value);
+    }
+    return value;
+  }
+
+  public updateTime(day : number): void {
+    
+    console.log("changed " + day)
+  }
+
   /**
    * Function to control the playback Play functionality
    */

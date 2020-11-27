@@ -30,6 +30,7 @@ import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
 import { DialogCreateExperimentComponent } from './dialog-create-experiment/dialog-create-experiment.component';
+import { DialogReportComponent } from './dialog-report/dialog-report.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { DialogCreateExperimentComponent } from './dialog-create-experiment/dial
     DialogUploadComponent,
     DialogExperimentListComponent,
     DialogExperimentComponent,
-    DialogCreateExperimentComponent
+    DialogCreateExperimentComponent,
+    DialogReportComponent
   ],
   imports: [
     LeafletModule,

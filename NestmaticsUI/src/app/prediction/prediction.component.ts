@@ -4,6 +4,7 @@ import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
 import { CalendarComponent } from '../calendar/calendar.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-prediction',
@@ -17,9 +18,9 @@ export class PredictionComponent implements AfterViewInit {
   calendarComponent: CalendarComponent = new CalendarComponent();
   private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   
-  areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
-  nests: string ='http://localhost:3000/nests' //Nest Data End-Point
+  areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
+  rides: string = environment.baseURL + '/nestmatics/rides' //Ride Data End-point
+  nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   restPredict: string ='http://localhost:3000/predictions'
   
   currHeat;
@@ -37,7 +38,7 @@ export class PredictionComponent implements AfterViewInit {
 
   formatLabel(value: number) {
     if (value >= 0) {
-      return 'hr' + Math.round(value);
+      return Math.round(value);
     }
     return value;
   }
@@ -51,11 +52,14 @@ export class PredictionComponent implements AfterViewInit {
    */
   private restrict(): void{
     if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
-      this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
-        var polygon = L.polygon(res[0].coordinates);
+      this.http.get(this.areas + "/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+        var polygon = L.polygon(res.ok.coords.coordinates);
         this.map.fitBounds(polygon.getBounds());
         this.map.setMaxBounds(polygon.getBounds());
         this.map.options.minZoom = this.map.getZoom();
+      },
+      (error) => {
+        console.log("Unable to restrict area");
       })
     }  
     else {
@@ -82,22 +86,33 @@ export class PredictionComponent implements AfterViewInit {
     tiles.addTo(this.map);
   }
 
+   /**
+   * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
+   */
   private loadNests(): void {
-    
-    this.http.get(this.nests).subscribe((res: any) => {
-      for (const c of res) {
-        const lat = c.coordinates[0];
-        const lon = c.coordinates[1];
-        (L as any).circle([lon, lat], 20).addTo(this.map);
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
+      for (const c of res.ok) {
+        const lat = c.coords.lat;
+        const lon = c.coords.lon;
+        var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
+        currNest.bindTooltip(
+          "Vehicles: " + c.vehicle_qty
+        );
       }
+    },
+    (error) => {
+      console.log("Unable to load Nests");
     });
   }
 
   private predict(day : number): void {
-    if(typeof this.currHeat != 'undefined'){
-      this.map.removeLayer(this.currHeat);
-    }
+    
+    
     this.http.get(this.restPredict).subscribe((res: any) => {
+      if(typeof this.currHeat != 'undefined'){
+        this.map.removeLayer(this.currHeat);
+      }
+      
       for (const c of res) {
         this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
       }
