@@ -7,6 +7,7 @@ import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
 
 const moment = _moment;
 
@@ -36,7 +37,8 @@ export class PlaybackComponent implements AfterViewInit {
 
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) {}
+      public dialog: MatDialog,
+      private toastr: ToastrService) {}
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -186,11 +188,11 @@ export class PlaybackComponent implements AfterViewInit {
           
         }
         else {
-          alert('No playback data available')
+          this.toastr.error('No playback data available')
         }
       },
       (error) => {
-        alert(error.error.Error);
+        this.toastr.info(error.error.Error);
       });
     }
     }, 400);

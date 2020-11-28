@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
 
 const moment = _moment;
 
@@ -23,7 +24,7 @@ export class DialogCreateExperimentComponent {
   experimentsNamesList: string[] = [];
   currNestID;
 
-  constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogCreateExperimentComponent>,
+  constructor(private toastr: ToastrService, private http: HttpClient , public dialogRef: MatDialogRef<DialogCreateExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       
       this.http.get(this.nests + "nestconfig/nest/" + data.id).subscribe((res: any) => {
@@ -46,7 +47,7 @@ export class DialogCreateExperimentComponent {
     {
       if(typeof this.selectedFirst != 'undefined' && typeof this.selectedSecond != 'undefined'){
         if(this.selectedFirst == this.selectedSecond){
-          alert("Invalid configuration selection. Configurations cannot be the same for both selections")
+          this.toastr.warning("Invalid configuration selection. Configurations cannot be the same for both selections")
         }
         else{
           var first: any = this.experimentsList[this.experimentsNamesList.indexOf(this.selectedFirst)]
@@ -62,16 +63,16 @@ export class DialogCreateExperimentComponent {
             this.dialogRef.close(-1);
           },
           (error) => {
-            alert(error.error.Error);
+            this.toastr.warning(error.error.Error);
           })
         }
       }
       else{
-        alert("Please Select two (2) different nest configurations");
+        this.toastr.info("Please Select two (2) different nest configurations");
       }
     }
     else {
-      alert("Please enter a valid name for the experiment");
+      this.toastr.info("Please enter a valid name for the experiment");
 
     }
 

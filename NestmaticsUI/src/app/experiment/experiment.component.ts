@@ -9,6 +9,7 @@ import { DialogExperimentComponent } from '../dialog-experiment/dialog-experimen
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 import { DialogCreateExperimentComponent } from '../dialog-create-experiment/dialog-create-experiment.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-experiment',
@@ -30,7 +31,8 @@ export class ExperimentComponent implements AfterViewInit {
   nestsList: string[][] = [];
   
   constructor(private http: HttpClient,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private toastr: ToastrService) { }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -162,7 +164,7 @@ export class ExperimentComponent implements AfterViewInit {
    */
   private getAllExperiments() {
     this.http.get(this.exp + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID')).subscribe((res: any) => {
-      if(res.ok.length == 0) alert("No Experiments have been created yet.")
+      if(res.ok.length == 0) this.toastr.info("No Experiments have been created yet.")
       for(var i=0; i<res.ok.length; i++){
         this.experimentsList.push(res.ok[i].name);
         this.experimentIDs.push(res.ok[i]._id);
@@ -173,7 +175,7 @@ export class ExperimentComponent implements AfterViewInit {
   
   public getFilteredExperiments(nest) {
     this.http.get(this.exp).subscribe((res: any) => {
-      if(res.length == 0) alert("No Experiments have been created yet.")
+      if(res.length == 0) this.toastr.info("No Experiments have been created yet.")
       for(var i=0; i<res.length; i++){
         this.experimentsList.push(res[i].name);
         this.experimentIDs.push(res[i]._id);

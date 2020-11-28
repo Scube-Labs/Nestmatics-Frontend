@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dialog-upload',
@@ -15,7 +16,7 @@ export class DialogUploadComponent implements OnInit {
   uploadingInProcess = false;
 
   rides = environment.baseURL + "/nestmatics/rides"
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
   
   // afuConfig = {
   //   uploadAPI: {
@@ -51,17 +52,17 @@ export class DialogUploadComponent implements OnInit {
     this.http.post(this.rides, formData).subscribe((res: any) => {
       console.log(res)
       if(res.ok.inserted.length == 0){
-        alert("File was already uploaded");
+        this.toastr.info("File was already uploaded");
       }
       else{
-        alert("File uploaded succesfuly")
+        this.toastr.success("File uploaded succesfuly")
       }
 
       this.uploadingInProcess = false;
     },
     (error) => {
       console.log(error);
-      alert("Upload Error: " + error.error.Error);
+      this.toastr.warning("Upload Error: " + error.error.Error);
 
       this.uploadingInProcess = false;
     })

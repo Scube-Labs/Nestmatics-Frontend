@@ -18,6 +18,7 @@ import { ServiceAreaComponent } from './service-area/service-area.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
+import { ToastrModule } from 'ngx-toastr';
 
 //Google Auth Modules
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
@@ -62,7 +63,8 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     HttpClientModule,
     CalendarHeatmapModule,
     SocialLoginModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     AuthGuard,
