@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dialog-experiment-list',
@@ -14,7 +15,7 @@ export class DialogExperimentListComponent {
   experiments: string[] = [];
   experimentIDs: string[] = [];
 
-  constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentListComponent>,
+  constructor(private toastr: ToastrService, private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.http.get(this.exp + "/nest/" + data.id).subscribe((res: any) => {
         for(var i=0; i<res.ok.length; i++){
@@ -23,7 +24,7 @@ export class DialogExperimentListComponent {
         }
       }),
       (error) => {
-        console.log(error.error.Error);
+        this.toastr.warning(error.error.Error);
       }
      }
 

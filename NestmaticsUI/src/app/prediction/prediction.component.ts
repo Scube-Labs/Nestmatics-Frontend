@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
 import { CalendarComponent } from '../calendar/calendar.component';
 import { environment } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-prediction',
@@ -25,7 +26,7 @@ export class PredictionComponent implements AfterViewInit {
   
   currHeat;
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -101,7 +102,7 @@ export class PredictionComponent implements AfterViewInit {
       }
     },
     (error) => {
-      console.log("Unable to load Nests");
+      this.toastr.info("Unable to load Nests");
     });
   }
 

@@ -97,7 +97,7 @@ export class ExperimentComponent implements AfterViewInit {
       }
     },
     (error) => {
-      console.log("Unable to load Nests");
+      this.toastr.warning("Unable to load Nests");
     });
   }
 
@@ -138,7 +138,6 @@ export class ExperimentComponent implements AfterViewInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result === -1){
           this.http.get(this.exp + "/" + expID + "/report").subscribe((res: any) => {
-            console.log(res);
           })
         }
       })

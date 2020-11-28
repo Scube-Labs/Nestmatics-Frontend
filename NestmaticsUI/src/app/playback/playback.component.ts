@@ -116,7 +116,7 @@ export class PlaybackComponent implements AfterViewInit {
       }
     },
     (error) => {
-      console.log("Unable to load Nests");
+      this.toastr.warning("Unable to load Nests");
     });
   }
 
@@ -149,7 +149,6 @@ export class PlaybackComponent implements AfterViewInit {
           
         }
         
-        console.log(playbackArray);
         
         if(res.ok.length > 0){
           
@@ -182,7 +181,6 @@ export class PlaybackComponent implements AfterViewInit {
             }
 
             this.progress = (Number(moment(e.time).format('H')) - this.minUnix) * this.change
-            console.log(this.change);
 
           }, this)
           
@@ -239,7 +237,6 @@ export class PlaybackComponent implements AfterViewInit {
   }
 
   public showLines(event) {
-    console.log(event)
     if(event.checked == false){
       this.trackplayback.hideTrackLine();
     }

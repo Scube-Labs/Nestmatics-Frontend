@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
 
 const moment = _moment;
 
@@ -28,7 +29,8 @@ export class MapComponent implements AfterViewInit {
   
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) { }
+      public dialog: MatDialog,
+      private toastr: ToastrService) { }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -157,7 +159,6 @@ export class MapComponent implements AfterViewInit {
    */
   private loadNests(): void {
     this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
-      console.log(res)
       for (const c of res.ok) {
         const lat = c.coords.lat;
         const lon = c.coords.lon;
@@ -171,7 +172,7 @@ export class MapComponent implements AfterViewInit {
       }
     },
     (error) => {
-      console.log(error.error.Error);
+      this.toastr.warning(error.error.Error);
     });
   }
 

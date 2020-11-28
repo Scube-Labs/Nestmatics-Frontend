@@ -50,7 +50,6 @@ export class DialogUploadComponent implements OnInit {
     formData.append('file', this.selectedFile);
     formData.append('area', localStorage.getItem('currAreaID'));
     this.http.post(this.rides, formData).subscribe((res: any) => {
-      console.log(res)
       if(res.ok.inserted.length == 0){
         this.toastr.info("File was already uploaded");
       }
@@ -61,7 +60,6 @@ export class DialogUploadComponent implements OnInit {
       this.uploadingInProcess = false;
     },
     (error) => {
-      console.log(error);
       this.toastr.warning("Upload Error: " + error.error.Error);
 
       this.uploadingInProcess = false;
