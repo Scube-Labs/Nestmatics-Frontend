@@ -26,8 +26,14 @@ export class PlaybackComponent implements AfterViewInit {
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
   rides: string = environment.baseURL + '/nestmatics/rides' //Ride Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
-  trackplayback: any;
-  disableControls: boolean = true;
+  trackplayback: any; //Track instance in charge of visualization
+  disableControls: boolean = true; //Variable used to disable controls
+  minUnix //Minimum time
+  maxUnix //Maximum time
+  change; //Percentage change for progress bar
+  progress = 0; //Progress for progress bar
+  currentTime; //Current time being displayed in the playback
+
   constructor(
       private http: HttpClient,
       public dialog: MatDialog) {}
@@ -128,12 +134,12 @@ export class PlaybackComponent implements AfterViewInit {
             rideArray.push({
               "lat": Number(res.ok[i].coords.start_lat),
               "lng": Number(res.ok[i].coords.start_lon),
-              "time": Number(moment(res.ok[i].start_time).format('HmmssS')) * 1
+              "time": Number(moment(res.ok[i].start_time).format('x')) * 1
             });
             rideArray.push({
               "lat": Number(res.ok[i].coords.end_lat),
               "lng": Number(res.ok[i].coords.end_lon),
-              "time": Number(moment(res.ok[i].end_time).format('HmmssS')) * 1
+              "time": Number(moment(res.ok[i].end_time).format('x')) * 1
             });
   
             playbackArray.push(rideArray);
@@ -155,6 +161,28 @@ export class PlaybackComponent implements AfterViewInit {
             isDraw: true
           }});
           this.disableControls = false;
+
+          this.minUnix = moment(this.trackplayback.getStartTime()).format('H');
+          this.maxUnix = moment(this.trackplayback.getEndTime()).format('H');
+
+          this.change = 100/(this.maxUnix - this.minUnix);
+
+          // trigger on time change
+          this.trackplayback.on('tick', e => {
+            if(Number(moment(e.time).format('H')) < 12){
+              this.currentTime = moment(e.time).format('H:mm:ss') + " AM";
+            }
+            else if(Number(moment(e.time).format('H')) == 12){
+              this.currentTime = moment(e.time).format('H:mm:ss') + " PM";
+            }
+            else{
+              this.currentTime = (Number(moment(e.time).format('H')) - 12).toString() + moment(e.time).format(':mm:ss') + " PM";
+            }
+
+            this.progress = (Number(moment(e.time).format('H')) - this.minUnix) * this.change
+            console.log(this.change);
+
+          }, this)
           
         }
         else {
@@ -162,22 +190,31 @@ export class PlaybackComponent implements AfterViewInit {
         }
       },
       (error) => {
-        console.log(error.error.Error);
+        alert(error.error.Error);
       });
     }
     }, 400);
   }
 
   formatLabel(value: number) {
-    if (value >= 0) {
-      return Math.round(value);
+    if (value > 12) {
+      return Math.round(value)-12 + 'PM';
     }
-    return value;
+    return value + 'AM';
   }
 
-  public updateTime(day : number): void {
-    
-    console.log("changed " + day)
+  public updateTime(time : number): void {
+    var unixTime;
+    if(time < 10){
+      unixTime = Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'))
+    }
+    else{
+      unixTime = Number(moment(this.dateSelected + "T" + time + ":00:00").format('x'))
+    }
+    Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'));
+    this.trackplayback.setCursor(unixTime);
+    this.playbackPause();
+    this.playbackPlay();
   }
 
   /**
@@ -207,5 +244,13 @@ export class PlaybackComponent implements AfterViewInit {
     else{
       this.trackplayback.showTrackLine();
     }
+  }
+
+  public quickSpeed() {
+    this.trackplayback.quickSpeed();
+  }
+
+  public slowSpeed() {
+    this.trackplayback.slowSpeed();
   }
 }

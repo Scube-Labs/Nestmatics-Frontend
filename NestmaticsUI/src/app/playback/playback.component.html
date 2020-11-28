@@ -17,8 +17,8 @@
   
   <div style="float:right; margin-right:10px; margin-top:5px">
     Speed Controls
-    <button [disabled]="disableControls" (click)="playbackReplay()"mat-mini-fab><mat-icon class="toolbarButtons">fast_rewind</mat-icon></button>
-    <button [disabled]="disableControls" (click)="playbackReplay()"mat-mini-fab><mat-icon class="toolbarButtons">fast_forward</mat-icon></button> 
+    <button [disabled]="disableControls" (click)="slowSpeed()"mat-mini-fab><mat-icon class="toolbarButtons">fast_rewind</mat-icon></button>
+    <button [disabled]="disableControls" (click)="quickSpeed()"mat-mini-fab><mat-icon class="toolbarButtons">fast_forward</mat-icon></button> 
   </div>
 
   <div style="margin-top: 13px">
@@ -27,17 +27,36 @@
     (change)="showLines($event)"
     [checked]="true"
     aria-label="First checkbox">
-  Show Lines
-</mat-checkbox>
+      Show Lines
+    </mat-checkbox>
+    <br>
+    <mat-checkbox
+    [disabled]="disableControls"
+    (change)="showLines($event)"
+    [checked]="true"
+    aria-label="First checkbox">
+      Behaviour Heatmap
+    </mat-checkbox>
+
+    <h1>Clock: {{currentTime}}</h1>
+
+    <mat-progress-bar  mode="determinate" [value]="progress"></mat-progress-bar>
+    <div>
+      Time Selection: 
+      <mat-slider #daySlider
+      thumbLabel
+      [displayWith]="formatLabel"
+      (change)="updateTime(daySlider.value)"
+      tickInterval="2"
+      [min]="minUnix"
+      [max]="maxUnix"
+      [disabled]="disableControls">
+    </mat-slider>
+
+    </div>
+     
   </div>
   
-  <mat-slider #daySlider
-    thumbLabel
-    [displayWith]="formatLabel"
-    (change)="updateTime(daySlider.value)"
-    tickInterval="2"
-    min="1"
-    max="24">
-  </mat-slider>
+  
 
 </mat-card>

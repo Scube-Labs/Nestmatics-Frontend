@@ -20,6 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressBarModule} from '@angular/material/progress-bar';
 
 const MaterialComponents = [
   BrowserModule,
@@ -37,7 +38,8 @@ const MaterialComponents = [
   MatListModule,
   MatSelectModule,
   MatProgressSpinnerModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatProgressBarModule
 ]
 
 @NgModule({
