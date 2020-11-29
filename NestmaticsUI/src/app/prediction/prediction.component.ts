@@ -25,7 +25,9 @@ export class PredictionComponent implements AfterViewInit {
   restPredict: string ='http://localhost:3000/predictions'
   
   currHeat;
-  
+  InProcess = false;
+  currentTime;
+
   constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   ngAfterViewInit(): void {
@@ -38,10 +40,16 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   formatLabel(value: number) {
-    if (value >= 0) {
-      return Math.round(value);
+    if (value == 12) {
+      return Math.round(value) + "PM";
     }
-    return value;
+    else if(value == 24){
+      return Math.round(value) - 12 + "AM"
+    }
+    else if(value > 12){
+      return Math.round(value) - 12 + "PM"
+    }
+    return value + "AM";
   }
 
   getPrediction(day: number) {
@@ -102,13 +110,14 @@ export class PredictionComponent implements AfterViewInit {
       }
     },
     (error) => {
-      this.toastr.info("Unable to load Nests");
+      this.toastr.info(error.error.Error);
     });
   }
 
   private predict(day : number): void {
     
-    
+    this.InProcess = true;
+
     this.http.get(this.restPredict).subscribe((res: any) => {
       if(typeof this.currHeat != 'undefined'){
         this.map.removeLayer(this.currHeat);
@@ -117,6 +126,14 @@ export class PredictionComponent implements AfterViewInit {
       for (const c of res) {
         this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
       }
+
+      this.InProcess = false;
+    },
+    (error) => {
+      this.InProcess = false;
+      this.toastr.error("No predictions found or available at the moment");
     });
+
+    
   }
 }

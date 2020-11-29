@@ -5,8 +5,8 @@
       <div id="prediction"></div>
     </div>
 </div>
-<mat-card style="width: 160px;">
-  <p>Hour selection slider (24 hours)</p>
+<mat-card style="width: 350px;">
+  <h1>Hour selection slider</h1>
   <mat-slider #daySlider
     thumbLabel
     [displayWith]="formatLabel"
@@ -16,3 +16,5 @@
     max="24">
   </mat-slider>
 </mat-card>
+
+<mat-spinner *ngIf="InProcess"></mat-spinner>

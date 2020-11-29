@@ -33,12 +33,12 @@
     <mat-checkbox
     [disabled]="disableControls"
     (change)="showLines($event)"
-    [checked]="true"
+    [checked]="false"
     aria-label="First checkbox">
       Behaviour Heatmap
     </mat-checkbox>
 
-    <h1>Clock: {{currentTime}}</h1>
+    
 
     <mat-progress-bar  mode="determinate" [value]="progress"></mat-progress-bar>
     <div>
@@ -60,3 +60,5 @@
   
 
 </mat-card>
+
+<mat-spinner *ngIf="InProcess"></mat-spinner>

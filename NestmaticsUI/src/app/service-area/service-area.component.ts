@@ -182,6 +182,9 @@ export class ServiceAreaComponent implements AfterViewInit {
           this.openDialog(c);
         })
       }
+    },
+    (error) => {
+      this.toastr.warning(error.error.Error);
     });
   }
 
