@@ -11,7 +11,7 @@ export class DialogNestsComponent implements OnInit {
   nestName = "";
   constructor(public dialogRef: MatDialogRef<DialogNestsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-    //  this.newAmmount = data.vehicles;
+      this.newAmmount = data.vehicles;
       this.nestName = data.name;
      }
 
@@ -21,8 +21,10 @@ export class DialogNestsComponent implements OnInit {
   /**
    * This function updates the selected nest's vehicle ammount. 0 <= value <= 100
    */
-  updateNest() {
-    this.dialogRef.close(this.nestName);
+  updateNest(qty:string, name:string) {
+    var result = {name: name, vehicles:qty };
+    console.log("name "+name+", vehicles: "+qty)
+    this.dialogRef.close(result);
   }
   // updateNest() {
   //   if(this.newAmmount > 100) this.newAmmount = 100;
