@@ -29,7 +29,7 @@ export class CalendarComponent implements OnInit {
   static hasDate = false;
   static selectedDate = moment(new Date()).format('YYYY-MM-DD');
   static availableDatesList: string[] = [];
-
+  
 
   todaysDate = new FormControl(new Date());
 
@@ -67,8 +67,7 @@ export class CalendarComponent implements OnInit {
     this.areaName = name
   }
 
-  static updateDeleteSA(){
-   // this.isSelected = localStorage.getItem('default');
+ 
   // dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
   //   // Only highligh dates inside the month view.
   //   if (view === 'month') {
@@ -79,7 +78,7 @@ export class CalendarComponent implements OnInit {
   //   }
 
   //   return '';
-  }
+  // }
 
   static getDateSelected() {
     return CalendarComponent.selectedDate;

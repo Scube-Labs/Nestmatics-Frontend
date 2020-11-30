@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { EventEmitterService } from '../event-emitter.service'
 
 @Component({
   selector: 'app-service-area',
@@ -32,7 +33,8 @@ export class ServiceAreaComponent implements AfterViewInit {
   constructor(
       private http: HttpClient,
       public dialog: MatDialog,
-      private toastr: ToastrService) { }
+      private toastr: ToastrService,
+      private eventEmitter: EventEmitterService) { }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -218,7 +220,8 @@ export class ServiceAreaComponent implements AfterViewInit {
 
         if(area.area_name != "--unnamed"){
 
-       //   CalendarComponent.updateAreaSelected(area._id, area.area_name);
+          this.eventEmitter.onSelectionOfArea();
+
           localStorage.setItem('currAreaID', area._id);
           localStorage.setItem('currAreaName', area.area_name);
           console.log(localStorage.getItem('currAreaID'))

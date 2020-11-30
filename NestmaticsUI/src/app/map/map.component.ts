@@ -53,7 +53,7 @@ export class MapComponent implements AfterViewInit {
       private toastr: ToastrService) { 
 
         this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
-      subscribe(()=> {
+        subscribe(()=> {
         this.refresh()
       });
     }

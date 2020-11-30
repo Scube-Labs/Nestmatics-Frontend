@@ -21,6 +21,9 @@ export class EventEmitterService {
   invokeAreaChange = new EventEmitter();
   subsArea:Subscription;
 
+  invokeSelected = new EventEmitter();
+  selectSub: Subscription;
+
   constructor() { }
 
   onChangeDate(view:string){
@@ -34,7 +37,10 @@ export class EventEmitterService {
     else if(view == 'playback'){
       this.invokeRefreshRides.emit();
     }
-   
+  }
+
+  onSelectionOfArea(){
+    this.invokeSelected.emit();
   }
 
   onChangeToArea(name:string){

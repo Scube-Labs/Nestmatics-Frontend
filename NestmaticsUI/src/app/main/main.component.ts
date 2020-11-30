@@ -4,8 +4,6 @@ import { PlaybackComponent } from '../playback/playback.component'
 import { PredictionComponent } from '../prediction/prediction.component';
 import { ExperimentComponent } from '../experiment/experiment.component';
 import { ServiceAreaComponent } from '../service-area/service-area.component';
-//import { CalendarComponent } from '../calendar/calendar.component';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component';
 import { EventEmitterService } from '../event-emitter.service'
@@ -20,7 +18,6 @@ export class MainComponent implements OnInit {
   defaultAreaName = "Puerto Rico"
   defaultName = localStorage.setItem('currAreaName', this.defaultAreaName)
   currentComponent: any = ServiceAreaComponent;
- // calendarComponent: CalendarComponent = new CalendarComponent();
   isSelected = false;
 
   activeColor = '#94ded2';
@@ -36,12 +33,22 @@ export class MainComponent implements OnInit {
   prevComp= 'service';
 
   constructor(
-    private http: HttpClient,
     public dialog: MatDialog,
-    private eventEmitterService: EventEmitterService) { }
+    private eventEmitterService: EventEmitterService) { 
+
+      this.eventEmitterService.selectSub = this.eventEmitterService.invokeSelected.
+        subscribe(()=> {
+        this.select()
+      });
+      
+    }
 
   ngOnInit(): void {
     localStorage.setItem('currView', 'serviceArea')
+  }
+
+  select(){
+    this.isSelected = true;
   }
 
   /**
@@ -107,10 +114,10 @@ export class MainComponent implements OnInit {
    * Open the upload component dialog
    */
   public openDialog(){
-    let dialogRef = this.dialog.open(DialogUploadComponent);
     this.upload = this.activeColor;
     this.changeColors(this.prevComp);
     this.prevComp = 'upload';
+    let dialogRef = this.dialog.open(DialogUploadComponent);
     dialogRef.afterClosed().subscribe(result => {
       
     })
