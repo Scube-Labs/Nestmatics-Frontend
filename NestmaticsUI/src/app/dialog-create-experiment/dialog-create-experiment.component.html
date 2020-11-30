@@ -1,0 +1,42 @@
+
+
+<mat-form-field class="example-full-width">
+    <mat-label>Enter experiment name</mat-label>
+    <input matInput type="text" maxlength="20" [(ngModel)]="experimentName"/>
+</mat-form-field>
+
+<div>
+    <mat-card class="experiment-card" style="float:left">
+        <mat-card-header>
+          <mat-card-title> Select first configuration </mat-card-title>
+        </mat-card-header>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Configuration's list</mat-label>
+          <mat-select #nestConf [(value)]="selectedFirst">
+            <mat-option *ngFor="let nestConf of experimentsNamesList" [value]="nestConf">
+              {{nestConf}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+    </mat-card>
+    
+    <mat-card class="experiment-card" style="float:right">
+        <mat-card-header>
+          <mat-card-title> Select second configuration </mat-card-title>
+        </mat-card-header>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Configuration's list</mat-label>
+          <mat-select #nestConf [(value)]="selectedSecond">
+            <mat-option *ngFor="let nestConf of experimentsNamesList" [value]="nestConf">
+              {{nestConf}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+    </mat-card>
+</div>
+
+<button (click)="createExperiment()" mat-raised-button color="accent">Create Experiment</button>

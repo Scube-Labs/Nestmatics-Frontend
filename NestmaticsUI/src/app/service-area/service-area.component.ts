@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
 import { environment } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-service-area',
@@ -30,7 +31,8 @@ export class ServiceAreaComponent implements AfterViewInit {
 
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) { }
+      public dialog: MatDialog,
+      private toastr: ToastrService) { }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -180,6 +182,9 @@ export class ServiceAreaComponent implements AfterViewInit {
           this.openDialog(c);
         })
       }
+    },
+    (error) => {
+      this.toastr.warning(error.error.Error);
     });
   }
 
@@ -227,7 +232,7 @@ export class ServiceAreaComponent implements AfterViewInit {
 
         }
         else{
-          alert("Unnamed selection is not allowed. Rename the Service Area and try again")
+          this.toastr.warning("Unnamed selection is not allowed. Rename the Service Area and try again")
         }
       }
       else{

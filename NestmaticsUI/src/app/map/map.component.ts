@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
 import { EventEmitterService } from '../event-emitter.service'
 import { Observable, forkJoin } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 const moment = _moment;
 
@@ -48,7 +49,8 @@ export class MapComponent implements AfterViewInit {
   constructor(
       private http: HttpClient,
       public dialog: MatDialog, 
-      private eventEmitterService: EventEmitterService) { 
+      private eventEmitterService: EventEmitterService,
+      private toastr: ToastrService) { 
 
         this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
       subscribe(()=> {
@@ -373,8 +375,8 @@ export class MapComponent implements AfterViewInit {
     (error) => {
       console.log("get empy nests");
       this.newDay = true;
+      this.toastr.warning(error.error.Error);
       this.getEmptyDayNests();
-      console.log(error.error.Error);
     });
   }
 

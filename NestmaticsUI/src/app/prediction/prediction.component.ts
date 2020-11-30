@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
 import { environment } from 'src/environments/environment';
 import { EventEmitterService } from '../event-emitter.service'
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-prediction',
@@ -26,9 +27,12 @@ export class PredictionComponent implements AfterViewInit {
   restPredict: string =environment.baseURL+ 'nestmatics/predictions'
   
   currHeat;
+  InProcess = false;
+  currentTime;
   
   constructor(private http: HttpClient,
-    private eventEmitterService: EventEmitterService) { }
+    private eventEmitterService: EventEmitterService, 
+    private toastr: ToastrService) { }
 
   ngOnInit(){
     if(this.eventEmitterService.predictSub == undefined){
@@ -46,7 +50,6 @@ export class PredictionComponent implements AfterViewInit {
     this.initialize();
   }
 
-
   ngAfterViewInit(): void {
    this.initialize();
   }
@@ -60,10 +63,16 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   formatLabel(value: number) {
-    if (value >= 0) {
-      return 'hr' + Math.round(value);
+    if (value == 12) {
+      return Math.round(value) + "PM";
     }
-    return value;
+    else if(value == 24){
+      return Math.round(value) - 12 + "AM"
+    }
+    else if(value > 12){
+      return Math.round(value) - 12 + "PM"
+    }
+    return value + "AM";
   }
 
   getPrediction(day: number) {
@@ -75,11 +84,14 @@ export class PredictionComponent implements AfterViewInit {
    */
   private restrict(): void{
     if(!(this.areaSelected == undefined || this.areaSelected == "Unnamed")) {
-      this.http.get(this.areas + "?name=" + this.areaSelected).subscribe((res: any) => {
-        var polygon = L.polygon(res[0].coordinates);
+      this.http.get(this.areas + "/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+        var polygon = L.polygon(res.ok.coords.coordinates);
         this.map.fitBounds(polygon.getBounds());
         this.map.setMaxBounds(polygon.getBounds());
         this.map.options.minZoom = this.map.getZoom();
+      },
+      (error) => {
+        console.log("Unable to restrict area");
       })
     }  
     else {
@@ -106,25 +118,45 @@ export class PredictionComponent implements AfterViewInit {
     tiles.addTo(this.map);
   }
 
+   /**
+   * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
+   */
   private loadNests(): void {
-    
-    this.http.get(this.nests).subscribe((res: any) => {
-      for (const c of res) {
-        const lat = c.coordinates[0];
-        const lon = c.coordinates[1];
-        (L as any).circle([lon, lat], 20).addTo(this.map);
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+      for (const c of res.ok) {
+        const lat = c.coords.lat;
+        const lon = c.coords.lon;
+        var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
+        currNest.bindTooltip(
+          "Vehicles: " + c.vehicle_qty
+        );
       }
+    },
+    (error) => {
+      this.toastr.info(error.error.Error);
     });
   }
 
   private predict(day : number): void {
-    if(typeof this.currHeat != 'undefined'){
-      this.map.removeLayer(this.currHeat);
-    }
+    
+    this.InProcess = true;
+
     this.http.get(this.restPredict).subscribe((res: any) => {
+      if(typeof this.currHeat != 'undefined'){
+        this.map.removeLayer(this.currHeat);
+      }
+      
       for (const c of res) {
         this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
       }
+
+      this.InProcess = false;
+    },
+    (error) => {
+      this.InProcess = false;
+      this.toastr.error("No predictions found or available at the moment");
     });
+
+    
   }
 }

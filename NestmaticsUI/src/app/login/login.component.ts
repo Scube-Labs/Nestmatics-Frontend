@@ -4,6 +4,7 @@ import { SocialAuthService, SocialUser } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   userRoute: string = environment.baseURL + "/nestmatics/users";
   
-  constructor(private http: HttpClient, private router: Router, private authService: SocialAuthService) {}
+  constructor(private http: HttpClient, private router: Router, private authService: SocialAuthService, private toastr: ToastrService) {}
 
   /**
    * The function initializes an authentication service that awaits for a user to login.
@@ -41,7 +42,7 @@ export class LoginComponent implements OnInit {
         }
   
         else{
-          alert("Account is not approved");
+          this.toastr.warning("Account is not approved");
           this.logout();
           this.router.navigate(['/login']);
         }

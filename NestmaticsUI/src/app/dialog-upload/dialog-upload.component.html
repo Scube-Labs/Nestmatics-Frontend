@@ -1,3 +1,16 @@
-<angular-file-uploader
+<!-- <angular-file-uploader
       [config]="afuConfig">
-</angular-file-uploader>
+</angular-file-uploader> -->
+
+<mat-card class="experiment-card" style="float:right">
+      <mat-card-header>
+        <mat-card-title> Select ride data file to upload </mat-card-title>
+      </mat-card-header>
+      
+      <input mat type="file" accept=".csv" (change)="onFileChange($event)">
+
+      <button [disabled]="!hasSelected" (click)="fileUpload()" mat-raised-button color="accent">Create Experiment</button>
+      <mat-spinner *ngIf="uploadingInProcess"></mat-spinner>
+  </mat-card>
+
+  

@@ -6,6 +6,10 @@ import 'leaflet-plugin-trackplayback';
 //import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
+import * as _moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-playback',
@@ -24,13 +28,22 @@ export class PlaybackComponent implements AfterViewInit {
   private dateSelected = localStorage.getItem('currDate');
 
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
+  rides: string = environment.baseURL + '/nestmatics/rides' //Ride Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
-  trackplayback: any;
-  
+  trackplayback: any; //Track instance in charge of visualization
+  disableControls: boolean = true; //Variable used to disable controls
+  minUnix //Minimum time
+  maxUnix //Maximum time
+  change; //Percentage change for progress bar
+  progress = 0; //Progress for progress bar
+  currentTime; //Current time being displayed in the playback
+
+  InProcess = true;
+
   constructor(
       private http: HttpClient,
-      public dialog: MatDialog) {}
+      public dialog: MatDialog,
+      private toastr: ToastrService) {}
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -45,7 +58,7 @@ export class PlaybackComponent implements AfterViewInit {
     this.loadNests();
     this.initTiles();
     this.restrict();
-    this.playback();
+    this.playAll();
   
   }
   
@@ -103,38 +116,152 @@ export class PlaybackComponent implements AfterViewInit {
         const lon = c.coords.lon;
         var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
         currNest.bindTooltip(
-          "Vehicles: " + c.vehicle_qty
+          
+          "Name: " + c.nest_name
         );
+        currNest.addEventListener("click", ()=> {
+          this.http.get(this.rides + "/startat/nest/" + c._id + "/date/" + "2020-03-02" + "/area/" + localStorage.getItem('currAreaID') ).subscribe((res: any) => {
+            
+            var playbackArray = [];
+
+            for(var i=0; i<res.ok.length; i++){
+              var rideArray = new Array();
+              if(Number(res.ok[i].coords.start_lat) != -1 && Number(res.ok[i].coords.start_lon) != -1 && Number(res.ok[i].start_time) != -1 && Number(res.ok[i].coords.end_lat) != -1 && Number(res.ok[i].coords.end_lon) != -1 && Number(res.ok[i].end_time) != -1){
+                rideArray.push({
+                  "lat": Number(res.ok[i].coords.start_lat),
+                  "lng": Number(res.ok[i].coords.start_lon),
+                  "time": Number(moment(res.ok[i].start_time).format('x')) * 1
+                });
+                rideArray.push({
+                  "lat": Number(res.ok[i].coords.end_lat),
+                  "lng": Number(res.ok[i].coords.end_lon),
+                  "time": Number(moment(res.ok[i].end_time).format('x')) * 1
+                });
+      
+                playbackArray.push(rideArray);
+              }
+              
+            }
+            
+            this.playBack(playbackArray);
+
+          })
+        })
       }
     },
     (error) => {
-      console.log("Unable to load Nests");
+      this.toastr.warning(error.error.Error);
     });
   }
 
   /**
    * Method to initialize playback of vehicle ride data
    */
-  private playback(): void {
+  private playAll(): void {
     setTimeout(() => {
     if(typeof this.dateSelected != 'undefined') {
-      this.http.get(this.rides + "?area=" + this.areaSelected + "&date=" + this.dateSelected).subscribe((res: any) => {
-        console.log(res);
-        this.trackplayback = (L as any).trackplayback(res[0].rides, this.map, {
-          trackPointOptions: {
-            // whether draw track point
-            isDraw: true
-          },
-          trackLineOptions: {
-          // whether draw track line
-          isDraw: true
-        }});
+      this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/date/" + this.dateSelected).subscribe((res: any) => {
+        var playbackArray = [];
+
+        for(var i=0; i<res.ok.length; i++){
+          var rideArray = new Array();
+          if(Number(res.ok[i].coords.start_lat) != -1 && Number(res.ok[i].coords.start_lon) != -1 && Number(res.ok[i].start_time) != -1 && Number(res.ok[i].coords.end_lat) != -1 && Number(res.ok[i].coords.end_lon) != -1 && Number(res.ok[i].end_time) != -1){
+            rideArray.push({
+              "lat": Number(res.ok[i].coords.start_lat),
+              "lng": Number(res.ok[i].coords.start_lon),
+              "time": Number(moment(res.ok[i].start_time).format('x')) * 1
+            });
+            rideArray.push({
+              "lat": Number(res.ok[i].coords.end_lat),
+              "lng": Number(res.ok[i].coords.end_lon),
+              "time": Number(moment(res.ok[i].end_time).format('x')) * 1
+            });
+  
+            playbackArray.push(rideArray);
+          }
+          
+        }
+        
+        this.playBack(playbackArray);
+        
       },
       (error) => {
-        console.log("No playback data available");
+        this.toastr.info(error.error.Error);
+
+        this.InProcess = false;
       });
     }
     }, 400);
+  }
+
+  private playBack(playbackArray: string[]) {
+    if(playbackArray.length > 0){
+
+
+      if(typeof this.trackplayback != 'undefined'){
+        this.trackplayback.dispose();
+      }
+          
+      this.trackplayback = (L as any).trackplayback(playbackArray, this.map, {
+        trackPointOptions: {
+          // whether draw track point
+          isDraw: true
+        },
+        trackLineOptions: {
+        // whether draw track line
+        isDraw: true
+      }});
+      this.disableControls = false;
+      this.InProcess = false;
+
+      this.minUnix = moment(this.trackplayback.getStartTime()).format('H');
+      this.maxUnix = moment(this.trackplayback.getEndTime()).format('H');
+
+      this.change = 100/(this.maxUnix - this.minUnix);
+
+      // trigger on time change
+      this.trackplayback.on('tick', e => {
+        if(Number(moment(e.time).format('H')) < 12){
+          this.currentTime = moment(e.time).format('H:mm:ss') + " AM";
+        }
+        else if(Number(moment(e.time).format('H')) == 12){
+          this.currentTime = moment(e.time).format('H:mm:ss') + " PM";
+        }
+        else{
+          this.currentTime = (Number(moment(e.time).format('H')) - 12).toString() + moment(e.time).format(':mm:ss') + " PM";
+        }
+
+        this.progress = (Number(moment(e.time).format('H')) - this.minUnix) * this.change
+
+      }, this)
+
+      
+    }
+    else {
+      this.toastr.error('No playback data available')
+    }
+
+
+  }
+  formatLabel(value: number) {
+    if (value > 12) {
+      return Math.round(value)-12 + 'PM';
+    }
+    return value + 'AM';
+  }
+
+  public updateTime(time : number): void {
+    var unixTime;
+    if(time < 10){
+      unixTime = Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'))
+    }
+    else{
+      unixTime = Number(moment(this.dateSelected + "T" + time + ":00:00").format('x'))
+    }
+    Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'));
+    this.trackplayback.setCursor(unixTime);
+    this.playbackPause();
+    this.playbackPlay();
   }
 
   /**
@@ -156,5 +283,20 @@ export class PlaybackComponent implements AfterViewInit {
     this.trackplayback.rePlaying();
   }
 
-  
+  public showLines(event) {
+    if(event.checked == false){
+      this.trackplayback.hideTrackLine();
+    }
+    else{
+      this.trackplayback.showTrackLine();
+    }
+  }
+
+  public quickSpeed() {
+    this.trackplayback.quickSpeed();
+  }
+
+  public slowSpeed() {
+    this.trackplayback.slowSpeed();
+  }
 }

@@ -13,23 +13,29 @@ import { ExperimentComponent } from './experiment/experiment.component';
 import { CalendarHeatmapModule } from 'ng-calendar-heatmap';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MainComponent } from './main/main.component';
-import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { PlaybackComponent } from './playback/playback.component';
 import { ServiceAreaComponent } from './service-area/service-area.component';
-import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
+import { ToastrModule } from 'ngx-toastr';
 
 //Google Auth Modules
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
+
+//Dialogs
+import { DialogAreasComponent } from './dialog-areas/dialog-areas.component';
+import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
 import { EventEmitterService } from './event-emitter.service';
 import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
 import { StatsComponent } from './stats/stats.component';
+import { DialogCreateExperimentComponent } from './dialog-create-experiment/dialog-create-experiment.component';
+import { DialogReportComponent } from './dialog-report/dialog-report.component';
+
 
 @NgModule({
   declarations: [
@@ -48,7 +54,9 @@ import { StatsComponent } from './stats/stats.component';
     DialogExperimentListComponent,
     DialogExperimentComponent,
     DropStrategyComponent,
-    StatsComponent
+    StatsComponent,
+    DialogCreateExperimentComponent,
+    DialogReportComponent
   ],
   imports: [
     LeafletModule,
@@ -61,7 +69,8 @@ import { StatsComponent } from './stats/stats.component';
     HttpClientModule,
     CalendarHeatmapModule,
     SocialLoginModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     EventEmitterService,
@@ -84,6 +93,6 @@ import { StatsComponent } from './stats/stats.component';
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent, DialogCreateExperimentComponent]
 })
 export class AppModule { }

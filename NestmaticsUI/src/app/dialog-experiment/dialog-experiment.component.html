@@ -1,11 +1,32 @@
-<mat-card class="experiment-card" style="float:left">
+<h1 mat-dialog-title>Experiment Name: {{expName}}</h1>
+
+<div>
+    <mat-card class="experiment-card" style="float:left">
         <mat-card-header>
-          <mat-card-title> Config 1 </mat-card-title>
+          <mat-card-title> Configuration #1: </mat-card-title>
         </mat-card-header>
+
+        <mat-card-content>
+          <p> Initial vehicle quantity: {{vehicle_qty1}}</p>
+          <p> Revenue: {{revenue1}} </p>
+          <p> Rides started at nest: {{started1}}</p>
+          <p> Rides ended at nest: {{ended1}}</p>
+        </mat-card-content>
 </mat-card>
 
 <mat-card class="experiment-card" style="float:right">
         <mat-card-header>
-          <mat-card-title> Config 2 </mat-card-title>
+          <mat-card-title> Configuration #2: </mat-card-title>
         </mat-card-header>
+
+        <mat-card-content>
+            <p>Initial vehicle quantity: {{vehicle_qty2}}</p>
+            <p> Revenue:  {{revenue2}}</p>
+            <p> Rides started at nest: {{started2}}</p>
+            <p> Rides ended at nest: {{ended2}}</p>
+          </mat-card-content>
 </mat-card>
+</div>
+
+
+<button (click)="report()" mat-raised-button color="accent">Generate Report</button>

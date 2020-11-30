@@ -5,11 +5,16 @@
       <div id="prediction"></div>
     </div>
 </div>
+<mat-card style="width: 350px;">
+  <h1>Hour selection slider</h1>
+  <mat-slider #daySlider
+    thumbLabel
+    [displayWith]="formatLabel"
+    (change)="getPrediction(daySlider.value)"
+    tickInterval="2"
+    min="1"
+    max="24">
+  </mat-slider>
+</mat-card>
 
-<mat-slider #daySlider
-  thumbLabel
-  [displayWith]="formatLabel"
-  (change)="getPrediction(daySlider.value)"
-  tickInterval="24"
-  min="1"
-  max="24"></mat-slider>
+<mat-spinner *ngIf="InProcess"></mat-spinner>
