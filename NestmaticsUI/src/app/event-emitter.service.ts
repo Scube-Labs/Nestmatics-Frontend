@@ -6,16 +6,35 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class EventEmitterService {
 
-  invokeRefresh = new EventEmitter();
+  invokeRefreshMap = new EventEmitter();
   subsVar:Subscription;
+
+  invokeRefreshExperiment = new EventEmitter();
+  expSub:Subscription;
+
+  invokeRefreshRides = new EventEmitter();
+  ridesSub:Subscription;
+
+  invokeRefreshPrediction = new EventEmitter();
+  predictSub: Subscription;
 
   invokeAreaChange = new EventEmitter();
   subsArea:Subscription;
 
   constructor() { }
 
-  onChangeDate(date:string){
-    this.invokeRefresh.emit(date);
+  onChangeDate(view:string){
+    if(view == 'map'){
+      console.log("map")
+      this.invokeRefreshMap.emit();
+    }
+    else if(view == 'predictions'){
+      this.invokeRefreshPrediction.emit();
+    }
+    else if(view == 'playback'){
+      this.invokeRefreshRides.emit();
+    }
+   
   }
 
   onChangeToArea(name:string){

@@ -79,7 +79,7 @@ export class CalendarComponent implements OnInit {
     localStorage.setItem('currDate', date);
     this.selectedDate = date;
     this.hasDate = true;
-    this.eventEmitter.onChangeDate(this.selectedDate);
+    this.eventEmitter.onChangeDate(localStorage.getItem('currView'));
    // console.log(this.selectedDate)
   }
 

@@ -6,18 +6,25 @@
     </div>
 </div>
 
+<app-stats></app-stats>
+
+<div class="add-nest-button">Add Nests</div>
+
 <mat-card class="drop-card">
+
   <mat-card-header>
-    <mat-card-title> Drop Strategies: </mat-card-title>
+  <mat-card-title> Drop Strategy </mat-card-title>
     <h3>Current Date: {{currentDate}}</h3>
   </mat-card-header>
+  
+  <div class="vehicle-labels">
+    <mat-label>Total vehicles for the day: {{vehicle_qty}}</mat-label>
+  </div>
 
   <form>
       <mat-form-field appearance="fill">
-        <mat-label>Vehicle quantity</mat-label>
         <input #qty matInput type="number" min="0" max="120" placeholder="Total Vehicles" 
         onkeydown="return !isNaN(Number(event.key))"/>
-        <mat-hint>Input total number of vehicles</mat-hint>
       </mat-form-field>
 
       <button mat-raised-button color="primary" type="button" (click)="setVehicles(qty.value)">Add Total Vehicles
@@ -25,17 +32,16 @@
   </form>
 
   <div class="vehicle-labels">
-  <mat-label>Total vehicles for the day: {{vehicle_qty}}</mat-label>
   <mat-label>Assigned Vehicles: {{assigned_vehicles}}</mat-label>
   </div>
 
-  <h3>Nest List</h3>
+  <mat-label>Nest List:</mat-label>
   <mat-card-content class="nest-list">
     <mat-list class="custom-scroll">
       <mat-list-item *ngFor="let nest of nestList" class="item">
         <mat-list-item-content class="item-content">
-          <span>Nest Name: {{nest.nest_name}}</span>
-          <span>Assigned Vehicles: {{nest.vehicle_qty}}</span>
+          <span class="nest-name">Nest Name: <span class="nest-info">{{nest.nest_name}}</span> </span>
+          <span class="nest-name">Assigned Vehicles: <span class="nest-info">{{nest.vehicle_qty}}</span> </span>
         </mat-list-item-content>
       </mat-list-item>
     </mat-list>

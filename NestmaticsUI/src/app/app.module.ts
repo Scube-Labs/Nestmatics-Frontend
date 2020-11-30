@@ -29,6 +29,7 @@ import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-e
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
 import { EventEmitterService } from './event-emitter.service';
 import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
+import { StatsComponent } from './stats/stats.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
     DialogUploadComponent,
     DialogExperimentListComponent,
     DialogExperimentComponent,
-    DropStrategyComponent
+    DropStrategyComponent,
+    StatsComponent
   ],
   imports: [
     LeafletModule,

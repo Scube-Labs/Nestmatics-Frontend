@@ -3,7 +3,8 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
-import { CalendarComponent } from '../calendar/calendar.component';
+import { environment } from 'src/environments/environment';
+import { EventEmitterService } from '../event-emitter.service'
 
 @Component({
   selector: 'app-prediction',
@@ -19,22 +20,43 @@ export class PredictionComponent implements AfterViewInit {
   
   private areaSelected = localStorage.getItem('currAreaID');
 
-  areas: string = 'http://localhost:3000/areas' //Service Area Data End-point
-  rides: string = 'http://localhost:3000/rides' //Ride Data End-point
-  nests: string ='http://localhost:3000/nests' //Nest Data End-Point
-  restPredict: string ='http://localhost:3000/predictions'
+  areas: string = environment.baseURL+ 'nestmatics/areas' //Service Area Data End-point
+  rides: string = environment.baseURL+ 'nestmatics/rides' //Ride Data End-point
+  nests: string = environment.baseURL+ 'nestmatics/nests' //Nest Data End-Point
+  restPredict: string =environment.baseURL+ 'nestmatics/predictions'
   
   currHeat;
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private eventEmitterService: EventEmitterService) { }
+
+  ngOnInit(){
+    if(this.eventEmitterService.predictSub == undefined){
+      this.eventEmitterService.predictSub = this.eventEmitterService.invokeRefreshPrediction.
+      subscribe(()=> {
+        this.refresh()
+      });
+    }
+  }
+
+  refresh(){
+    console.log(localStorage.getItem('currDate'));
+    this.map.off();
+    this.map.remove();
+    this.initialize();
+  }
+
 
   ngAfterViewInit(): void {
+   this.initialize();
+  }
+
+  initialize(){
     this.initMap();
     this.loadNests();
     this.initTiles();
     this.restrict();
     this.predict(1);
-    
   }
 
   formatLabel(value: number) {

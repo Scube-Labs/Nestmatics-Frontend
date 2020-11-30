@@ -2,13 +2,11 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
-import { CalendarComponent } from '../calendar/calendar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
 import { EventEmitterService } from '../event-emitter.service'
-import { CloseScrollStrategy } from '@angular/cdk/overlay';
 import { Observable, forkJoin } from 'rxjs';
 
 const moment = _moment;
@@ -50,17 +48,23 @@ export class MapComponent implements AfterViewInit {
   constructor(
       private http: HttpClient,
       public dialog: MatDialog, 
-      private eventEmitterService: EventEmitterService) { }
+      private eventEmitterService: EventEmitterService) { 
 
-
-  ngOnInit(){
-    if(this.eventEmitterService.subsVar == undefined){
-      this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefresh.
-      subscribe((date:string)=> {
+        this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
+      subscribe(()=> {
         this.refresh()
       });
     }
-  }
+
+
+  // ngOnInit(){
+  //   if(this.eventEmitterService.subsVar == undefined){
+  //     this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
+  //     subscribe(()=> {
+  //       this.refresh()
+  //     });
+  //   }
+  // }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -71,6 +75,7 @@ export class MapComponent implements AfterViewInit {
    * Initializes all the necessary components in the specified order.
    */
   private initialize() {
+      
     this.initMap();
     this.restrict();
     this.initTiles();
@@ -239,6 +244,7 @@ export class MapComponent implements AfterViewInit {
           var date = res.ok[0].start_date;
           this.vehicle_qty = res.ok[0].vehicles;
           this.dropid = res.ok[0]._id
+          this.newDay = false;
           
           var assignedVehicles = 0;
           this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + date).subscribe((res: any) => {
@@ -283,7 +289,8 @@ export class MapComponent implements AfterViewInit {
             c['vehicle_qty'] = 0;
             c["update"] = 0;
             this.nestList.push(c);
-  
+            
+            this.newDay = true;
             const lat = c.coords.lat;
             const lon = c.coords.lon;
             
@@ -439,7 +446,6 @@ export class MapComponent implements AfterViewInit {
       });
     }
   }
-
 
   /**
    * Function to update changes made in the configurations

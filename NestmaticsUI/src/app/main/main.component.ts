@@ -22,14 +22,26 @@ export class MainComponent implements OnInit {
   currentComponent: any = ServiceAreaComponent;
  // calendarComponent: CalendarComponent = new CalendarComponent();
   isSelected = false;
-  
+
+  activeColor = '#94ded2';
+  inactiveColor = '#59ccb9';
+
+  serviceArea = this.activeColor;
+  map = this.inactiveColor;
+  prediction = this.inactiveColor;
+  experiment = this.inactiveColor;
+  upload = this.inactiveColor;
+  playback = this.inactiveColor;
+
+  prevComp= 'service';
+
   constructor(
     private http: HttpClient,
     public dialog: MatDialog,
     private eventEmitterService: EventEmitterService) { }
 
   ngOnInit(): void {
-    //localStorage.setItem('currAreaName', "Puerto Rico")
+    localStorage.setItem('currView', 'serviceArea')
   }
 
   /**
@@ -39,20 +51,55 @@ export class MainComponent implements OnInit {
   changeComponent(comp: string) {
     if(comp == "map"){
       this.currentComponent = MapComponent;
+      localStorage.setItem('currView', 'map')
+      this.map = this.activeColor;
       this.eventEmitterService.onChangeToArea(localStorage.getItem('currAreaName'));
     }
-    if(comp == "playback"){
+    else if(comp == "playback"){
+      this.playback = this.activeColor;
+      localStorage.setItem('currView', 'playback')
       this.currentComponent = PlaybackComponent;
     }
-    if(comp == "prediction"){
+    else if(comp == "prediction"){
+      this.prediction = this.activeColor;
+      localStorage.setItem('currView', 'prediction')
       this.currentComponent = PredictionComponent;
     }
-    if(comp == "experiment"){
+    else if(comp == "experiment"){
+      this.experiment = this.activeColor;
+      localStorage.setItem('currView', 'experiment')
       this.currentComponent = ExperimentComponent;
     }
-    if(comp == "service"){
+    else if(comp == "service"){
+      this.serviceArea = this.activeColor;
+      localStorage.setItem('currView', 'serviceArea')
       this.currentComponent = ServiceAreaComponent;
       this.eventEmitterService.onChangeToArea("Puerto Rico");
+    }
+    this.changeColors(this.prevComp);
+    this.prevComp = comp;
+  }
+
+  changeColors(prevComp:string){
+    switch(prevComp){
+      case 'service':
+        this.serviceArea = this.inactiveColor;
+        break;
+      case 'map':
+        this.map = this.inactiveColor;
+        break;
+      case 'prediction':
+        this.prediction = this.inactiveColor;
+        break;
+      case 'upload':
+        this.upload = this.inactiveColor;
+        break;
+      case 'playback':
+        this.playback = this.inactiveColor;
+        break;
+      case 'experiment':
+        this.experiment = this.inactiveColor;
+        break;
     }
   }
 
@@ -61,7 +108,9 @@ export class MainComponent implements OnInit {
    */
   public openDialog(){
     let dialogRef = this.dialog.open(DialogUploadComponent);
-
+    this.upload = this.activeColor;
+    this.changeColors(this.prevComp);
+    this.prevComp = 'upload';
     dialogRef.afterClosed().subscribe(result => {
       
     })
