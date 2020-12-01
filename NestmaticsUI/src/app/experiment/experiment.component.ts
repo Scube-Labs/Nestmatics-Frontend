@@ -113,10 +113,20 @@ export class ExperimentComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result === -1){
-        //Create New Experiment
+        //Open experiment creation dialog.
         this.openCreateExperimentDialog(nest._id);
       }
+
+      else if(result === -2){
+        //experiment was deleted
+        console.log(nest._id)
+        this.experimentsList = [];
+        this.experimentIDs = [];
+        this.getAllExperiments();
+      }
+
       else if(typeof result != 'undefined'){
+        //a valid experiment was selected
         this.openExperimentDialog(result);
       }
     })
@@ -165,6 +175,7 @@ export class ExperimentComponent implements AfterViewInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if(result === -1){
+          //experiment was created
           this.experimentsList = [];
           this.experimentIDs = [];
           this.getAllExperiments();

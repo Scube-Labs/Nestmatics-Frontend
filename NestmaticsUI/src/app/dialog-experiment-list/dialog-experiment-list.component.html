@@ -7,6 +7,7 @@
 <p>
   Option selected: {{exp.selectedOptions.selected[0]?.value}}
 </p>
-  
+deleteExperiment
 <button (click)="selectExperiment(exp)" mat-raised-button color="primary">select</button>
+<button (click)="deleteExperiment(exp)" mat-raised-button color="primary">delete</button>
 <button (click)="createExperiment()" mat-raised-button color="accent">create new experiment</button>
