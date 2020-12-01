@@ -38,4 +38,14 @@ export class DialogExperimentListComponent {
   public createExperiment() {
     this.dialogRef.close(-1);
   }
+
+  public deleteExperiment(e: any) {
+    if(e.selectedOptions.selected.length > 0){
+
+      this.http.delete(this.exp + "/" + this.experimentIDs[this.experiments.indexOf(e.selectedOptions.selected[0]._value)]).subscribe((res: any) => {
+      })
+
+      this.dialogRef.close(-2);
+    }
+  }
 }
