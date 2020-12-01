@@ -3,8 +3,8 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
-import { CalendarComponent } from '../calendar/calendar.component';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
+import { EventEmitterService } from '../event-emitter.service'
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -16,26 +16,51 @@ export class PredictionComponent implements AfterViewInit {
   toolOpened = true;
   private map;
 
-  calendarComponent: CalendarComponent = new CalendarComponent();
-  private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
+  //calendarComponent: CalendarComponent = new CalendarComponent();
+  //private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   
-  areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
-  nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
+  private areaSelected = localStorage.getItem('currAreaID');
+
+  areas: string = environment.baseURL+ 'nestmatics/areas' //Service Area Data End-point
+  rides: string = environment.baseURL+ 'nestmatics/rides' //Ride Data End-point
+  nests: string = environment.baseURL+ 'nestmatics/nests' //Nest Data End-Point
+  
   restPredict: string ='http://localhost:3000/predictions'
   
   currHeat;
   InProcess = false;
   currentTime;
+  
+  constructor(private http: HttpClient,
+    private eventEmitterService: EventEmitterService, 
+    private toastr: ToastrService) { }
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  ngOnInit(){
+    if(this.eventEmitterService.predictSub == undefined){
+      this.eventEmitterService.predictSub = this.eventEmitterService.invokeRefreshPrediction.
+      subscribe(()=> {
+        this.refresh()
+      });
+    }
+  }
+
+  refresh(){
+    console.log(localStorage.getItem('currDate'));
+    this.map.off();
+    this.map.remove();
+    this.initialize();
+  }
 
   ngAfterViewInit(): void {
+   this.initialize();
+  }
+
+  initialize(){
     this.initMap();
     this.loadNests();
     this.initTiles();
     this.restrict();
     this.predict(1);
-    
   }
 
   formatLabel(value: number) {
@@ -98,7 +123,7 @@ export class PredictionComponent implements AfterViewInit {
    * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
    */
   private loadNests(): void {
-    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + this.calendarComponent.calComponent.getDateSelected()).subscribe((res: any) => {
+    this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
       for (const c of res.ok) {
         const lat = c.coords.lat;
         const lon = c.coords.lon;

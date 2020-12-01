@@ -30,8 +30,12 @@ import { DialogNestsComponent } from './dialog-nests/dialog-nests.component';
 import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
+import { EventEmitterService } from './event-emitter.service';
+import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
+import { StatsComponent } from './stats/stats.component';
 import { DialogCreateExperimentComponent } from './dialog-create-experiment/dialog-create-experiment.component';
 import { DialogReportComponent } from './dialog-report/dialog-report.component';
+
 
 @NgModule({
   declarations: [
@@ -49,6 +53,8 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     DialogUploadComponent,
     DialogExperimentListComponent,
     DialogExperimentComponent,
+    DropStrategyComponent,
+    StatsComponent,
     DialogCreateExperimentComponent,
     DialogReportComponent
   ],
@@ -67,6 +73,7 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     ToastrModule.forRoot()
   ],
   providers: [
+    EventEmitterService,
     AuthGuard,
     LoginComponent,
     CalendarComponent,

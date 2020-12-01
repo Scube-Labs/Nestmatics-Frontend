@@ -1,11 +1,11 @@
 <!--View for the main calendar/control component-->
 <div class="calendar">
-<div class="areaTitle">{{calComponent.areaName}}</div>
+<div class="areaTitle">{{areaName}}</div>
     <mat-form-field appearance="fill">
         <mat-label>Calendar</mat-label>
         <input #input disabled (dateInput)="addEvent('input', $event)" matInput [matDatepicker]="calendarPicker" [formControl]="todaysDate">
         <mat-datepicker-toggle [for]="calendarPicker" matSuffix></mat-datepicker-toggle>
-        <mat-datepicker [dateClass]="dateClass" [startAt]="todaysDate" disabled = "false" #calendarPicker></mat-datepicker>
+        <mat-datepicker [startAt]="todaysDate" disabled = "false" #calendarPicker></mat-datepicker>
     </mat-form-field>
 
 </div>

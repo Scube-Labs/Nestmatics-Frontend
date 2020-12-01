@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID)
     this.authService.authState.subscribe((user) => {
       if(user != null){
+        this.getApprovedAccounts();
         if(this.approvedEmails.indexOf(user.email) > 0){
           localStorage.setItem('loggedIn', JSON.stringify(user != null));
           localStorage.setItem('currUserID', this.approvedIDs[this.approvedEmails.indexOf(user.email)]);

@@ -1,8 +1,22 @@
 <!--Dialog displayed when user clicks on a nest-->
 
-<h1 mat-dialog-title>Amount of Vehicles: {{data.vehicles}}</h1>
+<form>
+<h2>Nest Name: {{data.name}}</h2>
+<mat-form-field appearance="fill">
+    <mat-label>edit nest name</mat-label>
+    <input  #name matInput placeholder="Nest name"/>
+    <mat-hint>Edit Nest Name</mat-hint>
+</mat-form-field>
 
-<input matInput type="number" min="0" max="100" onkeydown="return !isNaN(Number(event.key))" [(ngModel)]="newAmount"/>
+<h2>Vehicle Qty: {{data.vehicles}}</h2>
+<mat-form-field appearance="fill">
+    <mat-label>edit vehicle qty</mat-label>
+    <input #qty matInput type="number" min="0" max="100" placeholder="vehicle qty" 
+        onkeydown="return !isNaN(Number(event.key))"/>
+    <mat-hint>Edit Nest Name</mat-hint>
+</mat-form-field>
+</form>
 
-<button (click)="updateNest()" mat-raised-button color="primary">update</button>
+<button (click)="updateNest(qty.value, name.value)" mat-raised-button color="primary">update</button>
 <button (click)="deleteNest()" mat-raised-button color="primary">Delete</button>
+<button (click)="cancelNest()" mat-raised-button color="secondary">Cancel</button>

@@ -19,8 +19,12 @@ import { ToastrService } from 'ngx-toastr';
 export class ExperimentComponent implements AfterViewInit {
   toolOpened = true;
   private map;
-  calendarComponent: CalendarComponent = new CalendarComponent();
-  private areaSelected = CalendarComponent.getAreaSelected();
+  //calendarComponent: CalendarComponent = new CalendarComponent();
+ // private areaSelected = CalendarComponent.getAreaSelected();
+  private areaSelected = localStorage.getItem('currAreaName');
+
+  // rides: string = 'http://localhost:3000/rides'
+  // exp: string = 'http://localhost:3000/experiments';
 
   exp: string = environment.baseURL + '/nestmatics/experiment' //Route for experiments End-point
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
@@ -93,7 +97,9 @@ export class ExperimentComponent implements AfterViewInit {
         const lat = c.coords.lat;
         const lon = c.coords.lon;
         var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
-        
+        currNest.bindTooltip(
+          "Name: " + c.nest_name,
+        );
         currNest.addEventListener("click", ()=> {
           this.openDialog(DialogExperimentListComponent, c);
         })

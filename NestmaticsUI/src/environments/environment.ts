@@ -5,7 +5,10 @@
 export const environment = {
   production: false,
 
-  baseURL: "http://3.131.202.105"
+ // baseURL: "http://3.131.202.105"
+  baseURL: "http://localhost/",
+
+  selected: false
   
 };
 

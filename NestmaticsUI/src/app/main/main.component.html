@@ -4,13 +4,12 @@
         <mat-sidenav mode="side" [(opened)]="toolOpened">
             <div class="toolbar">
                 <p class="toolbarTitle">Nestmatics</p>
-                <button (click)="changeComponent('service')" mat-stroked-button><mat-icon class="toolbarButtons">map</mat-icon><p>Area</p></button>
-                <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('map')" mat-stroked-button><mat-icon class="toolbarButtons">home</mat-icon><p>Home</p></button>
-                <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('playback')" mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon><p>Play</p></button>
-                <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('prediction')" mat-stroked-button><mat-icon class="toolbarButtons">blur_on</mat-icon><p>Predictions</p></button>
-                <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="changeComponent('experiment')" mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon><p>Experiment</p></button>
-                <button [disabled]="!calendarComponent.calComponent.isSelected" (click)="openDialog()" mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon><p>Upload</p></button>
-                
+                <button (click)="changeComponent('service')" [ngStyle]="{'background-color':serviceArea}" mat-stroked-button><mat-icon class="toolbarButtons">map</mat-icon><p>Area</p></button>
+                <button [disabled]="!isSelected" [ngStyle]="{'background-color':map}" (click)="changeComponent('map')" mat-stroked-button><mat-icon class="toolbarButtons">room</mat-icon><p>Nests</p></button>
+                <button [disabled]="!isSelected" [ngStyle]="{'background-color':playback}" (click)="changeComponent('playback')" mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon><p>Play</p></button>
+                <button [disabled]="!isSelected" [ngStyle]="{'background-color':prediction}" (click)="changeComponent('prediction')" mat-stroked-button><mat-icon class="toolbarButtons">blur_on</mat-icon><p>Predictions</p></button>
+                <button [disabled]="!isSelected" [ngStyle]="{'background-color':experiment}" (click)="changeComponent('experiment')" mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon><p>Experiment</p></button>
+                <button [disabled]="!isSelected" [ngStyle]="{'background-color':upload}" (click)="openDialog()" mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon><p>Upload</p></button>
             </div>
         </mat-sidenav>
         <mat-sidenav-content>

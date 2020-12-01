@@ -14,3 +14,171 @@
   #map {
     height: 100%;
   }
+
+  .drop-card{
+    height:700px !important;
+    max-height: 800px !important;
+  }
+
+  .nests-list {
+    width: 300px;
+    max-height: 400px !important;
+    overflow-y: scroll;
+  }
+
+ form {
+   font-size: small;
+   display:flex;
+   flex-direction: row;
+   margin-top: 10px;
+   margin-bottom: 10px;
+ }
+
+ form button{
+   font-size: small;
+   height: 40px;
+   margin-left: 5px;
+ }
+
+ .vehicle-labels{
+   margin-top: 10px;
+   margin-bottom: 10px;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   height: 40px;
+   flex-direction: column;
+ }
+
+ .nest-name{
+   font-size: medium;
+   font-weight: 200;
+   color: rgb(64, 148, 138);
+ }
+
+ .nest-info{
+   right: 0px;
+   color: black;
+   font-size: large;
+   font-weight: 300;
+ }
+
+  .custom-scroll{
+    width: 300px;
+    flex-direction: column;
+    overflow-y:scroll;
+    max-height: 425px !important;
+  }
+
+  h3{
+    margin-bottom: 0px;
+    margin-left: 16px;
+    font-size: small;
+    font-weight: 100;
+  }
+
+  .mat-form-field-appearance-fill.mat-form-field-flex{
+    padding:0px !important;
+  }
+
+  mat-card-header{
+    margin: 0px !important;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  div.mat-card-header-text{
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+
+  mat-card-title{
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+
+  mat-form-field{
+    width: 125px;
+    height: 40px;
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+
+  mat-label{
+    font-size: medium;
+    font-weight: 100;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  mat-list-item{
+    display:flex;
+    flex-direction: column;
+    font-size: medium;
+    height: 80px !important;
+  }
+
+  mat-list-item-content{
+    display: flex;
+    border: mediumturquoise;
+    flex-direction: column;
+  }
+
+  .item-content{
+    display:flex;
+    height: 55px;
+    flex-direction: column;
+    font-size: medium;
+    margin-top: 2px;
+    margin-bottom: 3px;
+    padding: 0px;
+    height: 55px !important;
+
+  }
+
+  .item {
+    display:flex;
+    height: 55px;
+    flex-direction: column;
+    font-size: small;
+    margin-top: 2px;
+    margin-bottom: 3px;
+    padding: 0px;
+  }
+  
+  mat-card {
+    margin: 1px;
+    width: 300px;
+    position:fixed;
+    top: 62px;
+    right: 5;
+    flex-direction: column;
+  }
+
+  .add-nest-button{
+    position: fixed;
+    top:30px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 500;
+    color: white;
+    background-color: rgb(39, 161, 55);
+    z-index: -1;
+    margin-left: 42px;
+    padding: 6px;
+    border-radius: 5px;
+  }
+
+  .end-button{
+    position:fixed;
+    top:765px;
+    display: flex; 
+    flex-direction: row;
+    margin-left: 2px;
+  }
+  
+  ::ng-deep {
+    .mat-card.ng-star-inserted { padding: 0; }
+  }
+  

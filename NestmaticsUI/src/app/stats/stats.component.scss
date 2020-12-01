@@ -1,0 +1,19 @@
+mat-card {
+    margin: 1px;
+    width: 225px;
+    position:fixed;
+    top: 100px;
+    right: 0;
+    flex-direction: column;
+  }
+
+mat-label{
+    font-size: small;
+    font-weight: 200;
+    margin: 5px;
+}
+
+.day-stats{
+    display: flex;
+    flex-direction: column;
+}

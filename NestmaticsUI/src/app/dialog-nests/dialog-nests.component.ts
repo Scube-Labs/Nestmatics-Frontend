@@ -7,10 +7,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./dialog-nests.component.scss']
 })
 export class DialogNestsComponent implements OnInit {
-  newAmount = 0;
+  newAmmount = 0;
+  nestName = "";
   constructor(public dialogRef: MatDialogRef<DialogNestsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-      this.newAmount = data.vehicles;
+      this.newAmmount = data.vehicles;
+      this.nestName = data.name;
      }
 
   ngOnInit(): void {
@@ -19,9 +21,19 @@ export class DialogNestsComponent implements OnInit {
   /**
    * This function updates the selected nest's vehicle ammount. 0 <= value <= 100
    */
-  updateNest() {
-    if(this.newAmount > 100) this.newAmount = 100;
-    this.dialogRef.close(this.newAmount);
+  updateNest(qty:string, name:string) {
+    var result = {name: name, vehicles:qty };
+    console.log("name "+name+", vehicles: "+qty)
+    this.dialogRef.close(result);
+  }
+  // updateNest() {
+  //   if(this.newAmmount > 100) this.newAmmount = 100;
+  //   this.dialogRef.close(this.newAmmount);
+  // }
+
+  cancelNest() {
+    this.dialogRef.close(-2);
+
   }
 
   /**
