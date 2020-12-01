@@ -9,7 +9,7 @@
       
       <input mat type="file" accept=".csv" (change)="onFileChange($event)">
 
-      <button [disabled]="!hasSelected" (click)="fileUpload()" mat-raised-button color="accent">Create Experiment</button>
+      <button [disabled]="!hasSelected" (click)="fileUpload()" mat-raised-button color="accent">Upload</button>
       <mat-spinner *ngIf="uploadingInProcess"></mat-spinner>
   </mat-card>
 
