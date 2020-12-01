@@ -35,13 +35,16 @@ export class ExperimentComponent implements AfterViewInit {
     private toastr: ToastrService) { }
 
   ngAfterViewInit(): void {
+    this.initialize();
+  }
+
+  public initialize() {
     this.initMap();
     this.loadNests();
     this.initTiles();
     this.restrict();
     this.getAllExperiments();
   }
-
   /**
    * Restrict the map view to only the selected Service Area
    */
@@ -129,6 +132,16 @@ export class ExperimentComponent implements AfterViewInit {
     }
   }
 
+  public deleteExperiment(exp) {
+    if(typeof exp._value != 'undefined'){
+      this.http.delete(this.exp + "/" + this.experimentIDs[this.experimentsList.indexOf(exp.selectedOptions.selected[0]._value)]).subscribe((res: any) => {
+        this.experimentsList = [];
+        this.experimentIDs = [];
+        this.getAllExperiments();
+      })
+    }
+  }
+
   public openExperimentDialog(expID){
     if(typeof expID != 'undefined'){
       let dialogRef = this.dialog.open(DialogExperimentComponent, {
@@ -152,7 +165,9 @@ export class ExperimentComponent implements AfterViewInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if(result === -1){
-
+          this.experimentsList = [];
+          this.experimentIDs = [];
+          this.getAllExperiments();
         }
       })
     }
@@ -163,12 +178,14 @@ export class ExperimentComponent implements AfterViewInit {
    */
   private getAllExperiments() {
     this.http.get(this.exp + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID')).subscribe((res: any) => {
-      if(res.ok.length == 0) this.toastr.info("No Experiments have been created yet.")
       for(var i=0; i<res.ok.length; i++){
         this.experimentsList.push(res.ok[i].name);
         this.experimentIDs.push(res.ok[i]._id);
       }
 
+    },
+    (error) => {
+      this.toastr.warning(error.error.Error);
     })
   }
   
