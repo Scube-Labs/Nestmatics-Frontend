@@ -28,10 +28,13 @@ export class DialogExperimentComponent implements OnInit {
   
   constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+      console.log("experiment id "+data.id);
       this.http.get(this.exp + "/" + data.id).subscribe((res: any) => {
+        console.log(res);
         this.expName = res.ok.name;
 
         this.http.get(this.nests + "/nestconfig/" + res.ok.config1 + "/stats").subscribe((res: any) => {
+          console.log(res);
           this.vehicle_qty1 = res.ok.vehicle_qty;
           this.revenue1 = "$" + res.ok.revenue.toFixed(2);
           this.started1 = res.ok.rides_started_nest.length;

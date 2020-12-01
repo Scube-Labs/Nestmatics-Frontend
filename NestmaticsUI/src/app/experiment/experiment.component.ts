@@ -94,7 +94,9 @@ export class ExperimentComponent implements AfterViewInit {
         const lat = c.coords.lat;
         const lon = c.coords.lon;
         var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
-        
+        currNest.bindTooltip(
+          "Name: " + c.nest_name,
+        );
         currNest.addEventListener("click", ()=> {
           this.openDialog(DialogExperimentListComponent, c);
         })
@@ -133,6 +135,10 @@ export class ExperimentComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * Open experiment dialog to view nest config stats
+   * @param expID id of experiment
+   */
   public openExperimentDialog(expID){
     if(typeof expID != 'undefined'){
       let dialogRef = this.dialog.open(DialogExperimentComponent, {
