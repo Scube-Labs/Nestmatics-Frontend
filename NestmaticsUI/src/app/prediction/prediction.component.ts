@@ -20,7 +20,6 @@ export class PredictionComponent implements AfterViewInit {
   private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
-  rides: string = environment.baseURL + '/nestmatics/rides' //Ride Data End-point
   nests: string = environment.baseURL + '/nestmatics/nests' //Nest Data End-Point
   restPredict: string ='http://localhost:3000/predictions'
   

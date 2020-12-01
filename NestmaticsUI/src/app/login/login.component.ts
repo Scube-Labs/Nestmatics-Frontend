@@ -61,6 +61,7 @@ export class LoginComponent implements OnInit {
   public logout(): void {
     this.authService.signOut();
     localStorage.clear();
+    this.router.navigate(['/login']);
   }
 
   private getApprovedAccounts() {

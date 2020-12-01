@@ -34,8 +34,10 @@ export class PlaybackComponent implements AfterViewInit {
   change; //Percentage change for progress bar
   progress = 0; //Progress for progress bar
   currentTime; //Current time being displayed in the playback
-
+  currHeat;
+  heatSelected ;
   InProcess = true;
+  lastTimeSelected;
 
   constructor(
       private http: HttpClient,
@@ -56,7 +58,7 @@ export class PlaybackComponent implements AfterViewInit {
     this.initTiles();
     this.restrict();
     this.playAll();
-  
+    this.displayBehaviour(1);
   }
   
   /**
@@ -248,6 +250,7 @@ export class PlaybackComponent implements AfterViewInit {
   }
 
   public updateTime(time : number): void {
+    this.lastTimeSelected = time
     var unixTime;
     if(time < 10){
       unixTime = Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'))
@@ -256,6 +259,7 @@ export class PlaybackComponent implements AfterViewInit {
       unixTime = Number(moment(this.dateSelected + "T" + time + ":00:00").format('x'))
     }
     Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'));
+    this.displayBehaviour(time);
     this.trackplayback.setCursor(unixTime);
     this.playbackPause();
     this.playbackPlay();
@@ -285,9 +289,54 @@ export class PlaybackComponent implements AfterViewInit {
       this.trackplayback.hideTrackLine();
     }
     else{
+      this.heatSelected = false;
       this.trackplayback.showTrackLine();
     }
   }
+
+  public showBehaviour(event) {
+    if(event.checked == false){
+      this.heatSelected = false;
+      if(typeof this.currHeat != 'undefined'){
+        this.map.removeLayer(this.currHeat);
+      }
+    }
+    else{
+      this.heatSelected = true;
+      this.trackplayback.setCursor
+      if(typeof this.lastTimeSelected != 'undefined'){
+        this.displayBehaviour(this.lastTimeSelected);
+      }
+    }
+  }
+
+   private displayBehaviour(time : number): void {
+    var endPerHour = []
+    if(typeof this.dateSelected != 'undefined') {
+      this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/date/" + this.dateSelected).subscribe((res: any) => {
+        for (var i=0; i< res.ok.length; i++){
+
+          if(typeof this.currHeat != 'undefined'){
+            this.map.removeLayer(this.currHeat);
+          }
+
+          if(Number(moment(res.ok[i].start_time).format('H')) == time)
+          {
+            endPerHour.push([res.ok[i].coords.start_lat, res.ok[i].coords.start_lon, 1])
+            
+          }
+          
+
+        }
+        
+        if(this.heatSelected){
+          this.currHeat = (L as any).heatLayer(endPerHour, {radius: 30}, {0.4: 'bluered', 0.65: 'lime', 1: 'blue'}).addTo(this.map);
+
+        }
+        
+      });
+    }
+   }
 
   public quickSpeed() {
     this.trackplayback.quickSpeed();

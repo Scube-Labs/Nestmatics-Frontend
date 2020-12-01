@@ -32,13 +32,13 @@
     <br>
     <mat-checkbox
     [disabled]="disableControls"
-    (change)="showLines($event)"
+    (change)="showBehaviour($event)"
     [checked]="false"
     aria-label="First checkbox">
       Behaviour Heatmap
     </mat-checkbox>
 
-    
+    <h1>Clock: {{currentTime}}</h1>
 
     <mat-progress-bar  mode="determinate" [value]="progress"></mat-progress-bar>
     <div>
