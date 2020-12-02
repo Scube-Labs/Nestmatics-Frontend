@@ -1,1 +1,41 @@
-<p>dialog-settings works!</p>
+<h1 mat-dialog-title>Settings</h1>
+
+<div>
+
+    <mat-card class="experiment-card" style="float:right">
+        <mat-card-content>
+           
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="experiment-card" style="float:right">
+        <h2> System users</h2>
+
+        <mat-card-content class="user-list">
+            <mat-form-field appearance="fill">
+                <input type="email" [(ngModel)]="usrEmail" matInput placeholder="User email">
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill">
+                <mat-label>User Type</mat-label>
+                <mat-select #lstType>
+                    <mat-option *ngFor="let lstType of typeList" [value]="lstType">
+                        {{lstType}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+                <mat-selection-list #user [multiple]="false">
+                    <mat-list-option *ngFor="let user of usersList" [value]="user">
+                        {{user}}
+                    </mat-list-option>
+                </mat-selection-list>
+        </mat-card-content>
+
+        <button (click)="addUser(lstType.value)" mat-raised-button color="accent">Add email</button>
+        <button (click)="deleteUser(user)" mat-raised-button color="primary">Delete email</button>
+
+    </mat-card>
+
+</div>
+

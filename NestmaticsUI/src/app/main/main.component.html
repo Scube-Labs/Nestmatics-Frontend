@@ -10,7 +10,7 @@
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':prediction}" (click)="changeComponent('prediction')" mat-stroked-button><mat-icon class="toolbarButtons">blur_on</mat-icon><p>Predictions</p></button>
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':experiment}" (click)="changeComponent('experiment')" mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon><p>Experiment</p></button>
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':upload}" (click)="openUpload()" mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon><p>Upload</p></button>
-                <button [disabled]="!isSelected" [ngStyle]="{'background-color':settings}" (click)="openSettings()" mat-stroked-button><mat-icon class="toolbarButtons">settings</mat-icon><p>Settings</p></button>
+                <button [disabled]="!admin" [ngStyle]="{'background-color':settings}" (click)="openSettings()" mat-stroked-button><mat-icon class="toolbarButtons">settings</mat-icon><p>Settings</p></button>
             </div>
         </mat-sidenav>
         <mat-sidenav-content>
