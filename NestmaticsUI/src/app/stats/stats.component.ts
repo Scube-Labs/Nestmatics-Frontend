@@ -21,14 +21,14 @@ export class StatsComponent implements OnInit {
     private http: HttpClient,
     private eventEmitterService: EventEmitterService) { 
 
-      this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
+      this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshRides.
       subscribe(()=> {
         this.refresh()
     });
   }
 
   refresh(){
-
+    this.loadStats();
   }
 
   ngOnInit(): void {

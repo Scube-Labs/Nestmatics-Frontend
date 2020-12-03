@@ -37,13 +37,14 @@
  form button{
    font-size: small;
    height: 40px;
+   padding: 5px;
    margin-left: 5px;
  }
 
  .vehicle-labels{
-   margin-top: 10px;
+   margin-top: 15px;
    margin-bottom: 10px;
-   padding-top: 10px;
+   padding-top: 5px;
    padding-bottom: 10px;
    height: 40px;
    flex-direction: column;
@@ -66,7 +67,7 @@
     width: 300px;
     flex-direction: column;
     overflow-y:scroll;
-    max-height: 425px !important;
+    max-height: 350px !important;
   }
 
   h3{
@@ -98,11 +99,13 @@
     margin: 0px !important;
   }
 
-  mat-form-field{
-    width: 125px;
+  mat-form-field.mat-form-field{
+    width: 150px;
     height: 40px;
+    margin-left: 10px;
     padding: 0px !important;
     margin: 0px !important;
+    margin-top: -15px;
   }
 
   mat-label{

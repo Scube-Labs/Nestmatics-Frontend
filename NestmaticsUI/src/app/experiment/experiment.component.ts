@@ -165,11 +165,8 @@ export class ExperimentComponent implements AfterViewInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        if(result === -1){
-          this.http.get(this.exp + "/" + expID + "/report").subscribe((res: any) => {
-          })
-        }
-      })
+        
+      });
     }
   }
 

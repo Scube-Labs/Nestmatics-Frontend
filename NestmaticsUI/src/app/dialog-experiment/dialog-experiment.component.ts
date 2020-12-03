@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {environment } from '../../environments/environment';
+import { DialogReportComponent } from '../dialog-report/dialog-report.component' 
 
 @Component({
   selector: 'app-dialog-experiment',
@@ -14,6 +15,7 @@ export class DialogExperimentComponent implements OnInit {
   nests = environment.baseURL + "/nestmatics/nests"
 
   expName = ''
+  expid;
 
   revenue1;
   revenue2;
@@ -26,9 +28,10 @@ export class DialogExperimentComponent implements OnInit {
   ended1;
   ended2;
   
-  constructor(private http: HttpClient , public dialogRef: MatDialogRef<DialogExperimentComponent>,
+  constructor(private http: HttpClient , public dialog: MatDialog, public dialogRef: MatDialogRef<DialogExperimentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       console.log("experiment id "+data.id);
+      this.expid = data.id;
       this.http.get(this.exp + "/" + data.id).subscribe((res: any) => {
         console.log(res);
         this.expName = res.ok.name;
@@ -68,9 +71,19 @@ export class DialogExperimentComponent implements OnInit {
   }
 
   /**
-   * Close with code to generate report
+   * Open dialog for report
    */
-  report() {
+  openReportDialog(){
+    let dialogRef = this.dialog.open(DialogReportComponent, {
+      data: {id:this.expid, expName:this.expName},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    })
+  }
+
+  close() {
     this.dialogRef.close(-1);
     
   }

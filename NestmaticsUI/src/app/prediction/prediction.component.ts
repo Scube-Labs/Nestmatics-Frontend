@@ -33,19 +33,15 @@ export class PredictionComponent implements AfterViewInit {
   
   constructor(private http: HttpClient,
     private eventEmitterService: EventEmitterService, 
-    private toastr: ToastrService) { }
+    private toastr: ToastrService) {
 
-  ngOnInit(){
-    if(this.eventEmitterService.predictSub == undefined){
       this.eventEmitterService.predictSub = this.eventEmitterService.invokeRefreshPrediction.
       subscribe(()=> {
-        this.refresh()
-      });
-    }
-  }
+      this.refresh()
+    });
+     }
 
   refresh(){
-    console.log(localStorage.getItem('currDate'));
     this.map.off();
     this.map.remove();
     this.initialize();

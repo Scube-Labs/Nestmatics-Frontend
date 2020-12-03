@@ -30,6 +30,21 @@ mat-card {
   max-width: 230px;
 }
 
+.filter-button{
+  margin-top: -15px;
+  margin-bottom:15px;
+}
+
+button{
+  font-size: small;
+  margin: 3px;
+}
+
+.end-buttons{
+  display: flex;
+  flex-direction: row;
+}
+
 ::ng-deep {
   .mat-card.ng-star-inserted { padding: 0; }
 }

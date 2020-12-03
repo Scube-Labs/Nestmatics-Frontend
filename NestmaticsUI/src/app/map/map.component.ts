@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNestsComponent } from '../dialog-nests/dialog-nests.component';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
-import { EventEmitterService } from '../event-emitter.service'
+import { EventEmitterService } from '../event-emitter.service';
 import { Observable, forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
@@ -29,17 +29,18 @@ export class MapComponent implements AfterViewInit {
   newNests = new Array<any>();
 
   vehicle_qty: number;
+  old_vehicle_qty:number;
   assigned_vehicles: number;
   counter: number;
+
+  dropName:string;
+  old_dropName:string;
 
   newDay = false;
   surpassedAmount = false;
   dropid:string;
 
   currentDate= localStorage.getItem('currDate');
-
-  //calendarComponent: CalendarComponent = new CalendarComponent();
-  //private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
 
   private areaSelected = localStorage.getItem('currAreaName');
   areas: string = environment.baseURL + '/nestmatics/areas' //Service Area Data End-point
@@ -57,16 +58,6 @@ export class MapComponent implements AfterViewInit {
         this.refresh()
       });
     }
-
-
-  // ngOnInit(){
-  //   if(this.eventEmitterService.subsVar == undefined){
-  //     this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
-  //     subscribe(()=> {
-  //       this.refresh()
-  //     });
-  //   }
-  // }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -86,6 +77,9 @@ export class MapComponent implements AfterViewInit {
     this.currentDate = localStorage.getItem('currDate');
   }
 
+  /**
+   * Reinitializing map with local changes to drop strategy
+   */
   private reinitialize() {
     this.initMap();
     this.restrict();
@@ -94,6 +88,9 @@ export class MapComponent implements AfterViewInit {
     this.drawControl();
   }
 
+  /**
+   * Refresh map when changing dates
+   */
   refresh(){
     console.log(localStorage.getItem('currDate'));
     this.nestList.splice(0, this.nestList.length);
@@ -120,7 +117,7 @@ export class MapComponent implements AfterViewInit {
       })
     }  
     else {
-      console.log(localStorage.getItem('did not restrict'))
+     this.toastr.error("Unable to restrict area")
     }
   }
   
@@ -241,10 +238,18 @@ export class MapComponent implements AfterViewInit {
 
   public getDropStrategyForDate(){
     this.http.get(this.drop +"/area/"+localStorage.getItem('currAreaID')+"/date/"+localStorage.getItem('currDate')+"/"+localStorage.getItem('currDate')).subscribe((res: any) => {
-      //  console.log(res.ok);
+        console.log(res.ok);
         if (res.ok){
           var date = res.ok[0].start_date;
-          this.vehicle_qty = res.ok[0].vehicles;
+          
+          this.setVehicles(res.ok[0].vehicles)
+          //this.vehicle_qty = res.ok[0].vehicles;
+          this.old_vehicle_qty = res.ok[0].vehicles;
+          
+          this.setName(res.ok[0].name);
+         // this.dropName = res.ok[0].name;
+          this.old_dropName = res.ok[0].name;
+
           this.dropid = res.ok[0]._id
           this.newDay = false;
           
@@ -266,6 +271,9 @@ export class MapComponent implements AfterViewInit {
                 }
                 this.nestConfigList.splice(0, this.nestConfigList.length);
                 this.setAssignedVehicles(assignedVehicles);
+                this.toastr.clear();
+                this.toastr.success("Drop Strategy found for this day.");
+                this.toastr.info("If editing the drop strategy, remember to click on the button to edit it!");
               }
             },
             (error) => {
@@ -274,7 +282,7 @@ export class MapComponent implements AfterViewInit {
         }
       },
       (error) => {
-        console.log("get empy nests");
+        this.toastr.info("This day has no drop strategy. Create a New one and remember to save it!");
         this.newDay = true;
         this.getEmptyDayNests();
         console.log(error.error.Error);
@@ -454,43 +462,10 @@ export class MapComponent implements AfterViewInit {
    */
   editConfigurations(){
     var configs = Array<any>();
-    let observables: Observable<any>[] = [];
     this.addNewConfigsToDrop();
     for(const c of this.nestList){
       configs.push(c.configid);
-      // if("new" in c){
-        
-      //   this.http.post(this.nests, {
-      //     "service_area": c.service_area,
-      //     "nest_name": c.nest_name,
-      //     "coords": {
-      //       "lat": c.lat,
-      //       "lon": c.lon
-      //     },
-      //     "nest_radius": c.nest_radius,
-      //     "user": c.user,
-      //   } ).subscribe((done: any) => {
-      //     var nestid = done.ok._id;
-          
-      //     observables.push(this.http.post(this.nests + "/nestconfig", {
-      //       "nest": nestid,
-      //       "start_date":  localStorage.getItem('currDate'),
-      //       "end_date":  localStorage.getItem('currDate'),
-      //       "vehicle_qty": c.vehicle_qty,
-      //     }))
-
-      //     this.http.post(this.nests + "/nestconfig", {
-      //       "nest": nestid,
-      //       "start_date":  localStorage.getItem('currDate'),
-      //       "end_date":  localStorage.getItem('currDate'),
-      //       "vehicle_qty": c.vehicle_qty,
-      //     }).subscribe((result: any) => {
-      //       c["_id"] = nestid;
-      //       c["configid"] = result.ok._id;
-      //       c["update"] = 0;
-      //     });
-      //   });
-      // }
+      
       if("update" in c && c.update == 1){
 
         this.http.put(this.nests + "/nestconfig/" + c.configid , {
@@ -500,18 +475,45 @@ export class MapComponent implements AfterViewInit {
         });
       }
     }
-    console.log("editing drop strategy")
+    
     this.editDropStrategy(configs);
   }
 
   public editDropStrategy(configs){
+    var name = this.dropName;
+    var vehicles = this.vehicle_qty;
+    var vchange = false;
+    var nchange = false;
+    let observables: Observable<any>[] = [];
+    if(this.old_vehicle_qty != this.vehicle_qty){
+      vchange = true;
+      observables.push(this.http.put(this.drop + "/"+this.dropid+"/vehicles" , {
+        "vehicles":vehicles
+      }))
+    }
+    if(this.old_dropName != this.dropName){
+      nchange = true;
+      observables.push(this.http.put(this.drop + "/"+this.dropid+"/name" , {
+        "name":name
+      }))
+    }
     this.http.put(this.drop + "/"+this.dropid+"/day/0" , {
       configs
     }).subscribe(res => {
-      console.log("edited drop strategy")
-      this.map.off();
-      this.map.remove();
-      this.initialize();
+      if(vchange || nchange){
+        forkJoin(observables)
+          .subscribe(dataArray => {
+            this.toastr.success("Successfully edited the selected Drop Strategy");
+            this.map.off();
+            this.map.remove();
+            this.initialize();
+      });
+      }else{
+        this.toastr.success("Successfully edited the selected Drop Strategy");
+        this.map.off();
+        this.map.remove();
+        this.initialize();
+      }
     });
   }
 
@@ -526,11 +528,12 @@ export class MapComponent implements AfterViewInit {
         ],
         "user":localStorage.getItem('currUserID'), 
         "vehicles": this.vehicle_qty,
+        "name": this.dropName,
         "end_date": localStorage.getItem('currDate'), 
         "service_area": localStorage.getItem('currAreaID'), 
         "start_date": localStorage.getItem('currDate')
     }).subscribe((res: any) => {
-      console.log("added new drop strategy")
+      this.toastr.success("Successfully uploaded new Drop Strategy");
       this.map.off();
       this.map.remove();
       this.initialize();
@@ -722,8 +725,11 @@ export class MapComponent implements AfterViewInit {
   }
 
   setVehicles(qty) {
-    
     this.vehicle_qty = parseInt(qty);
+  }
+
+  setName(name){
+    this.dropName = name;
   }
 
   setAssignedVehicles(qty){

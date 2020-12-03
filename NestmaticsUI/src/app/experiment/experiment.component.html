@@ -19,6 +19,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <button class="filter-button" (click)="getFilteredExperiments(filt)" mat-raised-button color="primary">filter by nest</button>
 
   <p>Experiments List</p>
   <mat-card-content class="experiment-list">
@@ -29,8 +30,9 @@
       </mat-selection-list>
   </mat-card-content>
 
-
-  <button (click)="getFilteredExperiments(filt)" mat-raised-button color="primary">filter by nest</button>
-  <button (click)="deleteExperiment(exp)" mat-raised-button color="primary">delete</button>
-  <button (click)="getIDsOfExperiment(exp)" mat-raised-button color="accent">select</button>
+  <div class="end-buttons">
+    <button (click)="getIDsOfExperiment(exp)" mat-raised-button color="accent">select</button>
+    <button (click)="deleteExperiment(exp)" mat-raised-button color="basic">delete</button>
+  </div>
+  
 </mat-card>

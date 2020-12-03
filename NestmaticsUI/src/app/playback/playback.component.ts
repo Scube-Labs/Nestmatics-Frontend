@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { EventEmitterService } from '../event-emitter.service';
 
 const moment = _moment;
 
@@ -45,9 +46,21 @@ export class PlaybackComponent implements AfterViewInit {
   constructor(
       private http: HttpClient,
       public dialog: MatDialog,
-      private toastr: ToastrService) {}
+      private eventEmitterService: EventEmitterService,
+      private toastr: ToastrService) {
+        this.eventEmitterService.ridesSub = this.eventEmitterService.invokeRefreshRides.
+        subscribe(()=> {
+        this.refresh()
+      });
+    }
 
   ngAfterViewInit(): void {
+    this.initialize();
+  }
+
+  refresh(){
+    this.map.off();
+    this.map.remove();
     this.initialize();
   }
 

@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AngularFileUploaderModule } from 'angular-file-uploader';
 import { ToastrModule } from 'ngx-toastr';
+import { ChartsModule } from 'ng2-charts';
 
 //Google Auth Modules
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
@@ -31,7 +32,6 @@ import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
 import { EventEmitterService } from './event-emitter.service';
-import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
 import { StatsComponent } from './stats/stats.component';
 import { DialogCreateExperimentComponent } from './dialog-create-experiment/dialog-create-experiment.component';
 import { DialogReportComponent } from './dialog-report/dialog-report.component';
@@ -53,7 +53,6 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     DialogUploadComponent,
     DialogExperimentListComponent,
     DialogExperimentComponent,
-    DropStrategyComponent,
     StatsComponent,
     DialogCreateExperimentComponent,
     DialogReportComponent
@@ -70,6 +69,7 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     CalendarHeatmapModule,
     SocialLoginModule,
     ReactiveFormsModule,
+    ChartsModule,
     ToastrModule.forRoot()
   ],
   providers: [
