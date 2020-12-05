@@ -21,15 +21,13 @@ export class PredictionComponent implements AfterViewInit {
   
   private areaSelected = localStorage.getItem('currAreaID');
 
-  areas: string = environment.baseURL+ 'nestmatics/areas' //Service Area Data End-point
-  rides: string = environment.baseURL+ 'nestmatics/rides' //Ride Data End-point
-  nests: string = environment.baseURL+ 'nestmatics/nests' //Nest Data End-Point
+  areas: string = environment.baseURL+ '/nestmatics/areas' //Service Area Data End-point
+  nests: string = environment.baseURL+ '/nestmatics/nests' //Nest Data End-Point
   
-  restPredict: string ='http://localhost:3000/predictions'
+  restPredict: string = environment.baseURL + '/nestmatics/ml'
   
   currHeat;
   InProcess = false;
-  currentTime;
   
   constructor(private http: HttpClient,
     private eventEmitterService: EventEmitterService, 
@@ -138,18 +136,22 @@ export class PredictionComponent implements AfterViewInit {
     });
   }
 
-  private predict(day : number): void {
+  private predict(time : number): void {
     
     this.InProcess = true;
 
-    this.http.get(this.restPredict).subscribe((res: any) => {
+    this.http.get(this.restPredict + "/prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+      console.log(res.ok.prediction);
+      
       if(typeof this.currHeat != 'undefined'){
         this.map.removeLayer(this.currHeat);
       }
       
-      for (const c of res) {
-        this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
-      }
+      this.currHeat = (L as any).heatLayer(res.ok.prediction[time], 
+        {
+        radius: 30
+      }).addTo(this.map);
+      
 
       this.InProcess = false;
     },
@@ -159,5 +161,17 @@ export class PredictionComponent implements AfterViewInit {
     });
 
     
+  }
+
+  public generatePrediction() {
+    this.http.get(this.restPredict + "/generate_prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+      if(typeof res.ok != 'undefined'){
+        this.toastr.success("Prediction generated succesfuly");
+        console.log(res.ok)
+      }
+      else{
+        this.toastr.warning(res.Error);
+      }
+    })
   }
 }

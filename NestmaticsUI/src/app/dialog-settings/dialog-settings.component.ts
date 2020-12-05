@@ -17,6 +17,8 @@ export class DialogSettingsComponent implements OnInit {
   usrType;
   typeList = ["user", "admin"];
 
+  trainIsValid = false;
+
   constructor(private http: HttpClient,
     private toastr: ToastrService) { }
 
@@ -33,10 +35,15 @@ export class DialogSettingsComponent implements OnInit {
         "type": type
       }).subscribe((res: any) => {
         this.toastr.success("User " + this.usrEmail + "was succesfuly added");
+        this.usersList = [];
+        this.userIDs = [];
+        this.getAllUsers();
       },
       (error) => {
         this.toastr.error("Invalid email. " + error.error.Error);
       })
+
+     
     }
     else{
       this.toastr.info("Please enter both email and type")

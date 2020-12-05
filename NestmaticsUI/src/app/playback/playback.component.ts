@@ -36,7 +36,7 @@ export class PlaybackComponent implements AfterViewInit {
   maxUnix //Maximum time
   change; //Percentage change for progress bar
   progress = 0; //Progress for progress bar
-  currentTime; //Current time being displayed in the playback
+  currentTime = "00:00:00 --"; //Current time being displayed in the playback
   currHeat;
   heatSelected ;
   InProcess = true;
@@ -208,7 +208,7 @@ export class PlaybackComponent implements AfterViewInit {
         this.playbackPause();
         this.trackplayback.dispose();
         this.progress = 0;
-        this.currentTime = 0;
+        this.currentTime = "00:00:00 --";
       }
           
       this.trackplayback = (L as any).trackplayback(playbackArray, this.map, {
@@ -230,6 +230,8 @@ export class PlaybackComponent implements AfterViewInit {
 
       // trigger on time change
       this.trackplayback.on('tick', e => {
+
+
         if(Number(moment(e.time).format('H')) < 12){
           this.currentTime = moment(e.time).format('H:mm:ss') + " AM";
         }
@@ -241,6 +243,8 @@ export class PlaybackComponent implements AfterViewInit {
         }
 
         this.progress = (Number(moment(e.time).format('H')) - this.minUnix) * this.change
+
+        if(e.time ==this.trackplayback.getEndTime()) this.progress = 100;
 
       }, this)
 
@@ -271,15 +275,18 @@ export class PlaybackComponent implements AfterViewInit {
     Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'));
     this.displayBehaviour(time);
     this.trackplayback.setCursor(unixTime);
-    this.playbackPause();
-    this.playbackPlay();
   }
 
   /**
    * Function to control the playback Play functionality
    */
   public playbackPlay() {
-    this.trackplayback.start();
+    if(this.heatSelected){
+      this.toastr.info("Cannot start playback with behaviour selected. Unselect behaviour option to play.")
+    }
+    else{
+      this.trackplayback.start();
+    }
   }
   /**
    * Function to control the playback Pause functionality
@@ -291,7 +298,12 @@ export class PlaybackComponent implements AfterViewInit {
    * Function to control the playback Replay functionality
    */
   public playbackReplay() {
-    this.trackplayback.rePlaying();
+    if(this.heatSelected){
+      this.toastr.info("Cannot start playback with behaviour selected. Unselect behaviour option to play.")
+    }
+    else{
+      this.trackplayback.rePlaying();
+    }
   }
 
   public showLines(event) {
@@ -314,6 +326,7 @@ export class PlaybackComponent implements AfterViewInit {
     else{
       this.heatSelected = true;
       this.trackplayback.setCursor
+      this.playbackPause();
       if(typeof this.lastTimeSelected != 'undefined'){
         this.displayBehaviour(this.lastTimeSelected);
       }

@@ -99,6 +99,7 @@ export class ServiceAreaComponent implements AfterViewInit {
               "coordinates": layer._latlngs[0]
             }
         }).subscribe(res => {
+          console.log(res);
             this.map.off();
             this.map.remove();
             this.initialize();
