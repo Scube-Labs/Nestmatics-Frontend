@@ -11,6 +11,8 @@ import { environment } from '../../environments/environment';
 export class DialogSettingsComponent implements OnInit {
 
   users: string = environment.baseURL + "/nestmatics/users"
+  ml: string = environment.baseURL + "/nestmatics/ml"
+
   usersList = [];
   userIDs = [];
   usrEmail;
@@ -19,8 +21,79 @@ export class DialogSettingsComponent implements OnInit {
 
   trainIsValid = false;
 
+  newDataReq;
+  accuracyReq;
+
+  newDataCheck = false;
+  accuracyCheck = false;
+
+  week = [
+    { value: 'Sunday', ID: 0},
+    { value: 'Monday', ID: 1},
+    { value: 'Tuesday', ID: 2},
+    { value: 'Wednesday', ID: 3},
+    { value: 'Thursday', ID: 4},
+    { value: 'Friday', ID: 5},
+    { value: 'Saturday', ID: 6},
+  ]
+  hours = [
+    //AM
+    { value: '1:00 AM', ID: 0 },
+    { value: '2:00 AM', ID: 1 },
+    { value: '3:00 AM', ID: 2 },
+    { value: '4:00 AM', ID: 3 },
+    { value: '5:00 AM', ID: 4 },
+    { value: '6:00 AM', ID: 5 },
+    { value: '7:00 AM', ID: 6 },
+    { value: '8:00 AM', ID: 7 },
+    { value: '9:00 AM', ID: 8 },
+    { value: '10:00 AM', ID: 9 },
+    { value: '11:00 AM', ID: 10 },
+    { value: '12:00 AM', ID: 11 },
+    //PM
+    { value: '1:00 PM', ID: 12 },
+    { value: '2:00 PM', ID: 13 },
+    { value: '3:00 PM', ID: 14 },
+    { value: '4:00 PM', ID: 15 },
+    { value: '5:00 PM', ID: 16 },
+    { value: '6:00 PM', ID: 17 },
+    { value: '7:00 PM', ID: 18 },
+    { value: '8:00 PM', ID: 19 },
+    { value: '9:00 PM', ID: 20 },
+    { value: '10:00 PM', ID: 21 },
+    { value: '11:00 PM', ID: 22 },
+    { value: '12:00 PM', ID: 23 }
+  ]
+
+  ampm = ["AM", "PM"];
+
   constructor(private http: HttpClient,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService) {
+
+      if(localStorage.getItem('areaSelected') == "true"){
+        this.http.get(this.ml + "/requierments/area/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+          console.log(res);
+
+          this.trainIsValid = res.ok.can_train;
+          this.newDataReq = res.ok.required_days;
+          if(res.ok.accuracy === -1){
+            this.accuracyReq = "No predictions yet";
+          }
+          else{
+            this.accuracyReq = res.ok.accuracy;
+            if(res.ok.accuracy < res.ok.threshold) this.accuracyCheck = true;
+          }
+
+          if(res.ok.required_days === 0) this.newDataCheck = true;
+          
+        })
+      }
+      else{
+        this.newDataReq = "N/A";
+        this.accuracyReq = "N/A";
+        this.trainIsValid = false;
+      }
+    }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -73,7 +146,6 @@ export class DialogSettingsComponent implements OnInit {
 
   private getAllUsers(){
     this.http.get(this.users).subscribe((res: any) => {
-      console.log(this.users);
       for(var i=0; i<res.length; i++){
         this.usersList.push(res[i].email)
         this.userIDs.push(res[i]._id);
@@ -81,4 +153,21 @@ export class DialogSettingsComponent implements OnInit {
     })
   }
 
+  public trainModel(day, time) {
+    if(typeof day != 'undefined' && typeof time != 'undefined'){
+      this.toastr.success("Re-training was scheduled");
+      this.http.put(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/trainModel",
+      {
+        "status": "waiting",
+        "weekday": day,
+        "hour": time
+      }).subscribe((res: any) => {
+
+      })
+    }
+    else{
+      this.toastr.info("Please select a valid day and time to re-train");
+    }
+    
+  }
 }

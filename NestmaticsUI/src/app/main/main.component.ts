@@ -45,13 +45,14 @@ export class MainComponent implements OnInit {
         this.select()
       });
       this.admin = localStorage.getItem('userIsAdmin') == "true"
-
+      localStorage.setItem('areaSelected', JSON.stringify(false));
     }
 
   ngOnInit(): void {
     localStorage.setItem('currView', 'serviceArea')
     this.admin = localStorage.getItem('userIsAdmin') == "true"
     
+
     console.log(localStorage.getItem('reload'))
 
     if(localStorage.getItem('reload') != "true"){
@@ -65,6 +66,7 @@ export class MainComponent implements OnInit {
 
   select(){
     this.isSelected = true;
+    localStorage.setItem('areaSelected', JSON.stringify(true));
   }
 
   /**
