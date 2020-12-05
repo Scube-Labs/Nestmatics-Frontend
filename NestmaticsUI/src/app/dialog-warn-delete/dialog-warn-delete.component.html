@@ -1,0 +1,15 @@
+<mat-card>
+    
+<h1 style="color:red;"> WARNING </h1>
+
+<h2> 
+    Deleting this {{ item }} will remove all other references to this {{ item }} forever. 
+    Are you sure you want to delete it?
+</h2>
+
+<div class="end-buttons">
+    <button (click)="deleteNest()" mat-raised-button color="primary">Yes</button>
+    <button (click)="close()" mat-raised-button color="secondary">Cancel</button>
+</div>
+
+</mat-card>

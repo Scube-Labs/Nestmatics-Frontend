@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 export class StatsComponent implements OnInit {
 
   totalRides = 0;
-  totalRevenue = 0;
+  totalRevenue;
   totalActiveVehicles = 0;
 
   stats: string = environment.baseURL + '/nestmatics/stats' 
@@ -38,9 +38,9 @@ export class StatsComponent implements OnInit {
   loadStats(){
     this.http.get(this.stats + "/area/" + localStorage.getItem('currAreaID')+"/date/"+localStorage.getItem('currDate')).subscribe((res: any) => {
       if(res.ok){
-          this.totalRevenue = res.ok.total_revenue;
+          this.totalRevenue = parseFloat(res.ok.total_revenue).toFixed(2);
           this.totalRides = res.ok.total_rides;
-          this.totalActiveVehicles = res.ok.total_active_vehicles.length;
+          this.totalActiveVehicles = Object.keys(res.ok.total_active_vehicles).length;
       }
     },
     (error) => {

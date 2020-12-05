@@ -7,10 +7,9 @@
 </div>
 
 <mat-card class="experiment-card">
-  <mat-card-header>
-    <mat-card-title> Experiments: </mat-card-title>
-  </mat-card-header>
+  
 
+  <h2>Filter by name</h2>
   <mat-form-field appearance="fill">
       <mat-label>Filter</mat-label>
     <mat-select #filt>
@@ -19,9 +18,12 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <button class="filter-button" (click)="getFilteredExperiments(filt)" mat-raised-button color="primary">filter by nest</button>
+  <br>
 
-  <p>Experiments List</p>
+  <button style="margin-right: 10px;" (click)="filterExperiments(filt)" mat-raised-button color="primary">Add filter</button>
+  <button (click)="removeFilter()" mat-raised-button color="primary">Remove filter</button>
+
+  <h2 style="margin-top: 20px;">Experiments List</h2>
   <mat-card-content class="experiment-list">
       <mat-selection-list #exp [multiple]="false">
         <mat-list-option *ngFor="let exp of experimentsList" [value]="exp">

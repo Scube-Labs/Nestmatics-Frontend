@@ -9,16 +9,18 @@
 
 <app-stats></app-stats>
 
-<mat-card style="width: 350px;">
+<mat-card style="width: 435px;">
   <div>
     Playback Controls
     <button [disabled]="disableControls" (click)="playbackPlay()" mat-raised-button><mat-icon class="toolbarButtons">play_arrow</mat-icon></button>
     <button [disabled]="disableControls" (click)="playbackPause()"mat-raised-button><mat-icon class="toolbarButtons">pause</mat-icon></button> 
     <button [disabled]="disableControls" (click)="playbackReplay()"mat-raised-button><mat-icon class="toolbarButtons">replay</mat-icon></button>
+    <button [disabled]="disableControls" color="accent" (click)="playAll()"mat-raised-button>Play All</button>
+
   </div>
    
   
-  <div style="float:right; margin-right:10px; margin-top:5px">
+  <div style="float:right; margin-right:15px; margin-top:5px">
     Speed Controls
     <button [disabled]="disableControls" (click)="slowSpeed()"mat-mini-fab><mat-icon class="toolbarButtons">fast_rewind</mat-icon></button>
     <button [disabled]="disableControls" (click)="quickSpeed()"mat-mini-fab><mat-icon class="toolbarButtons">fast_forward</mat-icon></button> 
@@ -63,5 +65,3 @@
   
 
 </mat-card>
-
-<mat-spinner *ngIf="InProcess"></mat-spinner>

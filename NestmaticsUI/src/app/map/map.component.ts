@@ -9,6 +9,7 @@ import * as _moment from 'moment';
 import { EventEmitterService } from '../event-emitter.service';
 import { Observable, forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 const moment = _moment;
 
@@ -93,6 +94,8 @@ export class MapComponent implements AfterViewInit {
    */
   refresh(){
     console.log(localStorage.getItem('currDate'));
+    this.setAssignedVehicles(0)
+    this.setName("")
     this.nestList.splice(0, this.nestList.length);
     this.newNests.splice(0, this.newNests.length);
     this.map.off();
@@ -204,35 +207,6 @@ export class MapComponent implements AfterViewInit {
       this.map.remove();
       this.reinitialize();
 
-      //Add new nest to DB
-      // this.http.post(this.nests, newNest).subscribe((res: any) => {
-      //   console.log(res);
-      //   newNest["_id"]=res.ok._id
-
-      //   this.http.post(this.nests + "/nestconfig", {
-      //     "nest": res.ok._id,
-      //     "start_date":  localStorage.getItem('currDate'),
-      //     "end_date":  localStorage.getItem('currDate'),
-      //     "vehicle_qty": vehicle_qty,
-      //   }).subscribe((done: any) => {
-      //     newNest["vehicle_qty"] = vehicle_qty;
-      //     newNest["configid"] = done.ok._id;
-
-      //     //add nest to list to display
-      //     this.nestList.push(newNest);
-
-      //     //add nest to new nest list to insert afterward
-      //     this.newNests.push(newNest);
-
-      //     // add nest config id to list to insert later on 
-      //     this.newConfigs.push(done.ok._id);
-
-      //     console.log(done);
-      //     // this.map.off();
-      //     this.map.remove();
-      //     this.reinitialize();
-      //   })
-      // }) 
    });
   }
 
@@ -243,11 +217,11 @@ export class MapComponent implements AfterViewInit {
           var date = res.ok[0].start_date;
           
           this.setVehicles(res.ok[0].vehicles)
-          //this.vehicle_qty = res.ok[0].vehicles;
+          
           this.old_vehicle_qty = res.ok[0].vehicles;
           
           this.setName(res.ok[0].name);
-         // this.dropName = res.ok[0].name;
+         
           this.old_dropName = res.ok[0].name;
 
           this.dropid = res.ok[0]._id
@@ -255,12 +229,10 @@ export class MapComponent implements AfterViewInit {
           
           var assignedVehicles = 0;
           this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + date).subscribe((res: any) => {
-            //  console.log(res.ok);
               if (res.ok){
                 for (const c of res.ok) {
                   c["update"] = 0;
                   this.nestList.push(c);
-                 // this.nestConfigList.push(c.configid);
         
                  assignedVehicles += c.vehicle_qty;
         
@@ -291,7 +263,7 @@ export class MapComponent implements AfterViewInit {
 
   public getEmptyDayNests(){
     this.http.get(this.nests + "/area/"+localStorage.getItem('currAreaID')+"/user/"+localStorage.getItem('currUserID')).subscribe((res: any) => {
-      //  console.log(res.ok);
+  
       console.log(res);  
       if (res.ok){
           var vehicles = 0;
@@ -317,8 +289,6 @@ export class MapComponent implements AfterViewInit {
   }
 
   public reloadNests() {
-    // var tempList = this.nestList;
-    // this.nestList.splice(0, this.nestList.length);
     if (this.nestList){
       for (const c of this.nestList) {
 
@@ -355,9 +325,8 @@ export class MapComponent implements AfterViewInit {
    * Load Nests from DB to Map. Retrieved nest belong to selected Service Area
    */
   private loadNests(): void {
-   // console.log(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate'));
+   
     this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
-    //  console.log(res.ok);
       if (res.ok){
         var vehicles = 0;
         this.newDay = false;
@@ -365,7 +334,6 @@ export class MapComponent implements AfterViewInit {
 
           c["update"] = 0;
           this.nestList.push(c);
-          //this.nestConfigList.push(c.configid);
 
           vehicles += c.vehicle_qty;
 
@@ -510,9 +478,7 @@ export class MapComponent implements AfterViewInit {
       });
       }else{
         this.toastr.success("Successfully edited the selected Drop Strategy");
-        this.map.off();
-        this.map.remove();
-        this.initialize();
+        this.refresh();
       }
     });
   }
@@ -534,9 +500,7 @@ export class MapComponent implements AfterViewInit {
         "start_date": localStorage.getItem('currDate')
     }).subscribe((res: any) => {
       this.toastr.success("Successfully uploaded new Drop Strategy");
-      this.map.off();
-      this.map.remove();
-      this.initialize();
+      this.refresh();
     });
   }
 
@@ -565,18 +529,6 @@ export class MapComponent implements AfterViewInit {
             "vehicle_qty": c.vehicle_qty,
           }));
 
-          // var nestid = done.ok._id;
-          // this.http.post(this.nests + "/nestconfig", {
-          //   "nest": nestid,
-          //   "start_date":  localStorage.getItem('currDate'),
-          //   "end_date":  localStorage.getItem('currDate'),
-          //   "vehicle_qty": c.vehicle_qty,
-          // }).subscribe((result: any) => {
-          //   c["_id"] = nestid;
-          //   c["configid"] = result.ok._id;
-          //   c["update"] = 0;
-          //   this.nestConfigList.push(result.ok._id);
-          // });
         });
     }else{
       observables.push(this.http.post(this.nests + "/nestconfig", {
@@ -586,16 +538,6 @@ export class MapComponent implements AfterViewInit {
         "vehicle_qty": c.vehicle_qty,
       }));
       
-      // console.log("posting new config");
-      // this.http.post(this.nests + "/nestconfig", {
-      //   "nest": c._id,
-      //   "start_date":  localStorage.getItem('currDate'),
-      //   "end_date":  localStorage.getItem('currDate'),
-      //   "vehicle_qty": c.vehicle_qty,
-      // }).subscribe((done: any) => {
-      //   console.log("added new config");
-      //   this.nestConfigList.push(done.ok._id);
-      // });
     }
   }
   forkJoin(observables)
@@ -630,7 +572,7 @@ export class MapComponent implements AfterViewInit {
   private openDialog(dialog, vehicles, nest){
     let dialogRef = this.dialog.open(dialog, {
       data: {vehicles: vehicles, name: nest.nest_name},
-      disableClose: false
+      disableClose: true
     });
 
     var oldName = nest.nest_name;
@@ -640,84 +582,78 @@ export class MapComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result)
       {
-          //Delete the nest
+          //Delete the nest config 
         if(result === -1){
           this.removeItemFromNestArray(oldName);
           this.map.off();
           this.map.remove();
           this.reinitialize();
-          // this.http.delete(this.nests + "/nest/" + nest._id).subscribe(res => {
-          //   this.map.off();
-          //   this.map.remove();
-          //   this.initialize();
-          // });
         }
         else if(result == -2){
           // do nothing
         }
-        //Update the nest name
+
+        // delete the nest from db
+        else if(result == -3){
+          if('new' in nest && nest['new'] == 1){
+            this.removeItemFromNestArray(oldName)
+          }
+          else{
+            this.http.delete(this.nests + "/nest/" + nest._id).subscribe(res => {
+              this.removeItemFromNestArray(oldName)
+              this.map.off();
+              this.map.remove();
+              this.reinitialize();
+              
+            });
+          }
+        }
+        //Update the nest name or vehicle qty
         else{
-            if(result.name !== "" && result.vehicles !== ""){
-              this.http.put(this.nests + "/nest/" + nest._id , {
-                "nest_name": result.name
-              }).subscribe(res => {
-                this.updateLocalConfigVehicles(oldName, parseInt(result.vehicles));
-                this.updateLocalConfigNames(oldName, result.name);
-                this.map.off();
-                this.map.remove();
-                this.reinitialize();
-
-                // if (this.newDay){
-                //   this.updateLocalConfigVehicles(nest.nest_name, result.vehicles);
-                // }
-
-                // else{
-                //   this.http.put(this.nests + "/nestconfig/" + nest.configid , {
-                //     "vehicle_qty": parseInt(result.vehicles)
-                //   }).subscribe(res => {
-                //     this.updateAssignedVehicles(parseInt(result.vehicles),oldVehicleqty);
-                //     this.map.off();
-                //     this.map.remove();
-                //     this.initialize();
-                //   });
-                // }
-                
-              });
-            }
-            else if (result.name !== "" || result.vehicles !== ""){
-                // //FiX with ROUTE, need nest config id
+            if('new' in nest && nest['new'] == 1){
               if(result.vehicles !== ""){
                 this.updateLocalConfigVehicles(oldName, parseInt(result.vehicles));
-                this.map.off();
-                this.map.remove();
-                this.reinitialize();
-                  // if (this.newDay){
-                  //   this.updateLocalConfigVehicles(nest._id, result.vehicles);
-                  // }
-                  // else{
-                  //   this.http.put(this.nests + "/nestconfig/" + nest.configid , {
-                  //     "vehicle_qty": parseInt(result.vehicles)
-                  //   }).subscribe(res => {
-                  //     this.updateAssignedVehicles(parseInt(result.vehicles),oldVehicleqty);
-                  //     this.updateLocalConfigVehicles(nest.nest_name, result.vehicles);
-                  //     this.map.off();
-                  //     this.map.remove();
-                  //     this.reinitialize();
-                  //   });
-                  // }
+              }
+              else if (result.name !== ""){
+                this.updateLocalConfigNames(oldName, result.name);
+              }
+              this.map.off();
+              this.map.remove();
+              this.reinitialize();
+            }
+            else{
+              if(result.name !== "" && result.vehicles !== ""){
+                this.http.put(this.nests + "/nest/" + nest._id , {
+                  "nest_name": result.name
+                }).subscribe(res => {
+                  this.updateLocalConfigVehicles(oldName, parseInt(result.vehicles));
+                  this.updateLocalConfigNames(oldName, result.name);
+                  this.map.off();
+                  this.map.remove();
+                  this.reinitialize();
+                  
+                });
+              }
+              else if (result.name !== "" || result.vehicles !== ""){
+                  
+                if(result.vehicles !== ""){
+                  this.updateLocalConfigVehicles(oldName, parseInt(result.vehicles));
+                  this.map.off();
+                  this.map.remove();
+                  this.reinitialize();
+                  }
+                  else if (result.name !== ""){
+                    this.http.put(this.nests + "/nest/" + nest._id , {
+                      "nest_name": result.name
+                    }).subscribe(res => {
+                      this.updateLocalConfigNames(nest.nest_name, result.name);
+                      this.map.off();
+                      this.map.remove();
+                      this.reinitialize();
+                    });
                 }
-                else if (result.name !== ""){
-                  this.http.put(this.nests + "/nest/" + nest._id , {
-                    "nest_name": result.name
-                  }).subscribe(res => {
-                    this.updateLocalConfigNames(nest.nest_name, result.name);
-                    this.map.off();
-                    this.map.remove();
-                    this.reinitialize();
-                  });
               }
             }
-          
         }
       }
       

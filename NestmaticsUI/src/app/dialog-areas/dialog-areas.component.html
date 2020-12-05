@@ -1,8 +1,11 @@
 <!--Dialog displayed when selecting a service area-->
 
 <h1 mat-dialog-title>Area Name: {{data.name}}</h1>
-
-<input matInput type="text" maxlength="20" [(ngModel)]="nestName"/>
+<mat-form-field appearance="legacy">
+    <mat-label>Edit Area Name</mat-label>
+    <input matInput type="text" maxlength="20" [(ngModel)]="nestName"/>
+    <mat-hint>Edit Area Name</mat-hint>
+</mat-form-field>
 
 <button (click)="updateArea()" mat-raised-button color="primary">update</button>
 <button (click)="deleteArea()" mat-raised-button color="primary">Delete</button>

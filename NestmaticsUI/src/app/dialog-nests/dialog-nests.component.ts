@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { DialogWarnDeleteComponent } from '../dialog-warn-delete/dialog-warn-delete.component';
+
 
 @Component({
   selector: 'app-dialog-nests',
@@ -10,6 +12,7 @@ export class DialogNestsComponent implements OnInit {
   newAmmount = 0;
   nestName = "";
   constructor(public dialogRef: MatDialogRef<DialogNestsComponent>,
+    public warn_dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.newAmmount = data.vehicles;
       this.nestName = data.name;
@@ -26,10 +29,6 @@ export class DialogNestsComponent implements OnInit {
     console.log("name "+name+", vehicles: "+qty)
     this.dialogRef.close(result);
   }
-  // updateNest() {
-  //   if(this.newAmmount > 100) this.newAmmount = 100;
-  //   this.dialogRef.close(this.newAmmount);
-  // }
 
   cancelNest() {
     this.dialogRef.close(-2);
@@ -37,9 +36,29 @@ export class DialogNestsComponent implements OnInit {
   }
 
   /**
-   * This function deletes the selected nest from the database.
+   * This function will trigger the complete deletion of a nest
    */
-  deleteNest() {
+  deleteNest(){
+      let Ref = this.warn_dialog.open(DialogWarnDeleteComponent, {
+        data: {item: "nest"},
+        disableClose: true
+      });
+  
+      Ref.afterClosed().subscribe(result => {
+        if(result === -1){
+          this.dialogRef.close(-3);
+        }
+        else if (result === -2){
+          //Do-nothing, this is the closing condition.
+        }
+        
+      });
+    }
+
+  /**
+   * This function deletes the selected nest config from the current nest config list.
+   */
+  deleteNestConfig() {
     this.dialogRef.close(-1);
     
   }

@@ -7,7 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
-import { EventEmitterService } from '../event-emitter.service'
+import { EventEmitterService } from '../event-emitter.service';
+import { SpinnerService } from '../spinner.service';  
+
 
 @Component({
   selector: 'app-service-area',
@@ -34,7 +36,8 @@ export class ServiceAreaComponent implements AfterViewInit {
       private http: HttpClient,
       public dialog: MatDialog,
       private toastr: ToastrService,
-      private eventEmitter: EventEmitterService) { }
+      private eventEmitter: EventEmitterService,
+      private spinnerService: SpinnerService) { }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -66,7 +69,7 @@ export class ServiceAreaComponent implements AfterViewInit {
      * Area drawing is only enable when bounded.
      */
     this.map.addEventListener("dblclick", (e)=> {
-      var circle = L.circle([e.latlng.lat, e.latlng.lng], 2000).addTo(this.map); //Intermediate Circle to create the Area Bounds
+      var circle = L.circle([e.latlng.lat, e.latlng.lng], 2736).addTo(this.map); //Intermediate Circle to create the Area Bounds
       var rectangle = new L.Rectangle(circle.getBounds(), {color: 'red', fillColor: '#ffffff', fillOpacity: 0.5}); // Create Area Bounds.
       this.map.removeLayer(circle);
 
@@ -92,6 +95,9 @@ export class ServiceAreaComponent implements AfterViewInit {
         }
        }
        if(valid){
+
+        var spinnerRef = this.spinnerService.start("Creating service area");
+
         this.http.post(this.areas, {
           "area_name": "Area-" + new Date().toISOString(),
           "coords": 
@@ -99,9 +105,15 @@ export class ServiceAreaComponent implements AfterViewInit {
               "coordinates": layer._latlngs[0]
             }
         }).subscribe(res => {
+          console.log(res);
             this.map.off();
             this.map.remove();
             this.initialize();
+            this.spinnerService.stop(spinnerRef);
+        },
+        (error) => {
+          this.spinnerService.stop(spinnerRef);
+          this.toastr.error("Error creating service area")
         }) 
        }
     });

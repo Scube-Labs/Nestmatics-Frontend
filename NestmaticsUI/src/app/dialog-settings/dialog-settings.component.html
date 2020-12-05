@@ -1,0 +1,75 @@
+<h1 mat-dialog-title>Settings</h1>
+
+<div>
+
+    
+
+    <div style="height: 200px;">
+        <div style="float: left; margin-right: 20px">
+            <h2>Prediction training</h2>
+            <p><mat-icon>check</mat-icon>New data needed: 0</p>
+            <p><mat-icon>clear</mat-icon>Accuracy: 60%</p>
+        
+            <button disabled={{!trainIsValid}} style="margin-bottom: 30px" (click)="addUser(lstType.value)" mat-raised-button color="accent">Re-train model</button>
+        </div>
+        
+        <div style="float: left; margin-left:20px;">
+            <h2>Schedule training</h2>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Calendar</mat-label>
+                <input #input disabled  matInput [matDatepicker]="calendarPicker">
+                <mat-datepicker-toggle [for]="calendarPicker" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker  disabled = "false" #calendarPicker></mat-datepicker>
+            </mat-form-field>
+
+            <br>
+            <button disabled={{!trainIsValid}} style="margin-bottom: 30px" (click)="addUser(lstType.value)" mat-raised-button color="accent">Re-train model</button>
+    
+        </div>
+    </div>
+    
+    
+
+    <mat-divider style="margin-bottom: 30px;"></mat-divider>
+
+    <div>
+        <div style="float:left; margin-right: 20px">
+            <h2> Add users</h2>
+            <mat-form-field appearance="fill">
+                <input type="email" [(ngModel)]="usrEmail" matInput placeholder="User email">
+            </mat-form-field>
+        
+            <br>
+        
+            <mat-form-field appearance="fill">
+                <mat-label>User Type</mat-label>
+                <mat-select #lstType>
+                    <mat-option *ngFor="let lstType of typeList" [value]="lstType">
+                        {{lstType}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        
+            <br>
+            <button (click)="addUser(lstType.value)" mat-raised-button color="accent">Add user</button>
+        </div>
+
+        
+        <div style="height: 100px; float:right; margin-left:20px;">
+            <h2>Approved users</h2>
+            <div  class="user-list" style="max-height: 100px;">
+                <mat-selection-list #user [multiple]="false">
+                    <mat-list-option *ngFor="let user of usersList" [value]="user">
+                        {{user}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+
+            <button style="margin-top: 40px" (click)="deleteUser(user)" mat-raised-button color="primary">Delete user</button>
+
+        </div>
+    </div>
+</div>
+
+  
