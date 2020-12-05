@@ -7,7 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAreasComponent } from '../dialog-areas/dialog-areas.component';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
-import { EventEmitterService } from '../event-emitter.service'
+import { EventEmitterService } from '../event-emitter.service';
+import { SpinnerService } from '../spinner.service';  
+
 
 @Component({
   selector: 'app-service-area',
@@ -34,7 +36,8 @@ export class ServiceAreaComponent implements AfterViewInit {
       private http: HttpClient,
       public dialog: MatDialog,
       private toastr: ToastrService,
-      private eventEmitter: EventEmitterService) { }
+      private eventEmitter: EventEmitterService,
+      private spinnerService: SpinnerService) { }
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -92,6 +95,9 @@ export class ServiceAreaComponent implements AfterViewInit {
         }
        }
        if(valid){
+
+        var spinnerRef = this.spinnerService.start("Creating service area");
+
         this.http.post(this.areas, {
           "area_name": "Area-" + new Date().toISOString(),
           "coords": 
@@ -103,6 +109,11 @@ export class ServiceAreaComponent implements AfterViewInit {
             this.map.off();
             this.map.remove();
             this.initialize();
+            this.spinnerService.stop(spinnerRef);
+        },
+        (error) => {
+          this.spinnerService.stop(spinnerRef);
+          this.toastr.error("Error creating service area")
         }) 
        }
     });

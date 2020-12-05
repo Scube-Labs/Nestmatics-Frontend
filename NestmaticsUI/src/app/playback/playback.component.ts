@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../spinner.service';  
 
 const moment = _moment;
 
@@ -39,13 +40,13 @@ export class PlaybackComponent implements AfterViewInit {
   currentTime = "00:00:00 --"; //Current time being displayed in the playback
   currHeat;
   heatSelected ;
-  InProcess = true;
   lastTimeSelected;
 
   constructor(
       private http: HttpClient,
       public dialog: MatDialog,
-      private toastr: ToastrService) {}
+      private toastr: ToastrService,
+      private spinnerService: SpinnerService) {}
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -164,7 +165,11 @@ export class PlaybackComponent implements AfterViewInit {
    * Method to initialize playback of vehicle ride data
    */
   public playAll(): void {
+
+    var spinnerRef = this.spinnerService.start();
+    
     setTimeout(() => {
+
     if(typeof this.dateSelected != 'undefined') {
       this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/date/" + this.dateSelected).subscribe((res: any) => {
         var playbackArray = [];
@@ -189,12 +194,12 @@ export class PlaybackComponent implements AfterViewInit {
         }
         
         this.playBack(playbackArray);
-        
+        this.spinnerService.stop(spinnerRef);
+
       },
       (error) => {
         this.toastr.info(error.error.Error);
-
-        this.InProcess = false;
+        this.spinnerService.stop(spinnerRef);
       });
     }
     }, 400);
@@ -221,8 +226,6 @@ export class PlaybackComponent implements AfterViewInit {
         isDraw: true
       }});
       this.disableControls = false;
-      this.InProcess = false;
-
       this.minUnix = moment(this.trackplayback.getStartTime()).format('H');
       this.maxUnix = moment(this.trackplayback.getEndTime()).format('H');
 
