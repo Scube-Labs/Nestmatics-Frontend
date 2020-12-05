@@ -66,7 +66,7 @@ export class ServiceAreaComponent implements AfterViewInit {
      * Area drawing is only enable when bounded.
      */
     this.map.addEventListener("dblclick", (e)=> {
-      var circle = L.circle([e.latlng.lat, e.latlng.lng], 2000).addTo(this.map); //Intermediate Circle to create the Area Bounds
+      var circle = L.circle([e.latlng.lat, e.latlng.lng], 2736).addTo(this.map); //Intermediate Circle to create the Area Bounds
       var rectangle = new L.Rectangle(circle.getBounds(), {color: 'red', fillColor: '#ffffff', fillOpacity: 0.5}); // Create Area Bounds.
       this.map.removeLayer(circle);
 
