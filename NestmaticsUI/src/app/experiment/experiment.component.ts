@@ -32,7 +32,8 @@ export class ExperimentComponent implements AfterViewInit {
   
   experimentsList: string[] = [];
   experimentIDs: string[] = [];
-  nestsList: string[][] = [];
+  nestsList: string[] = [];
+  nestsIDs: string[] = [];
   
   constructor(private http: HttpClient,
     public dialog: MatDialog,
@@ -94,6 +95,8 @@ export class ExperimentComponent implements AfterViewInit {
   private loadNests(): void {
     this.http.get(this.nests + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID')).subscribe((res: any) => {
       for (const c of res.ok) {
+        this.nestsList.push(c.nest_name);
+        this.nestsIDs.push(c._id);
         const lat = c.coords.lat;
         const lon = c.coords.lon;
         var currNest = (L as any).circle([lat, lon], c.nest_radius).addTo(this.map);
@@ -125,7 +128,6 @@ export class ExperimentComponent implements AfterViewInit {
 
       else if(result === -2){
         //experiment was deleted
-        console.log(nest._id)
         this.experimentsList = [];
         this.experimentIDs = [];
         this.getAllExperiments();
@@ -139,7 +141,7 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   /**
-   * This function retrieves the id of the Experiment selected by user
+   * This function opens dialog of the Experiment selected by user
    * @param expID 
    */
   public getIDsOfExperiment(exp){
@@ -205,17 +207,33 @@ export class ExperimentComponent implements AfterViewInit {
       this.toastr.warning(error.error.Error);
     })
   }
-  
-  public getFilteredExperiments(nest) {
-    this.http.get(this.exp).subscribe((res: any) => {
-      if(res.length == 0) this.toastr.info("No Experiments have been created yet.")
-      for(var i=0; i<res.length; i++){
-        this.experimentsList.push(res[i].name);
-        this.experimentIDs.push(res[i]._id);
-      }
-    })
+
+  public filterExperiments(name) {
+    
+    if(typeof name._value != 'undefined'){
+      this.experimentsList = [];
+      this.experimentIDs = [];
+      this.http.get(this.exp + "/area/" + localStorage.getItem('currAreaID') + "/user/" + localStorage.getItem('currUserID')).subscribe((res: any) => {
+        console.log(name._value);
+        for(var i=0; i<res.ok.length; i++){
+          if(res.ok[i].nest_id == this.nestsIDs[this.nestsList.indexOf(name._value)]){
+            this.experimentsList.push(res.ok[i].name);
+            this.experimentIDs.push(res.ok[i]._id);
+          }
+        }
+      },
+      (error) => {
+        this.toastr.warning(error.error.Error);
+      })
+    }
+    else{
+      this.toastr.info("Please select a nest name before filtering");
+    }
   }
 
-  public filterExperiments(nest) {
+  public removeFilter() {
+    this.experimentsList = [];
+      this.experimentIDs = [];
+      this.getAllExperiments();
   }
 }

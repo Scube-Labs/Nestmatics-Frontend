@@ -22,10 +22,10 @@ export class DialogExperimentListComponent {
           this.experiments.push(res.ok[i].name);
           this.experimentIDs.push(res.ok[i]._id);
         }
-      }),
+      },
       (error) => {
         this.toastr.warning(error.error.Error);
-      }
+      })
      }
 
 

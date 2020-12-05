@@ -31,10 +31,13 @@ import { DialogUploadComponent } from './dialog-upload/dialog-upload.component';
 import { DialogExperimentListComponent } from './dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from './dialog-experiment/dialog-experiment.component';
 import { EventEmitterService } from './event-emitter.service';
+import { SpinnerService } from './spinner.service'
 import { DropStrategyComponent } from './drop-strategy/drop-strategy.component';
 import { StatsComponent } from './stats/stats.component';
 import { DialogCreateExperimentComponent } from './dialog-create-experiment/dialog-create-experiment.component';
 import { DialogReportComponent } from './dialog-report/dialog-report.component';
+import { DialogSettingsComponent } from './dialog-settings/dialog-settings.component';
+import { DialogLoadingComponent } from './dialog-loading/dialog-loading.component';
 
 
 @NgModule({
@@ -56,7 +59,9 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     DropStrategyComponent,
     StatsComponent,
     DialogCreateExperimentComponent,
-    DialogReportComponent
+    DialogReportComponent,
+    DialogSettingsComponent,
+    DialogLoadingComponent
   ],
   imports: [
     LeafletModule,
@@ -73,6 +78,7 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     ToastrModule.forRoot()
   ],
   providers: [
+    SpinnerService,
     EventEmitterService,
     AuthGuard,
     LoginComponent,
@@ -93,6 +99,6 @@ import { DialogReportComponent } from './dialog-report/dialog-report.component';
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent, DialogCreateExperimentComponent]
+  entryComponents: [DialogNestsComponent, DialogAreasComponent, DialogUploadComponent, DialogExperimentListComponent, DialogExperimentComponent, DialogCreateExperimentComponent, DialogReportComponent, DialogSettingsComponent]
 })
 export class AppModule { }

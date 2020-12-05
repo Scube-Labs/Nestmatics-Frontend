@@ -7,6 +7,8 @@ import { ServiceAreaComponent } from '../service-area/service-area.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component';
 import { EventEmitterService } from '../event-emitter.service'
+import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
+import { Router } from '@angular/router';
 
 @Component({ 
   selector: 'app-main',
@@ -29,22 +31,36 @@ export class MainComponent implements OnInit {
   experiment = this.inactiveColor;
   upload = this.inactiveColor;
   playback = this.inactiveColor;
-
+  settings = this.inactiveColor;
+  admin = false;
   prevComp= 'service';
 
   constructor(
     public dialog: MatDialog,
-    private eventEmitterService: EventEmitterService) { 
+    private eventEmitterService: EventEmitterService,
+    private router: Router) { 
 
       this.eventEmitterService.selectSub = this.eventEmitterService.invokeSelected.
         subscribe(()=> {
         this.select()
       });
-      
+      this.admin = localStorage.getItem('userIsAdmin') == "true"
+
     }
 
   ngOnInit(): void {
     localStorage.setItem('currView', 'serviceArea')
+    this.admin = localStorage.getItem('userIsAdmin') == "true"
+    
+    console.log(localStorage.getItem('reload'))
+
+    if(localStorage.getItem('reload') != "true"){
+      setTimeout(function() {
+        localStorage.setItem('reload', "true");
+        window.location.reload();
+      }, 10)
+      
+    }
   }
 
   select(){
@@ -107,17 +123,29 @@ export class MainComponent implements OnInit {
       case 'experiment':
         this.experiment = this.inactiveColor;
         break;
+      case 'settings':
+        this.settings = this.inactiveColor;
     }
   }
 
   /**
    * Open the upload component dialog
    */
-  public openDialog(){
+  public openUpload(){
     this.upload = this.activeColor;
     this.changeColors(this.prevComp);
     this.prevComp = 'upload';
     let dialogRef = this.dialog.open(DialogUploadComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      
+    })
+  }
+
+  public openSettings(){
+    this.settings = this.activeColor;
+    this.changeColors(this.prevComp);
+    this.prevComp = 'settings';
+    let dialogRef = this.dialog.open(DialogSettingsComponent);
     dialogRef.afterClosed().subscribe(result => {
       
     })

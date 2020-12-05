@@ -33,12 +33,23 @@ export class LoginComponent implements OnInit {
    */
   public login(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID)
-    this.authService.authState.subscribe((user) => {
+    this.authService.authState.subscribe((user: any) => {
       if(user != null){
         this.getApprovedAccounts();
-        if(this.approvedEmails.indexOf(user.email) > 0){
+        console.log(this.approvedEmails)
+        console.log(this.approvedEmails.indexOf(user.email))
+        if(this.approvedEmails.indexOf(user.email) >= 0){
           localStorage.setItem('loggedIn', JSON.stringify(user != null));
           localStorage.setItem('currUserID', this.approvedIDs[this.approvedEmails.indexOf(user.email)]);
+
+          this.http.get(this.userRoute + "/" + this.approvedIDs[this.approvedEmails.indexOf(user.email)]).subscribe((res: any) => {
+            if(res.type == "admin"){
+              localStorage.setItem('userIsAdmin', JSON.stringify(true));
+            }
+            else{
+              localStorage.setItem('userIsAdmin', JSON.stringify(false));
+            }
+          })
         }
   
         else{

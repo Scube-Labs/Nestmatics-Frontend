@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 import * as _moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../spinner.service';  
 
 const moment = _moment;
 
@@ -36,16 +37,16 @@ export class PlaybackComponent implements AfterViewInit {
   maxUnix //Maximum time
   change; //Percentage change for progress bar
   progress = 0; //Progress for progress bar
-  currentTime; //Current time being displayed in the playback
+  currentTime = "00:00:00 --"; //Current time being displayed in the playback
   currHeat;
   heatSelected ;
-  InProcess = true;
   lastTimeSelected;
 
   constructor(
       private http: HttpClient,
       public dialog: MatDialog,
-      private toastr: ToastrService) {}
+      private toastr: ToastrService,
+      private spinnerService: SpinnerService) {}
 
   ngAfterViewInit(): void {
     this.initialize();
@@ -122,31 +123,35 @@ export class PlaybackComponent implements AfterViewInit {
           "Name: " + c.nest_name
         );
         currNest.addEventListener("click", ()=> {
-          this.http.get(this.rides + "/startat/nest/" + c._id + "/date/" + "2020-03-02" + "/area/" + localStorage.getItem('currAreaID') ).subscribe((res: any) => {
+          this.http.get(this.rides + "/startat/nest/" + c._id + "/date/" + localStorage.getItem('currDate') + "/area/" + localStorage.getItem('currAreaID') ).subscribe((res: any) => {
             
             var playbackArray = [];
-
-            for(var i=0; i<res.ok.length; i++){
-              var rideArray = new Array();
-              if(Number(res.ok[i].coords.start_lat) != -1 && Number(res.ok[i].coords.start_lon) != -1 && Number(res.ok[i].start_time) != -1 && Number(res.ok[i].coords.end_lat) != -1 && Number(res.ok[i].coords.end_lon) != -1 && Number(res.ok[i].end_time) != -1){
-                rideArray.push({
-                  "lat": Number(res.ok[i].coords.start_lat),
-                  "lng": Number(res.ok[i].coords.start_lon),
-                  "time": Number(moment(res.ok[i].start_time).format('x')) * 1
-                });
-                rideArray.push({
-                  "lat": Number(res.ok[i].coords.end_lat),
-                  "lng": Number(res.ok[i].coords.end_lon),
-                  "time": Number(moment(res.ok[i].end_time).format('x')) * 1
-                });
-      
-                playbackArray.push(rideArray);
+            if(typeof res.ok != 'undefined'){
+              for(var i=0; i<res.ok.length; i++){
+                var rideArray = new Array();
+                if(Number(res.ok[i].coords.start_lat) != -1 && Number(res.ok[i].coords.start_lon) != -1 && Number(res.ok[i].start_time) != -1 && Number(res.ok[i].coords.end_lat) != -1 && Number(res.ok[i].coords.end_lon) != -1 && Number(res.ok[i].end_time) != -1){
+                  rideArray.push({
+                    "lat": Number(res.ok[i].coords.start_lat),
+                    "lng": Number(res.ok[i].coords.start_lon),
+                    "time": Number(moment(res.ok[i].start_time).format('x')) * 1
+                  });
+                  rideArray.push({
+                    "lat": Number(res.ok[i].coords.end_lat),
+                    "lng": Number(res.ok[i].coords.end_lon),
+                    "time": Number(moment(res.ok[i].end_time).format('x')) * 1
+                  });
+        
+                  playbackArray.push(rideArray);
+                }
+                
               }
               
+              this.playBack(playbackArray);
             }
-            
-            this.playBack(playbackArray);
 
+            else{
+              this.toastr.warning("No rides started from this nest");
+            }
           })
         })
       }
@@ -159,8 +164,12 @@ export class PlaybackComponent implements AfterViewInit {
   /**
    * Method to initialize playback of vehicle ride data
    */
-  private playAll(): void {
+  public playAll(): void {
+
+    var spinnerRef = this.spinnerService.start();
+    
     setTimeout(() => {
+
     if(typeof this.dateSelected != 'undefined') {
       this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID') + "/date/" + this.dateSelected).subscribe((res: any) => {
         var playbackArray = [];
@@ -185,12 +194,12 @@ export class PlaybackComponent implements AfterViewInit {
         }
         
         this.playBack(playbackArray);
-        
+        this.spinnerService.stop(spinnerRef);
+
       },
       (error) => {
         this.toastr.info(error.error.Error);
-
-        this.InProcess = false;
+        this.spinnerService.stop(spinnerRef);
       });
     }
     }, 400);
@@ -201,7 +210,10 @@ export class PlaybackComponent implements AfterViewInit {
 
 
       if(typeof this.trackplayback != 'undefined'){
+        this.playbackPause();
         this.trackplayback.dispose();
+        this.progress = 0;
+        this.currentTime = "00:00:00 --";
       }
           
       this.trackplayback = (L as any).trackplayback(playbackArray, this.map, {
@@ -214,8 +226,6 @@ export class PlaybackComponent implements AfterViewInit {
         isDraw: true
       }});
       this.disableControls = false;
-      this.InProcess = false;
-
       this.minUnix = moment(this.trackplayback.getStartTime()).format('H');
       this.maxUnix = moment(this.trackplayback.getEndTime()).format('H');
 
@@ -223,6 +233,8 @@ export class PlaybackComponent implements AfterViewInit {
 
       // trigger on time change
       this.trackplayback.on('tick', e => {
+
+
         if(Number(moment(e.time).format('H')) < 12){
           this.currentTime = moment(e.time).format('H:mm:ss') + " AM";
         }
@@ -234,6 +246,8 @@ export class PlaybackComponent implements AfterViewInit {
         }
 
         this.progress = (Number(moment(e.time).format('H')) - this.minUnix) * this.change
+
+        if(e.time ==this.trackplayback.getEndTime()) this.progress = 100;
 
       }, this)
 
@@ -264,15 +278,18 @@ export class PlaybackComponent implements AfterViewInit {
     Number(moment(this.dateSelected + "T0" + time + ":00:00").format('x'));
     this.displayBehaviour(time);
     this.trackplayback.setCursor(unixTime);
-    this.playbackPause();
-    this.playbackPlay();
   }
 
   /**
    * Function to control the playback Play functionality
    */
   public playbackPlay() {
-    this.trackplayback.start();
+    if(this.heatSelected){
+      this.toastr.info("Cannot start playback with behaviour selected. Unselect behaviour option to play.")
+    }
+    else{
+      this.trackplayback.start();
+    }
   }
   /**
    * Function to control the playback Pause functionality
@@ -284,7 +301,12 @@ export class PlaybackComponent implements AfterViewInit {
    * Function to control the playback Replay functionality
    */
   public playbackReplay() {
-    this.trackplayback.rePlaying();
+    if(this.heatSelected){
+      this.toastr.info("Cannot start playback with behaviour selected. Unselect behaviour option to play.")
+    }
+    else{
+      this.trackplayback.rePlaying();
+    }
   }
 
   public showLines(event) {
@@ -307,6 +329,7 @@ export class PlaybackComponent implements AfterViewInit {
     else{
       this.heatSelected = true;
       this.trackplayback.setCursor
+      this.playbackPause();
       if(typeof this.lastTimeSelected != 'undefined'){
         this.displayBehaviour(this.lastTimeSelected);
       }

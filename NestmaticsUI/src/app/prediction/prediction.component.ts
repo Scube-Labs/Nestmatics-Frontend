@@ -6,6 +6,7 @@ import 'leaflet.heat/dist/leaflet-heat.js'
 import { environment } from 'src/environments/environment';
 import { EventEmitterService } from '../event-emitter.service'
 import { ToastrService } from 'ngx-toastr';
+import { SpinnerService } from '../spinner.service';  
 
 @Component({
   selector: 'app-prediction',
@@ -21,19 +22,17 @@ export class PredictionComponent implements AfterViewInit {
   
   private areaSelected = localStorage.getItem('currAreaID');
 
-  areas: string = environment.baseURL+ 'nestmatics/areas' //Service Area Data End-point
-  rides: string = environment.baseURL+ 'nestmatics/rides' //Ride Data End-point
-  nests: string = environment.baseURL+ 'nestmatics/nests' //Nest Data End-Point
+  areas: string = environment.baseURL+ '/nestmatics/areas' //Service Area Data End-point
+  nests: string = environment.baseURL+ '/nestmatics/nests' //Nest Data End-Point
   
-  restPredict: string ='http://localhost:3000/predictions'
+  restPredict: string = environment.baseURL + '/nestmatics/ml'
   
   currHeat;
-  InProcess = false;
-  currentTime;
   
   constructor(private http: HttpClient,
     private eventEmitterService: EventEmitterService, 
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private spinnerService: SpinnerService) { }
 
   ngOnInit(){
     if(this.eventEmitterService.predictSub == undefined){
@@ -134,30 +133,50 @@ export class PredictionComponent implements AfterViewInit {
       }
     },
     (error) => {
-      this.toastr.info(error.error.Error);
+      this.toastr.warning(error.error.Error);
     });
   }
 
-  private predict(day : number): void {
+  private predict(time : number): void {
     
-    this.InProcess = true;
+    var spinnerRef = this.spinnerService.start();
 
-    this.http.get(this.restPredict).subscribe((res: any) => {
+    this.http.get(this.restPredict + "/prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+      console.log(res.ok.prediction);
+      
       if(typeof this.currHeat != 'undefined'){
         this.map.removeLayer(this.currHeat);
       }
       
-      for (const c of res) {
-        this.currHeat = (L as any).heatLayer(c[day], {radius: 30}).addTo(this.map);
-      }
+      this.currHeat = (L as any).heatLayer(res.ok.prediction[time], 
+        {
+        radius: 30
+      }).addTo(this.map);
+      
 
-      this.InProcess = false;
+      this.spinnerService.stop(spinnerRef);
     },
     (error) => {
-      this.InProcess = false;
+      this.spinnerService.stop(spinnerRef);
       this.toastr.error("No predictions found or available at the moment");
     });
 
     
+  }
+
+  public generatePrediction() {
+    var spinnerRef = this.spinnerService.start("Generating Prediction");
+
+    this.http.get(this.restPredict + "/generate_prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+      if(typeof res.ok != 'undefined'){
+        this.spinnerService.stop(spinnerRef);
+
+        this.toastr.success("Prediction generated succesfuly");
+      }
+      else{
+        this.spinnerService.stop(spinnerRef);
+        this.toastr.warning(res.Error);
+      }
+    })
   }
 }
