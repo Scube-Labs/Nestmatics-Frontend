@@ -3,7 +3,8 @@
 <mat-sidenav-container>
         <mat-sidenav mode="side" [(opened)]="toolOpened">
             <div class="toolbar">
-                <p class="toolbarTitle">Nestmatics</p>
+                <img class="logo" src="../../assets/NestmaticsLogo2.png"/>
+                
                 <button (click)="changeComponent('service')" [ngStyle]="{'background-color':serviceArea}" mat-stroked-button><mat-icon class="toolbarButtons">map</mat-icon><p>Area</p></button>
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':map}" (click)="changeComponent('map')" mat-stroked-button><mat-icon class="toolbarButtons">room</mat-icon><p>Nests</p></button>
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':playback}" (click)="changeComponent('playback')" mat-stroked-button><mat-icon class="toolbarButtons">play_circle_outline</mat-icon><p>Play</p></button>
