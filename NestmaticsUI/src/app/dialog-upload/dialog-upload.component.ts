@@ -16,6 +16,8 @@ export class DialogUploadComponent implements OnInit {
   uploadingInProcess = false;
 
   rides = environment.baseURL + "/nestmatics/rides"
+  ml: string = environment.baseURL + "/nestmatics/ml"
+
   constructor(private http: HttpClient, private toastr: ToastrService) { }
   
   // afuConfig = {
@@ -58,6 +60,10 @@ export class DialogUploadComponent implements OnInit {
       }
 
       this.uploadingInProcess = false;
+
+      this.http.get(this.ml + "/prediction/validate/area/" + localStorage.getItem('currAreaID')).subscribe((res: any) => {
+        this.toastr.info("Data was validated");
+      })
     },
     (error) => {
       this.toastr.warning("Upload Error: " + error.error.Error);
