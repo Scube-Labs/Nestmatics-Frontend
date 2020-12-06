@@ -10,7 +10,7 @@
         <p><mat-icon style="color:green" *ngIf="newDataCheck">check</mat-icon><mat-icon style="color:red" *ngIf="!newDataCheck">clear</mat-icon>New data needed: {{newDataReq}}</p>
         <p><mat-icon style="color:green" *ngIf="accuracyCheck">check</mat-icon><mat-icon style="color:red" *ngIf="!accuracyCheck">clear</mat-icon>Accuracy: {{accuracyReq}}</p>
         
-            <button [disabled]="!trainIsValid" style="margin-bottom: 30px" (click)="trainModel(-1,-1)" mat-raised-button color="accent">Re-train model</button>
+            <button [disabled]="!trainIsValid" style="margin-bottom: 30px" (click)="trainModel(0,-1)" mat-raised-button color="accent">Re-train model</button>
         </div>
         
         <div style="float: left; margin-left:20px;">
