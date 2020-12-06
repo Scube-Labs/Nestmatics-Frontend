@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { EventEmitterService } from '../event-emitter.service';
+import { Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -44,6 +45,7 @@ export class LoginComponent implements OnInit {
    * This function initializes a Google Sign-In API call.
    */
   public login(): void {
+    let observables: Observable<any>[] = [];
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID)
     this.authService.authState.subscribe((user: any) => {
       if(user != null){
@@ -53,15 +55,26 @@ export class LoginComponent implements OnInit {
         if(this.approvedEmails.indexOf(user.email) >= 0){
           localStorage.setItem('loggedIn', JSON.stringify(user != null));
           localStorage.setItem('currUserID', this.approvedIDs[this.approvedEmails.indexOf(user.email)]);
+          
+          observables.push(this.http.get(this.userRoute + "/" + this.approvedIDs[this.approvedEmails.indexOf(user.email)]))
 
-          this.http.get(this.userRoute + "/" + this.approvedIDs[this.approvedEmails.indexOf(user.email)]).subscribe((res: any) => {
-            if(res.type == "admin"){
-              localStorage.setItem('userIsAdmin', JSON.stringify(true));
-            }
-            else{
-              localStorage.setItem('userIsAdmin', JSON.stringify(false));
-            }
-          })
+          // this.http.get(this.userRoute + "/" + this.approvedIDs[this.approvedEmails.indexOf(user.email)]).subscribe((res: any) => {
+          //   if(res.type == "admin"){
+          //     localStorage.setItem('userIsAdmin', JSON.stringify(true));
+          //   }
+          //   else{
+          //     localStorage.setItem('userIsAdmin', JSON.stringify(false));
+          //   }
+          // })
+          forkJoin(observables)
+            .subscribe(res => {
+              if(res[0].type == "admin"){
+                localStorage.setItem('userIsAdmin', JSON.stringify(true));
+              }
+              else{
+                localStorage.setItem('userIsAdmin', JSON.stringify(false));
+              }
+            });
         }
   
         else{

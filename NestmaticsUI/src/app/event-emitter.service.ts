@@ -27,6 +27,9 @@ export class EventEmitterService {
   invokeLogout = new EventEmitter();
   logoutSub:Subscription;
 
+  invokeAddDates = new EventEmitter();
+  datesSub:Subscription;
+
   constructor() { }
 
   onChangeDate(view:string){
@@ -40,6 +43,10 @@ export class EventEmitterService {
     else if(view == 'playback'){
       this.invokeRefreshRides.emit();
     }
+  }
+
+  onAddDates(){
+    this.invokeAddDates.emit()
   }
 
   onLogOut(){
