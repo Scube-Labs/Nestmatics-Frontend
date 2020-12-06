@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { EventEmitterService } from '../event-emitter.service'
 import { ToastrService } from 'ngx-toastr';
 import { SpinnerService } from '../spinner.service';  
@@ -31,6 +31,9 @@ export class PredictionComponent implements AfterViewInit {
   currHeat;
   allHeat;
   lastPredict = 5;
+
+  legend_1 = true;
+  legend_10 = false;
   
   constructor(private http: HttpClient,
     private eventEmitterService: EventEmitterService, 
@@ -155,7 +158,8 @@ export class PredictionComponent implements AfterViewInit {
       
       this.currHeat = (L as any).heatLayer(res.ok.prediction[time], 
         {
-        radius: 30
+        radius: 30,
+        max: 1
       }).addTo(this.map);
       
       this.disablePrediction = false;
@@ -189,6 +193,8 @@ export class PredictionComponent implements AfterViewInit {
   public showFullPrediction(event) {
     
     if(event.checked == true){
+      
+      this.legend_1 = false;
 
       this.disableSlider = true;
       var spinnerRef = this.spinnerService.start();
@@ -201,7 +207,7 @@ export class PredictionComponent implements AfterViewInit {
         
         console.log(res.ok)
         var allHeatPoints = [];
-
+        console.log(res.ok.prediction[6][0])
         for(var i=0; i<24; i++){
           for(var j=0; j<res.ok.prediction[i].length; j++){
             allHeatPoints.push(res.ok.prediction[i][j]);
@@ -210,11 +216,13 @@ export class PredictionComponent implements AfterViewInit {
         }
 
         this.spinnerService.stop(spinnerRef);
-        console.log(allHeatPoints);
+        this.legend_10 = true;
+
+        //console.log(allHeatPoints);
         this.allHeat = (L as any).heatLayer(allHeatPoints, 
           {
           radius: 30,
-          max: 8
+          max: 10
         }).addTo(this.map);
       },
       (error) => {
@@ -223,6 +231,8 @@ export class PredictionComponent implements AfterViewInit {
       })
     }
     else{
+      this.legend_1 = true;
+      this.legend_10 = false;
       this.disableSlider = false;
       this.map.removeLayer(this.allHeat);
       this.predict(this.lastPredict);
