@@ -26,8 +26,11 @@ export class PredictionComponent implements AfterViewInit {
   nests: string = environment.baseURL+ '/nestmatics/nests' //Nest Data End-Point
   
   restPredict: string = environment.baseURL + '/nestmatics/ml'
-  
+  disablePrediction = true;
+  disableSlider
   currHeat;
+  allHeat;
+  lastPredict = 5;
   
   constructor(private http: HttpClient,
     private eventEmitterService: EventEmitterService, 
@@ -44,7 +47,6 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   refresh(){
-    console.log(localStorage.getItem('currDate'));
     this.map.off();
     this.map.remove();
     this.initialize();
@@ -76,6 +78,7 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   getPrediction(day: number) {
+    this.lastPredict = day
     this.predict(day);
   }
 
@@ -139,13 +142,15 @@ export class PredictionComponent implements AfterViewInit {
 
   private predict(time : number): void {
     
-    var spinnerRef = this.spinnerService.start();
 
     this.http.get(this.restPredict + "/prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
-      console.log(res.ok.prediction);
       
       if(typeof this.currHeat != 'undefined'){
         this.map.removeLayer(this.currHeat);
+      }
+
+      if(typeof this.allHeat != 'undefined'){
+        this.map.removeLayer(this.allHeat);
       }
       
       this.currHeat = (L as any).heatLayer(res.ok.prediction[time], 
@@ -153,11 +158,12 @@ export class PredictionComponent implements AfterViewInit {
         radius: 30
       }).addTo(this.map);
       
-
-      this.spinnerService.stop(spinnerRef);
+      this.disablePrediction = false;
+      this.disableSlider = false;
     },
     (error) => {
-      this.spinnerService.stop(spinnerRef);
+      this.disablePrediction = true;
+      this.disableSlider = true;
       this.toastr.error("No predictions found or available at the moment");
     });
 
@@ -178,5 +184,48 @@ export class PredictionComponent implements AfterViewInit {
         this.toastr.warning(res.Error);
       }
     })
+  }
+
+  public showFullPrediction(event) {
+    
+    if(event.checked == true){
+
+      this.disableSlider = true;
+      var spinnerRef = this.spinnerService.start();
+
+      this.http.get(this.restPredict + "/prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
+        
+        if(typeof this.currHeat != 'undefined'){
+          this.map.removeLayer(this.currHeat);
+        }
+        
+        console.log(res.ok)
+        var allHeatPoints = [];
+
+        for(var i=0; i<24; i++){
+          for(var j=0; j<res.ok.prediction[i].length; j++){
+            allHeatPoints.push(res.ok.prediction[i][j]);
+            
+          }
+        }
+
+        this.spinnerService.stop(spinnerRef);
+        console.log(allHeatPoints);
+        this.allHeat = (L as any).heatLayer(allHeatPoints, 
+          {
+          radius: 30,
+          max: 8
+        }).addTo(this.map);
+      },
+      (error) => {
+        this.spinnerService.stop(spinnerRef);
+        this.toastr.error(error.error.Error);
+      })
+    }
+    else{
+      this.disableSlider = false;
+      this.map.removeLayer(this.allHeat);
+      this.predict(this.lastPredict);
+    }
   }
 }

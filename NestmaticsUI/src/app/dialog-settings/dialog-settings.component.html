@@ -10,7 +10,7 @@
         <p><mat-icon style="color:green" *ngIf="newDataCheck">check</mat-icon><mat-icon style="color:red" *ngIf="!newDataCheck">clear</mat-icon>New data needed: {{newDataReq}}</p>
         <p><mat-icon style="color:green" *ngIf="accuracyCheck">check</mat-icon><mat-icon style="color:red" *ngIf="!accuracyCheck">clear</mat-icon>Accuracy: {{accuracyReq}}</p>
         
-            <button style="margin-bottom: 30px" (click)="trainModel(0,-1)" mat-raised-button color="accent">Re-train model</button>
+            <button [disabled]="!trainIsValid" style="margin-bottom: 30px" (click)="trainModel(-1,-1)" mat-raised-button color="accent">Re-train model</button>
         </div>
         
         <div style="float: left; margin-left:20px;">
@@ -19,8 +19,8 @@
             <mat-form-field style="margin-right: 20px;" appearance="fill">
                 <mat-label>Day</mat-label>
               <mat-select #day>
-                <mat-option *ngFor="let day of week" [value]="day.ID">
-                  {{day.value}}
+                <mat-option *ngFor="let day of weekValues" [value]="day">
+                  {{day}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -35,8 +35,8 @@
             </mat-form-field>
 
             <br>
-            <button style="margin-bottom: 30px" (click)="trainModel(day.value,time.value)" mat-raised-button color="accent">Schedule training</button>
-    
+            <button [disabled]="!scheduleIsValid" style="margin-top: 12px; margin-bottom: 10px;" (click)="trainModel(day,time.value)" mat-raised-button color="accent">Schedule</button>
+            <p style="float: right; margin-top: 20px; margin-right: 40px;">{{scheduleMessage}}</p>
         </div>
     </div>
     
