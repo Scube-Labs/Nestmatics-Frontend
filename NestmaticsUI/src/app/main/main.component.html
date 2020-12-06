@@ -12,7 +12,9 @@
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':experiment}" (click)="changeComponent('experiment')" mat-stroked-button><mat-icon class="toolbarButtons">create</mat-icon><p>Experiment</p></button>
                 <button [disabled]="!isSelected" [ngStyle]="{'background-color':upload}" (click)="openUpload()" mat-stroked-button><mat-icon class="toolbarButtons">file_upload</mat-icon><p>Upload</p></button>
                 <button [disabled]="!admin" [ngStyle]="{'background-color':settings}" (click)="openSettings()" mat-stroked-button><mat-icon class="toolbarButtons">settings</mat-icon><p>Settings</p></button>
-            </div>
+                <button class="logout-btn"  mat-raised-button (click)="logout()">Logout</button>
+              </div>
+
         </mat-sidenav>
         <mat-sidenav-content>
             <button class="toolToggle" (click) = "toolOpened=!toolOpened">

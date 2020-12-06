@@ -6,7 +6,7 @@ import { ExperimentComponent } from '../experiment/experiment.component';
 import { ServiceAreaComponent } from '../service-area/service-area.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component';
-import { EventEmitterService } from '../event-emitter.service'
+import { EventEmitterService } from '../event-emitter.service';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { Router } from '@angular/router';
 
@@ -141,6 +141,10 @@ export class MainComponent implements OnInit {
         this.settings = this.inactiveColor;
         break;
     }
+  }
+
+  logout(){
+    this.eventEmitterService.onLogOut();
   }
 
   /**

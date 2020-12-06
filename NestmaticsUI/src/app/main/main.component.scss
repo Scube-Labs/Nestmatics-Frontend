@@ -19,7 +19,7 @@
   .mat-sidenav {
     padding: 16px;
     background-color: #59ccb9;
-    width: 110px;
+    width: 130px;
     padding: 0;
     border: 0;
   }
@@ -50,8 +50,16 @@
   }
 
   .logo{
-    width:110px;
-    height:60px;
+    width:130px;
+    height:50px;
+  }
+
+  .logout-btn{
+    background-color: #3c7985;
+    color: white;
+    font-size: small;
+    margin: 5px;
+    margin-left: 25px;
   }
 
 

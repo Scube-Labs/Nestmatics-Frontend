@@ -5,6 +5,7 @@ import { GoogleLoginProvider } from "angularx-social-login";
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { EventEmitterService } from '../event-emitter.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,18 @@ export class LoginComponent implements OnInit {
 
   userRoute: string = environment.baseURL + "/nestmatics/users";
   
-  constructor(private http: HttpClient, private router: Router, private authService: SocialAuthService, private toastr: ToastrService) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private authService: SocialAuthService, 
+    private toastr: ToastrService,
+    private eventEmitterService: EventEmitterService) {
+
+      this.eventEmitterService.logoutSub = this.eventEmitterService.invokeLogout.
+        subscribe(()=> {
+        this.logout()
+      });
+    }
 
   /**
    * The function initializes an authentication service that awaits for a user to login.
