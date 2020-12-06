@@ -41,6 +41,7 @@ export class PlaybackComponent implements AfterViewInit {
   currHeat;
   heatSelected ;
   lastTimeSelected;
+  legend_1 = false;
 
   constructor(
       private http: HttpClient,
@@ -321,12 +322,14 @@ export class PlaybackComponent implements AfterViewInit {
 
   public showBehaviour(event) {
     if(event.checked == false){
+      this.legend_1 = false
       this.heatSelected = false;
       if(typeof this.currHeat != 'undefined'){
         this.map.removeLayer(this.currHeat);
       }
     }
     else{
+      this.legend_1 = true;
       this.heatSelected = true;
       this.trackplayback.setCursor
       this.playbackPause();
