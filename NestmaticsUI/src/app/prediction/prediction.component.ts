@@ -38,16 +38,13 @@ export class PredictionComponent implements AfterViewInit {
   constructor(private http: HttpClient,
     private eventEmitterService: EventEmitterService, 
     private toastr: ToastrService,
-    private spinnerService: SpinnerService) { }
+    private spinnerService: SpinnerService) { 
 
-  ngOnInit(){
-    if(this.eventEmitterService.predictSub == undefined){
       this.eventEmitterService.predictSub = this.eventEmitterService.invokeRefreshPrediction.
       subscribe(()=> {
-        this.refresh()
-      });
-    }
-  }
+      this.refresh()
+    });
+     }
 
   refresh(){
     this.map.off();

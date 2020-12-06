@@ -3,13 +3,13 @@ import * as L from 'leaflet';
 import 'leaflet-draw';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat/dist/leaflet-heat.js'
-import { CalendarComponent } from '../calendar/calendar.component';
 import { DialogExperimentListComponent } from '../dialog-experiment-list/dialog-experiment-list.component';
 import { DialogExperimentComponent } from '../dialog-experiment/dialog-experiment.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
 import { DialogCreateExperimentComponent } from '../dialog-create-experiment/dialog-create-experiment.component';
 import { ToastrService } from 'ngx-toastr';
+import { DialogWarnDeleteComponent } from '../dialog-warn-delete/dialog-warn-delete.component';
 
 @Component({
   selector: 'app-experiment',
@@ -151,14 +151,29 @@ export class ExperimentComponent implements AfterViewInit {
   }
 
   public deleteExperiment(exp) {
-    if(typeof exp._value != 'undefined'){
-      this.http.delete(this.exp + "/" + this.experimentIDs[this.experimentsList.indexOf(exp.selectedOptions.selected[0]._value)]).subscribe((res: any) => {
-        this.experimentsList = [];
-        this.experimentIDs = [];
-        this.getAllExperiments();
-      })
-    }
+    let Ref = this.dialog.open(DialogWarnDeleteComponent, {
+      data: {item: "experiment"},
+      disableClose: true
+    });
+
+    Ref.afterClosed().subscribe(result => {
+      if(result === -1){
+        if(typeof exp._value != 'undefined'){
+          this.http.delete(this.exp + "/" + this.experimentIDs[this.experimentsList.indexOf(exp.selectedOptions.selected[0]._value)]).subscribe((res: any) => {
+            this.experimentsList = [];
+            this.experimentIDs = [];
+            this.getAllExperiments();
+          })
+        }
+      }
+      else if (result === -2){
+        //Do-nothing, this is the closing condition.
+      }
+   
+    });
   }
+  
+
 
   public openExperimentDialog(expID){
     if(typeof expID != 'undefined'){
@@ -167,11 +182,8 @@ export class ExperimentComponent implements AfterViewInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        if(result === -1){
-          this.http.get(this.exp + "/" + expID + "/report").subscribe((res: any) => {
-          })
-        }
-      })
+        
+      });
     }
   }
 

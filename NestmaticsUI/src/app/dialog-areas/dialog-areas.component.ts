@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { DialogWarnDeleteComponent } from '../dialog-warn-delete/dialog-warn-delete.component';
 
 @Component({
   selector: 'app-dialog-areas',
@@ -11,6 +12,7 @@ export class DialogAreasComponent implements OnInit {
   nestID; //Nest ID Variable
 
   constructor(public dialogRef: MatDialogRef<DialogAreasComponent>,
+    public warn_dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.nestName = data.name;
       this.nestID = data.area._id
@@ -31,7 +33,20 @@ export class DialogAreasComponent implements OnInit {
    * Delete the Service Area
    */
   deleteArea() {
-    this.dialogRef.close(-1);
+    let Ref = this.warn_dialog.open(DialogWarnDeleteComponent, {
+      data: {item: "service area"},
+      disableClose: true
+    });
+
+    Ref.afterClosed().subscribe(result => {
+      if(result === -1){
+        this.dialogRef.close(-1);
+      }
+      else if (result === -2){
+        //Do-nothing, this is the closing condition.
+      }
+      
+    });
     
   }
 

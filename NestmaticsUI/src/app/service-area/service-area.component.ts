@@ -217,7 +217,7 @@ export class ServiceAreaComponent implements AfterViewInit {
       if(result === -1){
         //Delete service area.
         this.http.delete(this.areas + "/" + area._id).subscribe((res: any) => {
-         // CalendarComponent.updateAreaSelected(this.defaultServiceAreaID, this.defaultServiceArea);
+         
           this.getDefaultArea();
           this.map.off();
           this.map.remove();
@@ -256,7 +256,7 @@ export class ServiceAreaComponent implements AfterViewInit {
         }).subscribe(res => {
           localStorage.setItem('currAreaID', result[0]);
           localStorage.setItem('currAreaName',result[1]);
-        //  CalendarComponent.updateAreaSelected(result[0], result[1]);
+
           this.map.off();
           this.map.remove();
           this.initialize();
@@ -275,15 +275,14 @@ export class ServiceAreaComponent implements AfterViewInit {
         this.defaultServiceAreaID = res[0].id;
         localStorage.setItem('currAreaID',res[0].id);
         localStorage.setItem('currAreaName', res[0].name);
-      //  CalendarComponent.updateAreaSelected(res[0].id, res[0].name);
+      
       }
       else {
         this.defaultServiceArea = undefined;
         this.defaultServiceAreaID = undefined;
         localStorage.setItem('currAreaID', undefined);
         localStorage.setItem('currAreaName', undefined);
-      //  CalendarComponent.updateAreaSelected(undefined, undefined);
-      //  this.calendarComponent.calComponent.isSelected = false;
+     
       }
     })
   }
@@ -297,7 +296,7 @@ export class ServiceAreaComponent implements AfterViewInit {
       for(var i=0; i<res.length; i++){
         tempData.push(res[i].date)
       }
-     // this.calendarComponent.calComponent.availableDatesList = tempData;
+     
     })
   }
 }

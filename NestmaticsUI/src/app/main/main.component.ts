@@ -6,7 +6,7 @@ import { ExperimentComponent } from '../experiment/experiment.component';
 import { ServiceAreaComponent } from '../service-area/service-area.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadComponent } from '../dialog-upload/dialog-upload.component';
-import { EventEmitterService } from '../event-emitter.service'
+import { EventEmitterService } from '../event-emitter.service';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { Router } from '@angular/router';
 
@@ -34,6 +34,8 @@ export class MainComponent implements OnInit {
   settings = this.inactiveColor;
   admin = false;
   prevComp= 'service';
+
+  currArea = localStorage.getItem('currAreaName');
 
   constructor(
     public dialog: MatDialog,
@@ -78,31 +80,41 @@ export class MainComponent implements OnInit {
       this.currentComponent = MapComponent;
       localStorage.setItem('currView', 'map')
       this.map = this.activeColor;
-      this.eventEmitterService.onChangeToArea(localStorage.getItem('currAreaName'));
+      this.changeArea(localStorage.getItem('currAreaName'));
     }
     else if(comp == "playback"){
       this.playback = this.activeColor;
       localStorage.setItem('currView', 'playback')
       this.currentComponent = PlaybackComponent;
+      this.changeArea(localStorage.getItem('currAreaName'))
     }
     else if(comp == "prediction"){
       this.prediction = this.activeColor;
       localStorage.setItem('currView', 'prediction')
       this.currentComponent = PredictionComponent;
+      this.changeArea(localStorage.getItem('currAreaName'))
     }
     else if(comp == "experiment"){
       this.experiment = this.activeColor;
       localStorage.setItem('currView', 'experiment')
       this.currentComponent = ExperimentComponent;
+      this.changeArea(localStorage.getItem('currAreaName'))
     }
     else if(comp == "service"){
       this.serviceArea = this.activeColor;
       localStorage.setItem('currView', 'serviceArea')
       this.currentComponent = ServiceAreaComponent;
-      this.eventEmitterService.onChangeToArea("Puerto Rico");
+      this.changeArea("Puerto Rico");
     }
     this.changeColors(this.prevComp);
     this.prevComp = comp;
+  }
+
+  changeArea(area:string){
+    if(this.currArea != area){
+      this.eventEmitterService.onChangeToArea(area);
+      this.currArea = area;
+    }
   }
 
   changeColors(prevComp:string){
@@ -127,7 +139,12 @@ export class MainComponent implements OnInit {
         break;
       case 'settings':
         this.settings = this.inactiveColor;
+        break;
     }
+  }
+
+  logout(){
+    this.eventEmitterService.onLogOut();
   }
 
   /**
