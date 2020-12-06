@@ -24,6 +24,9 @@ export class EventEmitterService {
   invokeSelected = new EventEmitter();
   selectSub: Subscription;
 
+  invokeLogout = new EventEmitter();
+  logoutSub:Subscription;
+
   constructor() { }
 
   onChangeDate(view:string){
@@ -37,6 +40,10 @@ export class EventEmitterService {
     else if(view == 'playback'){
       this.invokeRefreshRides.emit();
     }
+  }
+
+  onLogOut(){
+    this.invokeLogout.emit();
   }
 
   onSelectionOfArea(){

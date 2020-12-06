@@ -28,5 +28,7 @@
 </mat-card>
 </div>
 
-
-<button (click)="report()" mat-raised-button color="accent">Generate Report</button>
+<div class="end-button">
+  <button (click)="openReportDialog()" mat-raised-button color="primary">Generate Report</button>
+  <button (click)="close()" mat-raised-button color="accent">Close</button>
+</div>

@@ -18,7 +18,6 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-
   <br>
 
   <button style="margin-right: 10px;" (click)="filterExperiments(filt)" mat-raised-button color="primary">Add filter</button>
@@ -33,8 +32,9 @@
       </mat-selection-list>
   </mat-card-content>
 
-
+  <div class="end-buttons">
+    <button (click)="getIDsOfExperiment(exp)" mat-raised-button color="accent">select</button>
+    <button (click)="deleteExperiment(exp)" mat-raised-button color="basic">delete</button>
+  </div>
   
-  <button style="margin-right: 10px;" (click)="deleteExperiment(exp)" mat-raised-button color="primary">delete</button>
-  <button (click)="getIDsOfExperiment(exp)" mat-raised-button color="accent">select</button>
 </mat-card>

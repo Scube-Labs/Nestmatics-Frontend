@@ -10,7 +10,6 @@
   .map-frame {
     height: 100%;
   }
-  
 
   .mat-sidenav-container {
     height: 100%;
@@ -20,7 +19,7 @@
   .mat-sidenav {
     padding: 16px;
     background-color: #59ccb9;
-    width: 110px;
+    width: 130px;
     padding: 0;
     border: 0;
   }
@@ -48,6 +47,19 @@
   .toolbarTitle {
     padding-left: 18px;  
 
+  }
+
+  .logo{
+    width:130px;
+    height:50px;
+  }
+
+  .logout-btn{
+    background-color: #3c7985;
+    color: white;
+    font-size: small;
+    margin: 5px;
+    margin-left: 25px;
   }
 
 

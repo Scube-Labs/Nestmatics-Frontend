@@ -1,1 +1,55 @@
-<p>dialog-report works!</p>
+<mat-card-title> Report for experiment: {{expName}} </mat-card-title>
+
+<mat-card >
+
+    <mat-card-title > Total vehicles per hour </mat-card-title>
+
+<div>
+  <div>
+    <div style="display: block">
+      <canvas baseChart
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [legend]="barChartLegend"
+        [chartType]="barChartType">
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<div>
+  <mat-card style="float:left">
+      <div class="config-info">
+        <mat-label class="config-title"> Configuration #1 </mat-label>
+        <mat-label class="date-label"> For Date: {{start_date1}} </mat-label>
+      </div>
+      <mat-card-content>
+        <mat-label> Total Rides: {{total_rides1}} </mat-label>
+        <mat-label> Total Revenue: {{revenue1}} </mat-label>
+        <mat-label> Vehicles Dropped off: {{vehicle_qty1}} </mat-label>
+        <mat-label> Revenue Compared to Config #2: </mat-label>
+        <p [style.color]="getPositiveNegative(config_1v2)">{{config_1v2}} %</p>
+        </mat-card-content>
+  </mat-card>
+
+  <mat-card style="float:right">
+    <div class="config-info">
+      <mat-label class="config-title"> Configuration #2 </mat-label>
+      <mat-label class="date-label"> For Date: {{start_date2}} </mat-label>
+    </div>
+    <mat-card-content>
+      <mat-label> Total Rides: {{total_rides2}} </mat-label>
+      <mat-label> Total Revenue: {{revenue2}} </mat-label>
+      <mat-label> Vehicles Dropped off: {{vehicle_qty2}} </mat-label>
+      <mat-label> Revenue Compared to Config #1: </mat-label>
+      <p [style.color]="getPositiveNegative(config_2v1)">{{config_2v1}} %</p>
+      </mat-card-content>
+  </mat-card>
+</div>
+
+</mat-card>
+
+<div class="end-button"> 
+  <button (click)="close()" mat-raised-button color="accent">Close</button>
+</div>

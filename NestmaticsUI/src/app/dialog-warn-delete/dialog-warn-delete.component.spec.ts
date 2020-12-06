@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DropStrategyComponent } from './drop-strategy.component';
+import { DialogWarnDeleteComponent } from './dialog-warn-delete.component';
 
-describe('DropStrategyComponent', () => {
-  let component: DropStrategyComponent;
-  let fixture: ComponentFixture<DropStrategyComponent>;
+describe('DialogWarnDeleteComponent', () => {
+  let component: DialogWarnDeleteComponent;
+  let fixture: ComponentFixture<DialogWarnDeleteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DropStrategyComponent ]
+      declarations: [ DialogWarnDeleteComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DropStrategyComponent);
+    fixture = TestBed.createComponent(DialogWarnDeleteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

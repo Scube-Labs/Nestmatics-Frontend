@@ -7,23 +7,37 @@
     z-index: -1;
   }
   
-  .map-frame {
-    height: 100%;
-  }
-  
-  #service {
-    height: 100%;
-  }
+.map-frame {
+  height: 100%;
+}
 
-  .add-nest-button{
-    position: fixed;
-    top:30px;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-weight: 500;
-    color: white;
-    background-color:  rgb(39, 161, 55);
-    z-index: -1;
-    margin-left: 42px;
-    padding: 6px;
-    border-radius: 5px;
-  }
+#service {
+  height: 100%;
+}
+
+.add-nest-button{
+  position: fixed;
+  top:30px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 500;
+  color: white;
+  background-color:  rgb(39, 161, 55);
+  z-index: -1;
+  margin-left: 42px;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+mat-card {
+  position:fixed;
+  top: 100px;
+  font-size: small;
+  right: 5;
+  flex-direction: column;
+  margin: 0px;
+  max-width: 250px;
+}
+
+::ng-deep {
+  .mat-card.ng-star-inserted { padding: 0; }
+}

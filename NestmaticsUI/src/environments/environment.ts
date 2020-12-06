@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
 
-  //baseURL: "http://3.137.90.103", //4g tier
-  //baseURL: "http://3.131.202.105", //free tier
-  baseURL: "http://localhost",
+ // baseURL: "http://3.131.202.105"
+ // baseURL: "https://www.nestmatics.tk/api"
+  baseURL: "http://localhost/api",
 
   selected: false
   

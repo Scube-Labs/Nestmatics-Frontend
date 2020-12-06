@@ -1,10 +1,16 @@
 <!--Dialog displayed when selecting a service area-->
 
 <h1 mat-dialog-title>Area Name: {{data.name}}</h1>
+<mat-form-field appearance="legacy">
+    <mat-label>Edit Area Name</mat-label>
+    <input matInput type="text" maxlength="20" [(ngModel)]="nestName"/>
+    <mat-hint>Edit Area Name</mat-hint>
+</mat-form-field>
 
-<input matInput type="text" maxlength="20" [(ngModel)]="nestName"/>
 
+<div class="end-buttons">
 <button (click)="updateArea()" mat-raised-button color="primary">update</button>
 <button (click)="deleteArea()" mat-raised-button color="primary">Delete</button>
 <button (click)="selectArea()" mat-raised-button color="accent">Select</button>
 <button (click)="cancelArea()" mat-raised-button color="secondary">Cancel</button>
+</div>
