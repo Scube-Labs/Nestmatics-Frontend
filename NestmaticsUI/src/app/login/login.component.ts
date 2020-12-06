@@ -32,16 +32,22 @@ export class LoginComponent implements OnInit {
    * This function initializes a Google Sign-In API call.
    */
   public login(): void {
+    //use Google provider
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID)
+    
+    //Subscribe to the authentication state
     this.authService.authState.subscribe((user: any) => {
       if(user != null){
         this.getApprovedAccounts();
         console.log(this.approvedEmails)
         console.log(this.approvedEmails.indexOf(user.email))
+
+        //There are approved emails in the system
         if(this.approvedEmails.indexOf(user.email) >= 0){
           localStorage.setItem('loggedIn', JSON.stringify(user != null));
           localStorage.setItem('currUserID', this.approvedIDs[this.approvedEmails.indexOf(user.email)]);
 
+          //Retrieve the account type information (Admin or User)
           this.http.get(this.userRoute + "/" + this.approvedIDs[this.approvedEmails.indexOf(user.email)]).subscribe((res: any) => {
             if(res.type == "admin"){
               localStorage.setItem('userIsAdmin', JSON.stringify(true));
@@ -52,6 +58,7 @@ export class LoginComponent implements OnInit {
           })
         }
   
+        //If the Google account does not match the approved accounts on system
         else{
           this.toastr.warning("Account is not approved");
           this.logout();
@@ -76,6 +83,9 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  /**
+   * Get the list of the approved accounts in the database
+   */
   private getApprovedAccounts() {
     this.http.get(this.userRoute).subscribe((res: any) => {
       for(var i=0; i<res.length; i++){

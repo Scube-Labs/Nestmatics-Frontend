@@ -7,7 +7,8 @@ export const environment = {
 
   //baseURL: "http://3.137.90.103", //4g tier
   //baseURL: "http://3.131.202.105", //free tier
-  baseURL: "http://localhost",
+  //baseURL: "http://localhost",
+  baseURL: "https://a7s9eoe3jpj2.p17.rt3.io",
 
   selected: false
   
