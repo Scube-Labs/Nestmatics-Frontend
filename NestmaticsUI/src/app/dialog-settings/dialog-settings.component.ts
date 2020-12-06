@@ -162,8 +162,21 @@ export class DialogSettingsComponent implements OnInit {
   }
 
   public trainModel(day, time) {
+
     if(typeof day != 'undefined' && typeof time != 'undefined'){
-      this.http.put(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/trainModel",
+      
+      if(time === -1){
+        this.http.put(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/trainModel",
+        {
+          "status": "waiting",
+          "weekday": day,
+          "hour": time
+        }).subscribe((res: any) => {
+          this.toastr.success("Training started");
+        })
+      }
+      else{
+        this.http.put(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/trainModel",
         {
           "status": "waiting",
           "weekday": this.weekIDs[this.weekValues.indexOf(day.value)],
@@ -171,6 +184,8 @@ export class DialogSettingsComponent implements OnInit {
         }).subscribe((res: any) => {
           this.toastr.success("Training started");
         })
+      }
+      
     }
     else{
       this.toastr.info("Please select a valid day and time to re-train");
