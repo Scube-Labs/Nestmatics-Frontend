@@ -1,0 +1,45 @@
+.end-button{
+    margin-left: 50%;
+    margin: 10px;
+}
+
+button{
+    margin-top: 15px;
+    margin-left: 220px;
+}
+
+.title{
+    margin-bottom: 10px;
+}
+
+.date-label{
+    margin: 3px;
+    font-size: small;
+    font-weight: 300;
+}
+
+.config-title{
+    font-size: medium;
+    font-weight: 500;
+}
+
+.config-info{
+    display: flex;
+    flex-direction: column;
+}
+
+mat-card-content{
+    display: flex;
+    flex-direction: column;
+}
+
+mat-card{
+    padding: 10px;
+    margin-top: 30px;
+}
+
+p{
+    font-size: large;
+    font-weight: 400;
+    margin: 10px;
+}

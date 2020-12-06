@@ -6,28 +6,35 @@
     </div>
 </div>
 
-<app-stats></app-stats>
-
 <div class="add-nest-button">Add Nests</div>
 
 <mat-card class="drop-card">
 
   <mat-card-header>
-  <mat-card-title> Drop Strategy </mat-card-title>
+  <mat-card-title> Drop Strategy</mat-card-title>
     <h3>Current Date: {{currentDate}}</h3>
   </mat-card-header>
-  
+
+  <h3> Name: {{dropName}} </h3>
+  <form>
+    <mat-form-field appearance="legacy">
+      <input #name matInput type="text" placeholder="Change name" />
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="button" (click)="setName(name.value)">Update
+    </button>
+  </form>
+
   <div class="vehicle-labels">
     <mat-label>Total vehicles for the day: {{vehicle_qty}}</mat-label>
   </div>
 
   <form>
-      <mat-form-field appearance="fill">
-        <input #qty matInput type="number" min="0" max="120" placeholder="Total Vehicles" 
+      <mat-form-field appearance="legacy">
+        <input #qty matInput type="number" min="0" max="120" placeholder="Change Total Vehicles" 
         onkeydown="return !isNaN(Number(event.key))"/>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="button" (click)="setVehicles(qty.value)">Add Total Vehicles
+      <button mat-raised-button color="primary" type="button" (click)="setVehicles(qty.value)">Update
       </button>
   </form>
 
