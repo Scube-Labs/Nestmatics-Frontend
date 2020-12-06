@@ -1,16 +1,19 @@
-import { Component, ViewChild, OnInit} from '@angular/core';
+import { Component, ViewChild, OnInit, ViewEncapsulation} from '@angular/core';
 import { MatDatepickerInputEvent, MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 import { MatInput } from '@angular/material/input';
 import { FormControl } from '@angular/forms';
-import { EventEmitterService } from '../event-emitter.service'
+import { HttpClient } from '@angular/common/http';
+import { EventEmitterService } from '../event-emitter.service';
+import { environment } from 'src/environments/environment';
 
 const moment = _moment;
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss']
+  styleUrls: ['./calendar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class CalendarComponent implements OnInit {
@@ -22,6 +25,9 @@ export class CalendarComponent implements OnInit {
   //calComponent = CalendarComponent;
   //For Service Area
   areaName = localStorage.getItem('currAreaName');
+
+  rides = environment.baseURL + "/nestmatics/rides"
+
   static areaSelectedID = localStorage.getItem('currAreaID');
   static isSelected = false;
 
@@ -35,13 +41,24 @@ export class CalendarComponent implements OnInit {
 
   day = localStorage.setItem('currDate', CalendarComponent.selectedDate);
 
-  
-  // dataFilter = (d: Date | null): boolean => {
-  //   const date = (d || new Date());
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    // Only highligh dates inside the month view.
+    if (view === 'month') {
 
-  //   // Allow specific dates. dates are listen in the availableDatesList array.
-  //   return (this.calComponent.availableDatesList.includes((moment(date).format('YYYY-MM-DD'))));
-  // }
+      var datestr = new Date(cellDate).toISOString();
+      datestr = datestr.split("T")[0].concat("T00:00:00");
+
+      if (CalendarComponent.availableDatesList.includes(datestr)){
+        console.log("jackpot")
+        return 'calendarColor';
+      }
+      else{
+        return "";
+      }
+    }
+
+    return '';
+  }
 
   static eventEmitter;
   
@@ -50,7 +67,9 @@ export class CalendarComponent implements OnInit {
     CalendarComponent.updateDateSelected(moment(event.value).format('YYYY-MM-DD'));
   }
 
-  constructor( private eventEmitterService: EventEmitterService) {
+  constructor( 
+    private eventEmitterService: EventEmitterService,
+    private http: HttpClient) {
     CalendarComponent.eventEmitter = eventEmitterService;
 
     if(CalendarComponent.eventEmitter.subsArea == undefined){
@@ -59,6 +78,7 @@ export class CalendarComponent implements OnInit {
         this.changeAreaName(name)
       });
     }
+
   }
 
   ngOnInit(){
@@ -67,6 +87,17 @@ export class CalendarComponent implements OnInit {
 
   changeAreaName(name:string){
     this.areaName = name
+    if(name != "Puerto Rico"){
+        this.lookForAvailableDates();
+    }
+  }
+
+  lookForAvailableDates(){
+    this.http.get(this.rides + "/area/" + localStorage.getItem('currAreaID')+"/alldates").subscribe((res: any) => {
+      if(res.ok){
+          CalendarComponent.availableDatesList = res.ok;
+      }
+    });
   }
 
   static getDateSelected() {
@@ -78,7 +109,7 @@ export class CalendarComponent implements OnInit {
     this.selectedDate = date;
     this.hasDate = true;
     this.eventEmitter.onChangeDate(localStorage.getItem('currView'));
-   // console.log(this.selectedDate)
+   
   }
 
   /**
@@ -88,27 +119,15 @@ export class CalendarComponent implements OnInit {
   static updateAreaSelected(id: string, name: string) {
     localStorage.setItem('areaName', name);
     localStorage.setItem('areaSelectedID', id);
-  //  this.areaName = name;
+
     this.areaSelectedID = id;
     this.isSelected = true; 
   }
 
-  /**
-   * Get the current service area selected
-   * @returns Returns selected service area name
-   */
-  static getAreaSelected() {
-  //  return CalendarComponent.areaName;
-  }
-
-  static getAreaSelectedID(){
-    
-  }
 
   public resetCalendar() {
     if(this.input.value != undefined){
       this.input.value = undefined;
-  //    this.calComponent.hasDate = false;
     }
   }
 
