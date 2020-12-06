@@ -9,7 +9,7 @@ import * as _moment from 'moment';
 import { EventEmitterService } from '../event-emitter.service';
 import { Observable, forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { SpinnerService } from '../spinner.service';
 
 const moment = _moment;
 
@@ -52,7 +52,8 @@ export class MapComponent implements AfterViewInit {
       private http: HttpClient,
       public dialog: MatDialog, 
       private eventEmitterService: EventEmitterService,
-      private toastr: ToastrService) { 
+      private toastr: ToastrService,
+      private spinner: SpinnerService) { 
 
         this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshMap.
         subscribe(()=> {
@@ -370,7 +371,7 @@ export class MapComponent implements AfterViewInit {
   updateLocalConfigVehicles(name:string, vehicle:number){
     for(const c of this.nestList){
       if(c.nest_name == name){
-          this.updateAssignedVehicles(vehicle, c.vehicle_qty)
+          this.updateAssignedVehicles(vehicle, c.vehicle_qty);
           console.log("changed "+c.nest_name+" with "+c.vehicle_qty+" to "+vehicle);
           c["update"] = 1;
           c.vehicle_qty = vehicle;
@@ -389,65 +390,70 @@ export class MapComponent implements AfterViewInit {
   }
 
   addNewConfigsToDrop(){
-    let observables: Observable<any>[] = [];
+    var spinnerRef = this.spinner.start();
+    
     var found = false;
     for(const c of this.nestList){
       if("new" in c){
         found = true;
+        console.log("found new")
         this.http.post(this.nests, {
           "service_area": c.service_area,
           "nest_name": c.nest_name,
           "coords": {
-            "lat": c.lat,
-            "lon": c.lon
+            "lat": c.coords.lat,
+            "lon": c.coords.lon
           },
           "nest_radius": c.nest_radius,
-          "user": c.user,
+          "user": c.user
         }).subscribe((done: any) => {
-          var nestid = done.ok._id;
-          
-          observables.push(this.http.post(this.nests + "/nestconfig", {
-            "nest": nestid,
-            "start_date":  localStorage.getItem('currDate'),
-            "end_date":  localStorage.getItem('currDate'),
-            "vehicle_qty": c.vehicle_qty,
-          }))
-        });
+          if(done.ok){
+            var nestid = done.ok._id;
+            console.log("nest_name"+ nestid)
+            this.http.post(this.nests + "/nestconfig", {
+              "nest": nestid,
+              "start_date":  localStorage.getItem('currDate'),
+              "end_date":  localStorage.getItem('currDate'),
+              "vehicle_qty": c.vehicle_qty,
+            }).subscribe((done:any)=>{
+              this.nestConfigList.push(done.ok._id);
+
+            })
+          }},
+          (error)=>{
+              this.toastr.error("there is already a nest with this configuration")
+          }
+        );
       }
     }
-    if(found){
-      forkJoin(observables)
-      .subscribe(dataArray => {
-        for(const c of dataArray){
-          this.nestConfigList.push(c.ok._id);
-        }
-      });
-    }
+
+    setTimeout( ()=>{ 
+      this.editConfigurations(spinnerRef);
+      //this.spinner.stop(spinnerRef);
+
+    }, 3000)
   }
 
   /**
    * Function to update changes made in the configurations
    */
-  editConfigurations(){
+  editConfigurations(spinerRef){
     var configs = Array<any>();
-    this.addNewConfigsToDrop();
-    for(const c of this.nestList){
-      configs.push(c.configid);
-      
-      if("update" in c && c.update == 1){
-
-        this.http.put(this.nests + "/nestconfig/" + c.configid , {
-          "vehicle_qty": parseInt(c.vehicle_qty)
-        }).subscribe(res => {
-          console.log("edited configuration")
-        });
+      for(const c of this.nestList){
+        configs.push(c.configid)
+        
+        if("update" in c && c.update == 1){
+          this.http.put(this.nests + "/nestconfig/" + c.configid , {
+            "vehicle_qty": parseInt(c.vehicle_qty)
+          })
+        }
       }
-    }
-    
-    this.editDropStrategy(configs);
+      configs.push(...this.nestConfigList);
+      this.editDropStrategy(configs, spinerRef);
+      this.spinner.stop(spinerRef);
   }
 
-  public editDropStrategy(configs){
+  public editDropStrategy(configs, spinerRef){
     var name = this.dropName;
     var vehicles = this.vehicle_qty;
     var vchange = false;
@@ -472,13 +478,12 @@ export class MapComponent implements AfterViewInit {
         forkJoin(observables)
           .subscribe(dataArray => {
             this.toastr.success("Successfully edited the selected Drop Strategy");
-            this.map.off();
-            this.map.remove();
-            this.initialize();
+            this.refresh();
       });
       }else{
         this.toastr.success("Successfully edited the selected Drop Strategy");
         this.refresh();
+        this.spinner.stop(spinerRef);
       }
     });
   }
@@ -488,7 +493,7 @@ export class MapComponent implements AfterViewInit {
       {
         "days": [
           {
-            "configurations": this.nestConfigList, 
+            "configurations": [ this.nestConfigList ], 
             "date": localStorage.getItem('currDate')
           }
         ],
@@ -508,6 +513,8 @@ export class MapComponent implements AfterViewInit {
   public insertNestConfigs(){
     console.log("attempting to insert nests ");
 
+    var spinnerservice = this.spinner.start();
+
     let observables: Observable<any>[] = [];
 
     for(var c of this.nestList){
@@ -516,47 +523,61 @@ export class MapComponent implements AfterViewInit {
           "service_area": c.service_area,
           "nest_name": c.nest_name,
           "coords": {
-            "lat": c.lat,
-            "lon": c.lon
+            "lat": c.coords.lat,
+            "lon": c.coords.lon
           },
           "nest_radius": c.nest_radius,
           "user": c.user,
         }).subscribe((done: any) => {
-          observables.push( this.http.post(this.nests + "/nestconfig", {
+          this.http.post(this.nests + "/nestconfig", {
             "nest": done.ok._id,
             "start_date":  localStorage.getItem('currDate'),
             "end_date":  localStorage.getItem('currDate'),
             "vehicle_qty": c.vehicle_qty,
-          }));
-
+          }).subscribe((done:any)=>{
+            this.nestConfigList.push(done.ok._id);
+          });
         });
-    }else{
-      observables.push(this.http.post(this.nests + "/nestconfig", {
+    } else{
+      this.http.post(this.nests + "/nestconfig", {
         "nest": c._id,
         "start_date":  localStorage.getItem('currDate'),
         "end_date":  localStorage.getItem('currDate'),
         "vehicle_qty": c.vehicle_qty,
-      }));
-      
+      }).subscribe((done:any)=>{
+        this.nestConfigList.push(done.ok._id);
+      });
     }
   }
-  forkJoin(observables)
-      .subscribe(dataArray => {
-          console.log(dataArray);
-          for(const c of dataArray){
-              this.nestConfigList.push(c.ok._id);
-          }
-          console.log("insert drop");
-          this.insertDropStrategyToDB();
-      });
+  
+  setTimeout( ()=>{ 
+    this.insertDropStrategyToDB()
+    this.spinner.stop(spinnerservice);
+  }, 3000)
+    
+  //this.spinner.stop(spinnerservice);
+
+  // setTimeout( function(){
+  //   forkJoin(observables)
+  //     .subscribe(dataArray => {
+  //         console.log(dataArray);
+  //         for(const c of dataArray){
+  //             this.nestConfigList.push(c.ok._id);
+  //         }
+  //         console.log("insert drop");
+  //         this.insertDropStrategyToDB();
+  //     });
+
+  // }, 3000)
   }
 
   updateAssignedVehicles(newNumber:number, oldNumber:number){
-    this.assigned_vehicles -= oldNumber;
-    this.assigned_vehicles += newNumber;
+    this.assigned_vehicles = this.assigned_vehicles - oldNumber;
+    this.assigned_vehicles = this.assigned_vehicles + newNumber;
     if(this.assigned_vehicles > this.vehicle_qty){
       this.surpassedAmount = true;
-      this.assigned_vehicles -= newNumber;
+      this.assigned_vehicles = this.assigned_vehicles - newNumber;
+      this.toastr.info("You have surpassed the quantity of vehicles to deploy on the day");
     }
     else{
       this.surpassedAmount = false;
@@ -614,7 +635,7 @@ export class MapComponent implements AfterViewInit {
               if(result.vehicles !== ""){
                 this.updateLocalConfigVehicles(oldName, parseInt(result.vehicles));
               }
-              else if (result.name !== ""){
+              if (result.name !== ""){
                 this.updateLocalConfigNames(oldName, result.name);
               }
               this.map.off();

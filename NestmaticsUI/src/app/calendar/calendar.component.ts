@@ -22,7 +22,6 @@ export class CalendarComponent implements OnInit {
     read: MatInput
   }) input: MatInput;
   
-  //calComponent = CalendarComponent;
   //For Service Area
   areaName = localStorage.getItem('currAreaName');
 
@@ -36,7 +35,6 @@ export class CalendarComponent implements OnInit {
   static selectedDate = moment(new Date()).format('YYYY-MM-DD');
   static availableDatesList: string[] = [];
   
-
   todaysDate = new FormControl(new Date());
 
   day = localStorage.setItem('currDate', CalendarComponent.selectedDate);
@@ -49,7 +47,6 @@ export class CalendarComponent implements OnInit {
       datestr = datestr.split("T")[0].concat("T00:00:00");
 
       if (CalendarComponent.availableDatesList.includes(datestr)){
-        console.log("jackpot")
         return 'calendarColor';
       }
       else{
@@ -73,12 +70,19 @@ export class CalendarComponent implements OnInit {
     CalendarComponent.eventEmitter = eventEmitterService;
 
     if(CalendarComponent.eventEmitter.subsArea == undefined){
+      
+      //Subscribe to event that will trigger a change in the name of the area the user is looking at
       this.eventEmitterService.subsArea = this.eventEmitterService.invokeAreaChange.
       subscribe((name:string)=> {
         this.changeAreaName(name)
       });
     }
 
+    //subscribe to event that will look for available dates when there is an upload
+    this.eventEmitterService.datesSub = this.eventEmitterService.invokeAddDates.
+        subscribe((name:string)=> {
+          this.lookForAvailableDates()
+        });
   }
 
   ngOnInit(){
