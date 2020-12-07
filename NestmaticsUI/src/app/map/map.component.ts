@@ -212,7 +212,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   public getDropStrategyForDate(){
-    this.http.get(this.drop +"/user/"+localStorage.getItem('currUserID')+"/area/"+localStorage.getItem('currAreaID')+"/date/"+localStorage.getItem('currDate')+"/"+localStorage.getItem('currDate')).subscribe((res: any) => {
+    this.http.get(this.drop +"/area/"+localStorage.getItem('currAreaID')+"/date/"+localStorage.getItem('currDate')+"/"+localStorage.getItem('currDate')).subscribe((res: any) => {
         console.log(res.ok);
         if (res.ok){
           var date = res.ok[0].start_date;
