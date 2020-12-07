@@ -21,7 +21,7 @@ export class StatsComponent implements OnInit {
     private http: HttpClient,
     private eventEmitterService: EventEmitterService) { 
 
-      this.eventEmitterService.subsVar = this.eventEmitterService.invokeRefreshRides.
+      this.eventEmitterService.statsSub = this.eventEmitterService.invokeClearStats.
       subscribe(()=> {
         this.refresh()
     });

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { EventEmitterService } from '../event-emitter.service';
 
 @Component({
   selector: 'app-dialog-upload',
@@ -18,18 +19,11 @@ export class DialogUploadComponent implements OnInit {
   rides = environment.baseURL + "/nestmatics/rides"
   ml: string = environment.baseURL + "/nestmatics/ml"
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  constructor(
+    private http: HttpClient, 
+    private toastr: ToastrService,
+    private eventEmitterService: EventEmitterService) { }
   
-  // afuConfig = {
-  //   uploadAPI: {
-  //     url: environment.baseURL + "/nestmatics/rides" 
-  //   },
-  //   formatsAllowed: ".csv",
-  //   theme: "dragNDrop",
-  //   params: {
-  //     'page': '1'
-  //   }
-  // };
 
   ngOnInit(): void {
   }
@@ -56,7 +50,8 @@ export class DialogUploadComponent implements OnInit {
         this.toastr.info("File was already uploaded");
       }
       else{
-        this.toastr.success("File uploaded succesfuly")
+        this.toastr.success("File uploaded succesfully")
+        this.eventEmitterService.onAddDates();
       }
 
       this.uploadingInProcess = false;
