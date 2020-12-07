@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
+import { MatDialogRef } from '@angular/material/dialog';
+import { SpinnerService } from '../spinner.service';  
 
 @Component({
   selector: 'app-dialog-settings',
@@ -62,43 +64,52 @@ export class DialogSettingsComponent implements OnInit {
 
   ampm = ["AM", "PM"];
 
-  constructor(private http: HttpClient,
-    private toastr: ToastrService) {
+  constructor(public dialogRef: MatDialogRef<DialogSettingsComponent>,
+    private http: HttpClient,
+    private toastr: ToastrService,
+    private SpinnerService: SpinnerService) {
+
+      var spinnerRef = this.SpinnerService.start("Retrieving Settings..")
 
       if(localStorage.getItem('areaSelected') == "true"){
         this.http.get(this.ml + "/requierments/area/" + localStorage.getItem('currAreaID')).subscribe((req: any) => {
           this.http.get(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/training/metadata").subscribe((res:any) => {
-          this.trainIsValid = req.ok.can_train && (res.ok[0].status != "training");
-          this.scheduleIsValid = (res.ok[0].status != "training")
-          this.newDataReq = req.ok.required_days;
-          
-          if(req.ok.accuracy === -1){
-            this.accuracyReq = "No predictions yet";
-          }
-          else{
-            this.accuracyReq = req.ok.accuracy.toFixed(1);
-            if(req.ok.accuracy < req.ok.threshold) this.accuracyCheck = true;
-          }
 
-          if(req.ok.required_days === 0) this.newDataCheck = true;
+            this.SpinnerService.stop(spinnerRef);
+            this.trainIsValid = req.ok.can_train && (res.ok[0].status != "training");
+            this.scheduleIsValid = (res.ok[0].status != "training")
+            this.newDataReq = req.ok.required_days;
+            
+            if(req.ok.accuracy === -1){
+              this.accuracyReq = "No predictions yet";
+            }
+            else{
+              this.accuracyReq = req.ok.accuracy.toFixed(1);
+              if(req.ok.accuracy < req.ok.threshold) this.accuracyCheck = true;
+            }
 
-          if(res.ok[0].status == "ready"){
-            this.scheduleMessage = "There is no training scheduled"
-          }
-          else if(res.ok[0].status == "training"){
-            this.scheduleMessage = "Prediction model is currently training";
-          }
-          else{
-            this.scheduleMessage = "Training scheduled for " + this.weekValues[res.ok[0].weekday] + " at " + this.hours[res.ok[0].hour].value;
-          }
+            if(req.ok.required_days === 0) this.newDataCheck = true;
+
+            if(res.ok[0].status == "ready"){
+              this.scheduleMessage = "There is no training scheduled"
+            }
+            else if(res.ok[0].status == "training"){
+              this.scheduleMessage = "Prediction model is currently training";
+            }
+            else{
+              this.scheduleMessage = "Training scheduled for " + this.weekValues[res.ok[0].weekday] + " at " + this.hours[res.ok[0].hour].value;
+            }
           
           })
         })
           
       }
       else{
+
+        this.SpinnerService.stop(spinnerRef);
         this.newDataReq = "N/A";
         this.accuracyReq = "N/A";
+        this.scheduleMessage = "No service area selected"
         this.trainIsValid = false;
       }
     }
@@ -190,6 +201,8 @@ export class DialogSettingsComponent implements OnInit {
     else{
       this.toastr.info("Please select a valid day and time to re-train");
     }
+
+    this.dialogRef.close();
     
   }
 }

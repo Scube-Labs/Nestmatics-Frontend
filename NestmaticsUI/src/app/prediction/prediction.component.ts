@@ -139,7 +139,8 @@ export class PredictionComponent implements AfterViewInit {
   }
 
   private predict(time : number): void {
-    
+
+    var spinnerRef = this.spinnerService.start();
 
     this.http.get(this.restPredict + "/prediction/area/" + localStorage.getItem('currAreaID') + "/date/" + localStorage.getItem('currDate')).subscribe((res: any) => {
       
@@ -157,10 +158,12 @@ export class PredictionComponent implements AfterViewInit {
         max: 1
       }).addTo(this.map);
       
+      this.spinnerService.stop(spinnerRef);
       this.disablePrediction = false;
       this.disableSlider = false;
     },
     (error) => {
+      this.spinnerService.stop(spinnerRef);
       this.disablePrediction = true;
       this.disableSlider = true;
       this.toastr.error("No predictions found or available at the moment");
