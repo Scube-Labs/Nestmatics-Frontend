@@ -17,8 +17,6 @@ export class PredictionComponent implements AfterViewInit {
   toolOpened = true;
   private map;
 
-  //calendarComponent: CalendarComponent = new CalendarComponent();
-  //private areaSelected = CalendarComponent.getAreaSelected(); // Variable to obtain service area selected
   
   private areaSelected = localStorage.getItem('currAreaID');
 
@@ -43,7 +41,7 @@ export class PredictionComponent implements AfterViewInit {
       this.eventEmitterService.predictSub = this.eventEmitterService.invokeRefreshPrediction.
       subscribe(()=> {
       this.refresh()
-    });
+      });
      }
 
   refresh(){
