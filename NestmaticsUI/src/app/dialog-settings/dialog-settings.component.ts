@@ -67,7 +67,7 @@ export class DialogSettingsComponent implements OnInit {
 
       if(localStorage.getItem('areaSelected') == "true"){
         this.http.get(this.ml + "/requierments/area/" + localStorage.getItem('currAreaID')).subscribe((req: any) => {
-          this.http.get(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/training/metadata/").subscribe((res:any) => {
+          this.http.get(this.ml + "/area/" + localStorage.getItem('currAreaID') + "/training/metadata").subscribe((res:any) => {
           this.trainIsValid = req.ok.can_train && (res.ok[0].status != "training");
           this.scheduleIsValid = (res.ok[0].status != "training")
           this.newDataReq = req.ok.required_days;
@@ -76,7 +76,7 @@ export class DialogSettingsComponent implements OnInit {
             this.accuracyReq = "No predictions yet";
           }
           else{
-            this.accuracyReq = req.ok.accuracy;
+            this.accuracyReq = req.ok.accuracy.toFixed(1);
             if(req.ok.accuracy < req.ok.threshold) this.accuracyCheck = true;
           }
 
