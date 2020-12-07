@@ -44,6 +44,9 @@ export class StatsComponent implements OnInit {
       }
     },
     (error) => {
+      this.totalRides = 0;
+      this.totalRevenue = 0;
+      this.totalActiveVehicles = 0;
       
     })
   }

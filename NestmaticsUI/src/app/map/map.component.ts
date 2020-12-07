@@ -212,7 +212,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   public getDropStrategyForDate(){
-    this.http.get(this.drop +"/area/"+localStorage.getItem('currAreaID')+"/date/"+localStorage.getItem('currDate')+"/"+localStorage.getItem('currDate')).subscribe((res: any) => {
+    this.http.get(this.drop +"/user/"+localStorage.getItem('currUserID')+"/area/"+localStorage.getItem('currAreaID')+"/date/"+localStorage.getItem('currDate')+"/"+localStorage.getItem('currDate')).subscribe((res: any) => {
         console.log(res.ok);
         if (res.ok){
           var date = res.ok[0].start_date;
@@ -429,8 +429,6 @@ export class MapComponent implements AfterViewInit {
 
     setTimeout( ()=>{ 
       this.editConfigurations(spinnerRef);
-      //this.spinner.stop(spinnerRef);
-
     }, 3000)
   }
 
@@ -509,7 +507,6 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-
   public insertNestConfigs(){
     console.log("attempting to insert nests ");
 
@@ -550,37 +547,28 @@ export class MapComponent implements AfterViewInit {
     }
   }
   
-  setTimeout( ()=>{ 
-    this.insertDropStrategyToDB()
-    this.spinner.stop(spinnerservice);
-  }, 3000)
-    
-  //this.spinner.stop(spinnerservice);
-
-  // setTimeout( function(){
-  //   forkJoin(observables)
-  //     .subscribe(dataArray => {
-  //         console.log(dataArray);
-  //         for(const c of dataArray){
-  //             this.nestConfigList.push(c.ok._id);
-  //         }
-  //         console.log("insert drop");
-  //         this.insertDropStrategyToDB();
-  //     });
-
-  // }, 3000)
+    setTimeout( ()=>{ 
+      this.insertDropStrategyToDB()
+      this.spinner.stop(spinnerservice);
+    }, 3000)
   }
 
   updateAssignedVehicles(newNumber:number, oldNumber:number){
-    this.assigned_vehicles = this.assigned_vehicles - oldNumber;
-    this.assigned_vehicles = this.assigned_vehicles + newNumber;
-    if(this.assigned_vehicles > this.vehicle_qty){
-      this.surpassedAmount = true;
-      this.assigned_vehicles = this.assigned_vehicles - newNumber;
-      this.toastr.info("You have surpassed the quantity of vehicles to deploy on the day");
+    if(this.vehicle_qty == undefined){
+      this.assigned_vehicles = this.assigned_vehicles + newNumber;
     }
     else{
-      this.surpassedAmount = false;
+      this.assigned_vehicles = this.assigned_vehicles - oldNumber;
+      this.assigned_vehicles = this.assigned_vehicles + newNumber;
+
+      if(this.assigned_vehicles > this.vehicle_qty){
+        this.surpassedAmount = true;
+        this.assigned_vehicles = this.assigned_vehicles - newNumber;
+        this.toastr.info("You have surpassed the quantity of vehicles to deploy on the day");
+        }
+      else{
+        this.surpassedAmount = false;
+      }
     }
   }
 

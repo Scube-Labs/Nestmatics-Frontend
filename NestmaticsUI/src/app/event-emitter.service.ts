@@ -39,11 +39,9 @@ export class EventEmitterService {
     if(view == 'map'){
       console.log("map")
       this.invokeRefreshMap.emit();
-      this.invokeClearStats.emit();
     }
     else if(view == 'prediction'){
       this.invokeRefreshPrediction.emit();
-      this.invokeClearStats.emit();
     }
     else if(view == 'playback'){
       this.invokeRefreshRides.emit();

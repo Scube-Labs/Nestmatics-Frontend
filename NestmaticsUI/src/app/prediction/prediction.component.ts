@@ -180,6 +180,7 @@ export class PredictionComponent implements AfterViewInit {
         this.spinnerService.stop(spinnerRef);
 
         this.toastr.success("Prediction generated succesfuly");
+        this.refresh();
       }
       else{
         this.spinnerService.stop(spinnerRef);
